@@ -10,14 +10,17 @@
         January 2015
    */
 	int lgths[100];
+     int number_count;
 %%
 [a-zA-Z]+	lgths[yyleng]++;
+[0-9]+	number_count++;
 .	|
 \n	;
 %%
-yywrap()
+int yywrap()
 {
 	int i;
+     printf("Number of words: %d\n", number_count);
 	printf("Length  No. words\n");
 	for (i=1; i<100; i++) {
 		if (lgths[i] > 0) {
@@ -27,7 +30,7 @@ yywrap()
 	return(1);
 }
 
-main()
+int main()
 {  yylex();
 
 }
