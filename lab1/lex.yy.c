@@ -480,9 +480,28 @@ char *yytext_ptr;
         Shaun Cooper
         January 2015
    */
+   /*
+     Header Comments
+     Devon Sookhoo
+     August 25th, 2025
+     Lab 1
+     Enhancements Made: Added a counter for numbers.
+   */
+     /*  
+     Lex files are divided into three sections, separated by %%:
+     Definitions
+     %%
+     Rules
+     %%
+     User Code
+    */
+/* Definitions */
 	int lgths[100];
      int number_count;
-#line 485 "lex.yy.c"
+/* Rules */
+/* Counts the numbers of words with n length */
+/* Counts the number of numbers*/
+#line 504 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -699,9 +718,9 @@ YY_DECL
 		}
 
 	{
-#line 15 "lab1.l"
+#line 42 "lab1.l"
 
-#line 704 "lex.yy.c"
+#line 723 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -770,28 +789,28 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 16 "lab1.l"
+#line 43 "lab1.l"
 lgths[yyleng]++;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 17 "lab1.l"
+#line 44 "lab1.l"
 number_count++;
 	YY_BREAK
 case 3:
-#line 19 "lab1.l"
+#line 46 "lab1.l"
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 19 "lab1.l"
+#line 46 "lab1.l"
 ;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 20 "lab1.l"
+#line 47 "lab1.l"
 ECHO;
 	YY_BREAK
-#line 794 "lex.yy.c"
+#line 813 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1808,23 +1827,36 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 20 "lab1.l"
+#line 47 "lab1.l"
 
+
+/* User Code */
+
+// yywrap() is called automatically when the scanner reaches EOF.
 int yywrap()
 {
 	int i;
-     printf("Number of words: %d\n", number_count);
-	printf("Length  No. words\n");
+
+     // Print the number count.
+     printf("Number of numbers: %d\n", number_count);
+	
+     // Prints the header for the output table.
+     printf("Length  No. words\n");
+     
+     // Loops through lgths[] and print the lengths and their counts.
 	for (i=1; i<100; i++) {
+          // ignore lengths with zero counts.
 		if (lgths[i] > 0) {
 			printf("%5d%10d\n",i,lgths[i]);
 		}
-	}
+	} // end for loop
 	return(1);
-}
+} // end yywrap
 
+// This is the main function, which serves as the entry point to the program.
+// It calls yylex() to start the lexical analysis process.
 int main()
 {  yylex();
 
-}
+} // end main
 
