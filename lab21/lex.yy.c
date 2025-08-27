@@ -478,13 +478,19 @@ char *yytext_ptr;
             Shaun Cooper
             January 2015
          */
+/*
+Devon Sookhoo
+September 1st, 2025
+Lab21
+Enhancements: Added the line_number variable which keeps track of the line number.
+*/
 /* yytext - "is a global character pointer that always points to the current token that matched one of your regular expressions" */
 /*********************************** Lex Section 1: Definitions ***********************************/
   int comment = 0;      /* 1 if in a comment, 0 if not */
   int debug = 0;        /* prints out debug statements if desired */
   int line_number = 1;  /* keep track of the line number for debugging */
 /*********************************** Lex Section 2: Rules ***********************************/
-#line 487 "lex.yy.c"
+#line 493 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -701,9 +707,9 @@ YY_DECL
 		}
 
 	{
-#line 22 "lab2remove.l"
+#line 29 "lab2remove.l"
 
-#line 706 "lex.yy.c"
+#line 712 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -772,49 +778,53 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 23 "lab2remove.l"
+#line 30 "lab2remove.l"
 {
+/* Rule #1: Detect the begining of a comment */
 	if (comment && debug) {
     fprintf(stderr, " >>>>>>>> line %d: Possible Nested comment <<<<<<<<<<\n", line_number);
   }
-	comment = 1;
+	comment = 1; /* You have entered a comment */
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 30 "lab2remove.l"
+#line 38 "lab2remove.l"
 {
+/* Rule #2: Detect the end of a comment */
   if (!comment) {
     printf("%s",yytext); /*print out if it is not in a comment */
   }
-            
-  comment = 0;
-	}
+
+  comment = 0; /* Exit comment */
+}
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 38 "lab2remove.l"
+#line 47 "lab2remove.l"
 {
-  line_number++;
-  printf("\n");
+/* Rule #3: Detect new lines */
+  line_number++; /* Increase the line count before proceeding to the next line */
+  printf("\n"); /* Print a new line because.... */
 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 43 "lab2remove.l"
-{ 
+#line 53 "lab2remove.l"
+{
+/* Rule #4: Print out remaining characters */
   if (!comment) {
-    printf("%s",yytext);
+    printf("%s",yytext); /* Print characters outside of comments */
   }
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 49 "lab2remove.l"
+#line 60 "lab2remove.l"
 ECHO;
 	YY_BREAK
-#line 817 "lex.yy.c"
+#line 827 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1831,19 +1841,19 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 49 "lab2remove.l"
+#line 60 "lab2remove.l"
 
 
 
 /*********************************** Lex Section 3: User Code ***********************************/
-int yywrap(void)
-{ return 1;
+/* Lex calls yywrap at the end of an input file */
+int yywrap(void) {
+  return 1;
 }
 
-int main()
-{
-  yylex();
-  
+/* The entry point into the program */
+int main() {
+  yylex(); /* yylex is called to grab the next token */
 }
 
 

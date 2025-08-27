@@ -8,6 +8,13 @@
  
          */
 
+/*
+Devon Sookhoo
+September 1st, 2025
+Lab21
+Enhancements: Added the line_number variable which keeps track of the line number.
+*/
+
 /* yytext - "is a global character pointer that always points to the current token that matched one of your regular expressions" */
 
 /*********************************** Lex Section 1: Definitions ***********************************/
@@ -32,8 +39,8 @@
   if (!comment) {
     printf("%s",yytext); /*print out if it is not in a comment */
   }
-            
-  comment = 0;
+
+  comment = 0; /* Exit comment */
 }
 
 \n		{
@@ -45,7 +52,7 @@
 .		{
 /* Rule #4: Print out remaining characters */
   if (!comment) {
-    printf("%s",yytext);
+    printf("%s",yytext); /* Print characters outside of comments */
   }
 }
 
@@ -53,13 +60,13 @@
 
 
 /*********************************** Lex Section 3: User Code ***********************************/
-int yywrap(void)
-{ return 1;
+/* Lex calls yywrap at the end of an input file */
+int yywrap(void) {
+  return 1;
 }
 
-int main()
-{
-  yylex();
-  
+/* The entry point into the program */
+int main() {
+  yylex(); /* yylex is called to grab the next token */
 }
 
