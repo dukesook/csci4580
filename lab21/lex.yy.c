@@ -481,7 +481,7 @@ char *yytext_ptr;
 /* yytext - "is a global character pointer that always points to the current token that matched one of your regular expressions" */
 /*********************************** Lex Section 1: Definitions ***********************************/
   int comment = 0;      /* 1 if in a comment, 0 if not */
-  int debug = 1;        /* prints out debug statements if desired */
+  int debug = 0;        /* prints out debug statements if desired */
   int line_number = 1;  /* keep track of the line number for debugging */
 /*********************************** Lex Section 2: Rules ***********************************/
 #line 487 "lex.yy.c"
@@ -797,11 +797,12 @@ YY_RULE_SETUP
 #line 38 "lab2remove.l"
 {
   line_number++;
+  printf("\n");
 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 42 "lab2remove.l"
+#line 43 "lab2remove.l"
 { 
   if (!comment) {
     printf("%s",yytext);
@@ -810,10 +811,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 48 "lab2remove.l"
+#line 49 "lab2remove.l"
 ECHO;
 	YY_BREAK
-#line 816 "lex.yy.c"
+#line 817 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1830,7 +1831,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 48 "lab2remove.l"
+#line 49 "lab2remove.l"
 
 
 
