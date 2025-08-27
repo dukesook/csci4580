@@ -10,16 +10,18 @@
 
 /* yytext - "is a global character pointer that always points to the current token that matched one of your regular expressions" */
 
-/* Lex Section 1: Definitions */
-  int comment = 0;
-  int debug=0;  /* prints out debug statements if desired */
+/*********************************** Lex Section 1: Definitions ***********************************/
+  int comment = 0;      /* 1 if in a comment, 0 if not */
+  int debug = 1;        /* prints out debug statements if desired */
+  int line_number = 1;  /* keep track of the line number for debugging */
 
 
-/* Lex Section 2: Rules */
+
+/*********************************** Lex Section 2: Rules ***********************************/
 %%
 "/*"	{
 	if (comment && debug) {
-    fprintf(stderr, " >>>>>>>> line %d: Possible Nested comment <<<<<<<<<<\n");
+    fprintf(stderr, " >>>>>>>> line %d: Possible Nested comment <<<<<<<<<<\n", line_number);
   }
 	comment = 1;
 }
@@ -32,6 +34,10 @@
   comment = 0;
 	}
 
+\n		{
+  line_number++;
+}
+
 .		{ 
   if (!comment) {
     printf("%s",yytext);
@@ -41,7 +47,7 @@
 %%
 
 
-/* Lex Section 3: User Code */
+/*********************************** Lex Section 3: User Code ***********************************/
 int yywrap(void)
 { return 1;
 }

@@ -370,8 +370,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 		YY_FATAL_ERROR( "token too large, exceeds YYLMAX" ); \
 	yy_flex_strncpy( yytext, (yytext_ptr), yyleng + 1 ); \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 4
-#define YY_END_OF_BUFFER 5
+#define YY_NUM_RULES 5
+#define YY_END_OF_BUFFER 6
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -381,7 +381,7 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[11] =
     {   0,
-        0,    0,    5,    3,    4,    3,    3,    2,    1,    0
+        0,    0,    6,    4,    3,    4,    4,    2,    1,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -446,9 +446,9 @@ static const flex_int16_t yy_chk[13] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[5] =
+static const flex_int32_t yy_rule_can_match_eol[6] =
     {   0,
-0, 0, 0, 0,     };
+0, 0, 1, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -479,11 +479,12 @@ char *yytext_ptr;
             January 2015
          */
 /* yytext - "is a global character pointer that always points to the current token that matched one of your regular expressions" */
-/* Lex Section 1: Definitions */
-  int comment = 0;
-  int debug=0;  /* prints out debug statements if desired */
-/* Lex Section 2: Rules */
-#line 486 "lex.yy.c"
+/*********************************** Lex Section 1: Definitions ***********************************/
+  int comment = 0;      /* 1 if in a comment, 0 if not */
+  int debug = 1;        /* prints out debug statements if desired */
+  int line_number = 1;  /* keep track of the line number for debugging */
+/*********************************** Lex Section 2: Rules ***********************************/
+#line 487 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -700,9 +701,9 @@ YY_DECL
 		}
 
 	{
-#line 20 "lab2remove.l"
+#line 22 "lab2remove.l"
 
-#line 705 "lex.yy.c"
+#line 706 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -771,17 +772,17 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "lab2remove.l"
+#line 23 "lab2remove.l"
 {
 	if (comment && debug) {
-    fprintf(stderr, " >>>>>>>> line %d: Possible Nested comment <<<<<<<<<<\n");
+    fprintf(stderr, " >>>>>>>> line %d: Possible Nested comment <<<<<<<<<<\n", line_number);
   }
 	comment = 1;
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 28 "lab2remove.l"
+#line 30 "lab2remove.l"
 {
   if (!comment) {
     printf("%s",yytext); /*print out if it is not in a comment */
@@ -791,20 +792,28 @@ YY_RULE_SETUP
 	}
 	YY_BREAK
 case 3:
+/* rule 3 can match eol */
 YY_RULE_SETUP
-#line 36 "lab2remove.l"
+#line 38 "lab2remove.l"
+{
+  line_number++;
+}
+	YY_BREAK
+case 4:
+YY_RULE_SETUP
+#line 42 "lab2remove.l"
 { 
   if (!comment) {
     printf("%s",yytext);
   }
 }
 	YY_BREAK
-case 4:
+case 5:
 YY_RULE_SETUP
-#line 42 "lab2remove.l"
+#line 48 "lab2remove.l"
 ECHO;
 	YY_BREAK
-#line 807 "lex.yy.c"
+#line 816 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1821,11 +1830,11 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 42 "lab2remove.l"
+#line 48 "lab2remove.l"
 
 
 
-/* Lex Section 3: User Code */
+/*********************************** Lex Section 3: User Code ***********************************/
 int yywrap(void)
 { return 1;
 }
