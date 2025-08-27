@@ -478,9 +478,12 @@ char *yytext_ptr;
             Shaun Cooper
             January 2015
          */
-        int comment = 0;
-        int debug=0;  /* prints out debug statements if desired */
-#line 483 "lex.yy.c"
+/* yytext - "is a global character pointer that always points to the current token that matched one of your regular expressions" */
+/* Lex Section 1: Definitions */
+  int comment = 0;
+  int debug=0;  /* prints out debug statements if desired */
+/* Lex Section 2: Rules */
+#line 486 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -697,9 +700,9 @@ YY_DECL
 		}
 
 	{
-#line 13 "lab2remove.l"
+#line 20 "lab2remove.l"
 
-#line 702 "lex.yy.c"
+#line 705 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -768,32 +771,40 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 14 "lab2remove.l"
+#line 21 "lab2remove.l"
 {
-	if (comment && debug) fprintf(stderr,
-		" >>>>>>>> line %d: Possible Nested comment <<<<<<<<<<\n");
+	if (comment && debug) {
+    fprintf(stderr, " >>>>>>>> line %d: Possible Nested comment <<<<<<<<<<\n");
+  }
 	comment = 1;
-	}
+}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 20 "lab2remove.l"
+#line 28 "lab2remove.l"
 {
-          if (!comment) printf("%s",yytext); /*print out if it is not in a comment */
-  	  comment = 0;
+  if (!comment) {
+    printf("%s",yytext); /*print out if it is not in a comment */
+  }
+            
+  comment = 0;
 	}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 24 "lab2remove.l"
-{ if (!comment) printf("%s",yytext);}
+#line 36 "lab2remove.l"
+{ 
+  if (!comment) {
+    printf("%s",yytext);
+  }
+}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 26 "lab2remove.l"
+#line 42 "lab2remove.l"
 ECHO;
 	YY_BREAK
-#line 796 "lex.yy.c"
+#line 807 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1810,14 +1821,16 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 26 "lab2remove.l"
+#line 42 "lab2remove.l"
 
 
+
+/* Lex Section 3: User Code */
 int yywrap(void)
 { return 1;
 }
 
-main()
+int main()
 {
   yylex();
   

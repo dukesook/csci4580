@@ -7,28 +7,46 @@
             January 2015
  
          */
-        int comment = 0;
-        int debug=0;  /* prints out debug statements if desired */
+
+/* yytext - "is a global character pointer that always points to the current token that matched one of your regular expressions" */
+
+/* Lex Section 1: Definitions */
+  int comment = 0;
+  int debug=0;  /* prints out debug statements if desired */
+
+
+/* Lex Section 2: Rules */
 %%
 "/*"	{
-	if (comment && debug) fprintf(stderr,
-		" >>>>>>>> line %d: Possible Nested comment <<<<<<<<<<\n");
+	if (comment && debug) {
+    fprintf(stderr, " >>>>>>>> line %d: Possible Nested comment <<<<<<<<<<\n");
+  }
 	comment = 1;
-	}
+}
 
 "*/"	{
-          if (!comment) printf("%s",yytext); /*print out if it is not in a comment */
-  	  comment = 0;
+  if (!comment) {
+    printf("%s",yytext); /*print out if it is not in a comment */
+  }
+            
+  comment = 0;
 	}
-.       { if (!comment) printf("%s",yytext);}
+
+.		{ 
+  if (!comment) {
+    printf("%s",yytext);
+  }
+}
 
 %%
 
+
+/* Lex Section 3: User Code */
 int yywrap(void)
 { return 1;
 }
 
-main()
+int main()
 {
   yylex();
   
