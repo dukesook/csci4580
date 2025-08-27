@@ -1,4 +1,4 @@
-/*                 Small LEX routine which returns two formal tokens (INTEGER and VARIABLE)
+     /*            Small LEX routine which returns two formal tokens (INTEGER and VARIABLE)
                    along with single string elements like '+'.
  
                     This LEX definition is the companion to the docalc.y YACC routine which
@@ -6,14 +6,14 @@
 
                     Shaun Cooper
                     January 2015
-*/
+     */
 
-/*
-Devon Sookhoo
-September 1st, 2025
-Lab21
-Enhancements: Added...
-*/
+  /*
+    Devon Sookhoo
+    September 1st, 2025
+    Lab21
+    Enhancements: Added...
+  */
 
 
 %{
