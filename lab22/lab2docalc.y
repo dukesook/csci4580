@@ -98,6 +98,7 @@ expr	:	'(' expr ')'
 	|	INTEGER {$$=$1; fprintf(stderr,"found an integer\n");}
 	;
 
+/* $1 gets the value of yylval */
 
 
 %%	/* end of rules, start of program */
