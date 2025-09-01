@@ -15,4 +15,4 @@ lab21: lab2remove.l
 
 # Clean Target
 clean: 
-	rm -f lab21, lex.yy.c
+	rm -f lab21 lex.yy.c
