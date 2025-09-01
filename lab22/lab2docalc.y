@@ -1,3 +1,15 @@
+/*
+    Devon Sookhoo
+    September 1st, 2025
+    Lab22
+    Enhancements:
+			1. Fixed unary minus by removing extra expr symbol.
+			2. Added whitespace to final answer.
+			3. Added multiplcation operator.
+			4. Specified int as the return value for main().
+			5. Declared the function prototype for yylex() to resolve warning.
+*/
+
 %{
 
 /*
@@ -31,7 +43,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
-int yylex(void); /* declare function prototype to resolve warning */
+/* declare function prototype to resolve warning */
+int yylex(void);
 
 int regs[26];
 int base, debugsw;
@@ -70,6 +83,7 @@ list	:	/* empty */
 	;
 
 stat	:	expr
+			/* Added appropriate whitespace */
 			{ fprintf(stderr,"the answer is %d \n", $1); }
 	|	VARIABLE '=' expr
 			{ regs[$1] = $3; }
@@ -81,6 +95,7 @@ expr	:	'(' expr ')'
 			{ $$ = $1 - $3; }
 	|	expr '+' expr
 			{ $$ = $1 + $3; }
+	/* Added multiplication */
 	|	expr '*' expr
 			{ $$ = $1 * $3; }
 	|	expr '/' expr
@@ -91,6 +106,7 @@ expr	:	'(' expr ')'
 			{ $$ = $1 & $3; }
 	|	expr '|' expr
 			{ $$ = $1 | $3; }
+	/* Fixed unary minus by removing extra expr symbol */
 	|	'-' expr	%prec UMINUS
 			{ $$ = -$2; }
 	|	VARIABLE
@@ -103,6 +119,7 @@ expr	:	'(' expr ')'
 
 %%	/* end of rules, start of program */
 
+/* Specify Return value*/
 int main()
 { yyparse();
 }

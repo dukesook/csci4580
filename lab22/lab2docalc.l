@@ -11,8 +11,8 @@
   /*
     Devon Sookhoo
     September 1st, 2025
-    Lab21
-    Enhancements: Added...
+    Lab22
+    Enhancements: The regex rule for symbols was missing the parentheses.
   */
 
 
