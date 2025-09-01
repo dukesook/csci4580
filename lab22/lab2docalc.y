@@ -89,7 +89,7 @@ expr	:	'(' expr ')'
 			{ $$ = $1 & $3; }
 	|	expr '|' expr
 			{ $$ = $1 | $3; }
-	|	expr '-' expr	%prec UMINUS
+	|	'-' expr	%prec UMINUS
 			{ $$ = -$2; }
 	|	VARIABLE
 			{ $$ = regs[$1]; fprintf(stderr,"found a variable value =%d\n",$1); }
