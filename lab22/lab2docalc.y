@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
+int yylex(void); /* declare function prototype to resolve warning */
 
 int regs[26];
 int base, debugsw;
@@ -47,17 +48,20 @@ void yyerror (s)  /* Called by yyparse on error */
 
 %start list
 
+/* defines the expected tokens from Lex*/
 %token INTEGER
 %token  VARIABLE
 
-%left '|'
+%left '|'					/* lowest precedence */
 %left '&'
 %left '+' '-'
 %left '*' '/' '%'
-%left UMINUS
+%left UMINUS			/* highest precedence */
 
 
 %%	/* end specs, begin rules */
+
+/* For each rule, precedence is determined by the last token */
 
 list	:	/* empty */
 	|	list stat '\n'
@@ -96,6 +100,6 @@ expr	:	'(' expr ')'
 
 %%	/* end of rules, start of program */
 
-main()
+int main()
 { yyparse();
 }
