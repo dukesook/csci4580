@@ -70,7 +70,7 @@ list	:	/* empty */
 	;
 
 stat	:	expr
-			{ fprintf(stderr,"the answer is %d\n", $1); }
+			{ fprintf(stderr,"the answer is %d \n", $1); }
 	|	VARIABLE '=' expr
 			{ regs[$1] = $3; }
 	;
