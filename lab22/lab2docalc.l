@@ -12,13 +12,16 @@
     Devon Sookhoo
     September 1st, 2025
     Lab22
-    Enhancements: The regex rule for symbols was missing the parentheses.
+    Enhancements:
+      - The regex rule for symbols was missing the parentheses.
+      - Turned off debugging statement to reduce clutter in output.
   */
 
 
 %{
 
-int mydebug=1;
+/* Turned off debugging statement */
+int mydebug=0;
 #include "y.tab.h"
 %}
 

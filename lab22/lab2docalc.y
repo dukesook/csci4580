@@ -84,6 +84,7 @@ list	:	/* empty */
 
 stat	:	expr
 			/* Added appropriate whitespace */
+			/* Fixed Typo: answer*/
 			{ fprintf(stderr,"the answer is %d \n", $1); }
 	|	VARIABLE '=' expr
 			{ regs[$1] = $3; }
