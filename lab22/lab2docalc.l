@@ -1,3 +1,14 @@
+  /*
+    Devon Sookhoo
+    September 1st, 2025
+    Lab22
+    Enhancements:
+      - The regex rule for symbols was missing the parentheses.
+      - Turned off debugging statement to reduce clutter in output.
+  */
+
+
+
      /*            Small LEX routine which returns two formal tokens (INTEGER and VARIABLE)
                    along with single string elements like '+'.
  
@@ -7,15 +18,6 @@
                     Shaun Cooper
                     January 2015
      */
-
-  /*
-    Devon Sookhoo
-    September 1st, 2025
-    Lab22
-    Enhancements:
-      - The regex rule for symbols was missing the parentheses.
-      - Turned off debugging statement to reduce clutter in output.
-  */
 
 
 %{
