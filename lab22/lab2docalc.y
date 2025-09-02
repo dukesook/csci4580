@@ -110,7 +110,8 @@ expr	:	'(' expr ')'
 	|	'-' expr	%prec UMINUS
 			{ $$ = -$2; }
 	|	VARIABLE
-			{ $$ = regs[$1]; fprintf(stderr,"found a variable value =%d\n",$1); }
+	/* Added whitespace to improve readability*/
+			{ $$ = regs[$1]; fprintf(stderr,"found a variable value = %d\n",$1); }
 	|	INTEGER {$$=$1; fprintf(stderr,"found an integer\n");}
 	;
 
