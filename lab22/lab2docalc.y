@@ -8,6 +8,8 @@
 			3. Added multiplcation operator.
 			4. Specified int as the return value for main().
 			5. Declared the function prototype for yylex() to resolve warning.
+			6. Fixed Typo: answer
+			7. Use debugsw variable to toggle debug statements instead of always printing them.
 */
 
 %{
@@ -47,7 +49,7 @@
 int yylex(void);
 
 int regs[26];
-int base, debugsw;
+int base, debugsw=0;
 
 void yyerror (s)  /* Called by yyparse on error */
      char *s;
@@ -110,10 +112,18 @@ expr	:	'(' expr ')'
 	/* Fixed unary minus by removing extra expr symbol */
 	|	'-' expr	%prec UMINUS
 			{ $$ = -$2; }
-	|	VARIABLE
-	/* Added whitespace to improve readability*/
-			{ $$ = regs[$1]; fprintf(stderr,"found a variable value = %d\n",$1); }
-	|	INTEGER {$$=$1; fprintf(stderr,"found an integer\n");}
+	|	VARIABLE { 
+				$$ = regs[$1]; 
+				/* Using debugsw variable to toggle debug statements*/
+				if (debugsw) 
+					fprintf(stderr,"found a variable value = %d\n",$1); /* Added whitespace to improve readability*/
+			}
+	|	INTEGER {
+		$$=$1;
+			/* Using debugsw variable to toggle debug statements*/
+			if (debugsw)
+				fprintf(stderr,"found an integer\n");
+		}
 	;
 
 /* $1 gets the value of yylval */
