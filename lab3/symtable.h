@@ -8,7 +8,7 @@ void Display();
 void Delete(); // Remove!!!
 // void Delete(char *s); // takes a symbols and removes it if present
 
-int Search(char *s); //takes a symbol and states if present or not returns 0 or 1.
+int Search(char *label); //takes a symbol and states if present or not returns 0 or 1.
 
 void Modify(); // Remove!!!
 
