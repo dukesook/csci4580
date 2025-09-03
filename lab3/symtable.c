@@ -22,6 +22,7 @@ TODO
   - for loop comments
   - if comments
   - function comments
+  - throw away label
 */
 
 #include <stdio.h>
@@ -36,7 +37,9 @@ int size = 0; // the number symbols in the symbol table
 struct SymbTab *first, *last;
 
 void main() {
-  int op, y;
+  int op;
+  int label_found;
+  char *label;
   char la[10];
   do {
     printf("\n\tSYMBOL TABLE IMPLEMENTATION\n");
@@ -55,11 +58,10 @@ void main() {
       Delete();
       break;
     case 4:
-      printf("\n\tEnter the label to be searched : ");
-      scanf("%s", la);
-      y = Search(la);
+      label = prompt_search();
+      label_found = Search(label);
       printf("\n\tSearch Result:");
-      if (y == 1)
+      if (label_found)
         printf("\n\tThe label is present in the symbol table\n");
       else
         printf("\n\tThe label is not present in the symbol table\n");
@@ -116,12 +118,12 @@ void Display() {
   }
 }
 
-int Search(char lab[]) {
+int Search(char label[]) {
   int i, flag = 0;
   struct SymbTab *p;
   p = first;
   for (i = 0; i < size; i++) {
-    if (strcmp(p->label, lab) == 0)
+    if (strcmp(p->label, label) == 0)
       flag = 1;
     p = p->next;
   }
@@ -233,4 +235,13 @@ void Delete() {
     printf("\n\tAfter Deletion:\n");
     Display();
   }
+}
+
+
+// Prompers
+char* prompt_search() {
+  char * label;
+  printf("\n\tEnter the label to be searched : ");
+  scanf("%s", label);
+  return label;
 }

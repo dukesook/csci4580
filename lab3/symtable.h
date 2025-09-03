@@ -8,8 +8,8 @@ void Display();
 void Delete(); // Remove!!!
 // void Delete(char *s); // takes a symbols and removes it if present
 
-int Search(char lab[]); // Remove!!!
-// int Search(char *s); //takes a symbol and states if present or not returns 0 or 1.
+// int Search(char label[]); // Remove!!!
+int Search(char *s); //takes a symbol and states if present or not returns 0 or 1.
 
 void Modify(); // Remove!!!
 
@@ -20,3 +20,8 @@ struct SymbTab {
   int addr;
   struct SymbTab *next;
 };
+
+
+// Prompters
+char* prompt_search();
+
