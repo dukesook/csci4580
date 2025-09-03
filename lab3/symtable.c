@@ -19,7 +19,9 @@ Enhancements:
 TODO
   - A screenshot of at least 4 actions (Demonstrate that you understand the code by testing the functionality of the interface.)
   - Describe the main data structure in this code.  What is it's name?  What are the fields and how is the structure built
-
+  - for loop comments
+  - if comments
+  - function comments
 */
 
 #include <stdio.h>
@@ -29,7 +31,7 @@ TODO
 #include <string.h>
 #include "symtable.h"
 
-int size = 0;
+int size = 0; // the number symbols in the symbol table
 
 struct SymbTab *first, *last;
 
