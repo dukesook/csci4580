@@ -10,6 +10,7 @@ Description of Code:
   - Each function is parameterless, which is not ideal for reusability and clarity.
 Enhancements:
     - Formatted code for better readability.
+    - Updated Search(lab[]) to accept a char* instead.
 */
 
 // char * strdup( const char *str1 ); // to duplicate strings
@@ -114,7 +115,7 @@ void Display() {
   }
 }
 
-int Search(char label[]) {
+int Search(char* label) {
   int i, flag = 0;
   struct SymbTab *p;
   p = first;
