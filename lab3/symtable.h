@@ -14,7 +14,8 @@ void Modify(); // Remove!!!
 
 struct SymbTab {
   char label[10];  // Remove!!!
-  char *symbol;
+  char symbol[10]; // Remove!!!
+  // char *symbol;
   int addr;
   struct SymbTab *next;
 };
@@ -22,6 +23,8 @@ struct SymbTab {
 
 // Helpers
 char* prompt_search();
+
+char* prompt_for(char* variable);
 
 void log_search(int label_found);
 

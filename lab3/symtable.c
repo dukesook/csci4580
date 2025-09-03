@@ -77,17 +77,17 @@ void main() {
 void Insert() {
   // You will need to use strdup() to make a copy of the string in Insert() 
   int n;
-  char l[10];
+  char label[10];
   printf("\n\tEnter the label : ");
-  scanf("%s", l);
-  n = Search(l);
+  scanf("%s", label);
+  n = Search(label);
   if (n == 1)
     printf("\n\tThe label exists already in the symbol table\n\tDuplicate "
            "can.t be inserted");
   else {
     struct SymbTab *p;
     p = malloc(sizeof(struct SymbTab));
-    strcpy(p->label, l);
+    strcpy(p->label, label);
     printf("\n\tEnter the symbol : ");
     scanf("%s", p->symbol);
     printf("\n\tEnter the address : ");
@@ -243,6 +243,14 @@ char* prompt_search() {
   scanf("%s", label);
   return label;
 }
+
+char* prompt_for(char* variable) {
+  char * label;
+  printf("\n\tEnter the %s to be searched : ", variable);
+  scanf("%s", label);
+  return label;
+}
+
 
 void log_search(int label_found) {
   printf("\n\tSearch Result:");
