@@ -1,13 +1,21 @@
 #pragma once
 
-void Insert();
+void Insert(); // Remove!!!
+// void Insert(char *sym, int address); // takes a symbold and address and inserts if the symbold is not there
 void Display();
-void Delete();
-int Search(char lab[]);
-void Modify();
+
+void Delete(); // Remove!!!
+// void Delete(char *s); // takes a symbols and removes it if present
+
+int Search(char lab[]); // Remove!!!
+// int Search(char *s); //takes a symbol and states if present or not returns 0 or 1.
+
+void Modify(); // Remove!!!
 
 struct SymbTab {
-  char label[10], symbol[10];
+  char label[10];  // Remove!!!
+  char symbol[10]; // Remove!!!
+  // char * symbol; // Insert!!!
   int addr;
   struct SymbTab *next;
 };

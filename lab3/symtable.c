@@ -1,3 +1,27 @@
+/*
+Devon Sookhoo
+September 8th, 2025
+Lab 3 Symbol Table
+Assignment Description: Refactor the code to made it readable and parameterize each helper function.
+
+Description of Code:
+  - The original code was found here: https://forgetcode.com/C/101-Symbol-table
+  - The code implements a symbol table using a linked list in C.
+  - Each function is parameterless, which is not ideal for reusability and clarity.
+Enhancements:
+    - Formatted code for better readability.
+*/
+
+// char * strdup( const char *str1 ); // to duplicate strings
+
+
+/*
+TODO
+  - A screenshot of at least 4 actions (Demonstrate that you understand the code by testing the functionality of the interface.)
+  - Describe the main data structure in this code.  What is it's name?  What are the fields and how is the structure built
+
+*/
+
 #include <stdio.h>
 /* #include<conio.h> */
 #include <malloc.h>
@@ -49,6 +73,7 @@ void main() {
 } /* and of main */
 
 void Insert() {
+  // You will need to use strdup() to make a copy of the string in Insert() 
   int n;
   char l[10];
   printf("\n\tEnter the label : ");
