@@ -14,8 +14,7 @@ void Modify(); // Remove!!!
 
 struct SymbTab {
   char label[10];  // Remove!!!
-  char symbol[10]; // Remove!!!
-  // char * symbol; // Insert!!!
+  char *symbol;
   int addr;
   struct SymbTab *next;
 };

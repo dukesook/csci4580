@@ -11,6 +11,7 @@ Description of Code:
 Enhancements:
     - Formatted code for better readability.
     - Updated Search(lab[]) to accept a char* instead.
+    - Updated SymbTab.symbol to be a pointer instead of an array.
 */
 
 // char * strdup( const char *str1 ); // to duplicate strings
