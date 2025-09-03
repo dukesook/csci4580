@@ -22,6 +22,8 @@ struct SymbTab {
 };
 
 
-// Prompters
+// Helpers
 char* prompt_search();
+
+void log_search(int label_found);
 

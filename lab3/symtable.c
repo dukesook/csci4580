@@ -60,11 +60,7 @@ void main() {
     case 4:
       label = prompt_search();
       label_found = Search(label);
-      printf("\n\tSearch Result:");
-      if (label_found)
-        printf("\n\tThe label is present in the symbol table\n");
-      else
-        printf("\n\tThe label is not present in the symbol table\n");
+      log_search(label_found);
       break;
     case 5:
       Modify();
@@ -244,4 +240,12 @@ char* prompt_search() {
   printf("\n\tEnter the label to be searched : ");
   scanf("%s", label);
   return label;
+}
+
+void log_search(int label_found) {
+  printf("\n\tSearch Result:");
+  if (label_found)
+    printf("\n\tThe label is present in the symbol table\n");
+  else
+    printf("\n\tThe label is not present in the symbol table\n");
 }
