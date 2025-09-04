@@ -40,16 +40,13 @@ int size = 0; // the number symbols in the symbol table
 struct SymbTab *first, *last;
 
 void main() {
-  int op;
+  int option;
   int label_found;
   char *label;
   char la[10];
   do {
-    printf("\n\tSYMBOL TABLE IMPLEMENTATION\n");
-    printf("\n\t1.INSERT\n\t2.DISPLAY\n\t3.DELETE\n\t4.SEARCH\n\t5.END\n");
-    printf("\n\tEnter your option : ");
-    scanf("%d", &op);
-    switch (op) {
+    option = prompt_option();
+    switch (option) {
     case 1:
       Insert();
       break;
@@ -67,7 +64,7 @@ void main() {
     case 5:
       exit(0);
     }
-  } while (op < 6);
+  } while (option < 6);
 
 } /* and of main */
 
@@ -161,7 +158,16 @@ void Delete() {
 }
 
 
-// Prompers
+// Helpers
+int prompt_option() {
+  int option;
+  printf("\n\tSYMBOL TABLE IMPLEMENTATION\n");
+  printf("\n\t1.INSERT\n\t2.DISPLAY\n\t3.DELETE\n\t4.SEARCH\n\t5.END\n");
+  printf("\n\tEnter your option : ");
+  scanf("%d", &option);
+  return option;
+}
+
 char* prompt_search() {
   char * label;
   printf("\n\tEnter the label to be searched : ");

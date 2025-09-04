@@ -20,6 +20,8 @@ struct SymbTab {
 
 
 // Helpers
+int prompt_option();
+
 char* prompt_search();
 
 char* prompt_for(char* variable);
