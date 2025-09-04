@@ -42,7 +42,7 @@ struct SymbTab *first, *last;
 
 void main() {
   int option;
-  bool symbol_found;
+  bool found;
   char *symbol;
   do {
     option = prompt_option();
@@ -50,9 +50,9 @@ void main() {
     case 1:
       printf("\n\tEnter the symbol : ");
       scanf("%s", symbol);
-      symbol_found = Search(symbol);
+      found = Search(symbol);
 
-      if (symbol_found) {
+      if (found) {
         printf("\n\tThe symbol exists already in the symbol table\n");
         printf("\tDuplicate can't be inserted\n");
       } else {
@@ -67,12 +67,19 @@ void main() {
       Display();
       break;
     case 3:
-      Delete();
+      printf("\n\tEnter the symbol to be deleted : ");
+      scanf("%s", symbol);
+      found = Search(symbol);
+      if (!found) {
+        printf("\n\tSymbol not found\n");
+      } else {
+        Delete(symbol);
+      }
       break;
     case 4:
       symbol = prompt_search();
-      symbol_found = Search(symbol);
-      log_search(symbol_found);
+      found = Search(symbol);
+      log_search(found);
       break;
     case 5:
       exit(0);
@@ -83,7 +90,6 @@ void main() {
 
 void Insert(char *symbol, int address) {
   bool symbol_found;
-  // char symbol[10];
   struct SymbTab *node;
 
   node = malloc(sizeof(struct SymbTab));
@@ -125,39 +131,32 @@ bool Search(char* symbol) {
   return exists;
 }
 
-void Delete() {
-  int found;
-  char symbol[10];
+void Delete(char *symbol) {
+  bool found;
   struct SymbTab *p, *q;
   p = first;
-  printf("\n\tEnter the symbol to be deleted : ");
-  scanf("%s", symbol);
-  found = Search(symbol);
-  if (!found) {
-    printf("\n\tSymbol not found\n");
-  } else {
-    if (strcmp(first->symbol, symbol) == 0)
-      first = first->next;
-    else if (strcmp(last->symbol, symbol) == 0) {
-      q = p->next;
-      while (strcmp(q->symbol, symbol) != 0) {
-        p = p->next;
-        q = q->next;
-      }
-      p->next = NULL;
-      last = p;
-    } else {
-      q = p->next;
-      while (strcmp(q->symbol, symbol) != 0) {
-        p = p->next;
-        q = q->next;
-      }
-      p->next = q->next;
+
+  if (strcmp(first->symbol, symbol) == 0)
+    first = first->next;
+  else if (strcmp(last->symbol, symbol) == 0) {
+    q = p->next;
+    while (strcmp(q->symbol, symbol) != 0) {
+      p = p->next;
+      q = q->next;
     }
-    size--;
-    printf("\n\tAfter Deletion:\n");
-    Display();
+    p->next = NULL;
+    last = p;
+  } else {
+    q = p->next;
+    while (strcmp(q->symbol, symbol) != 0) {
+      p = p->next;
+      q = q->next;
+    }
+    p->next = q->next;
   }
+  size--;
+  printf("\n\tAfter Deletion:\n");
+  Display();
 }
 
 
