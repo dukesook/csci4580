@@ -43,7 +43,6 @@ void main() {
   int option;
   int label_found;
   char *label;
-  char la[10];
   do {
     option = prompt_option();
     switch (option) {
@@ -64,9 +63,9 @@ void main() {
     case 5:
       exit(0);
     }
-  } while (option < 6);
+  } while (option < 5);
 
-} /* and of main */
+} /* end of main */
 
 void Insert() {
   // You will need to use strdup() to make a copy of the string in Insert() 
