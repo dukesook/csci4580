@@ -60,8 +60,8 @@ void main() {
         printf("\n\tEnter the address : ");
         scanf("%d", &address);
         Insert(symbol, address);
+        printf("\n\tSymbol inserted\n");
       }
-
       break;
     case 2:
       Display();
@@ -74,6 +74,8 @@ void main() {
         printf("\n\tSymbol not found\n");
       } else {
         Delete(symbol);
+        printf("\n\tAfter Deletion:\n");
+        Display();
       }
       break;
     case 4:
@@ -105,7 +107,6 @@ void Insert(char *symbol, int address) {
     last = node;
   }
   size++;
-  printf("\n\tSymbol inserted\n");
 }
 
 void Display() {
@@ -155,8 +156,6 @@ void Delete(char *symbol) {
     p->next = q->next;
   }
   size--;
-  printf("\n\tAfter Deletion:\n");
-  Display();
 }
 
 
