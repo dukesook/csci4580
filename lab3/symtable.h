@@ -14,7 +14,6 @@ void Delete(); // Remove!!!
 bool Search(char *symbol); //takes a symbol and states if present or not returns 0 or 1.
 
 struct SymbTab {
-  char label[10];  // Remove!!!
   char *symbol;
   int addr;
   struct SymbTab *next;
