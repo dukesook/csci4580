@@ -12,6 +12,7 @@ Enhancements:
     - Formatted code for better readability.
     - Updated Search(lab[]) to accept a char* instead.
     - Updated SymbTab.symbol to be a pointer instead of an array.
+    - Completely removed Modify() function.
 */
 
 // char * strdup( const char *str1 ); // to duplicate strings
@@ -45,8 +46,7 @@ void main() {
   char la[10];
   do {
     printf("\n\tSYMBOL TABLE IMPLEMENTATION\n");
-    printf("\n\t1.INSERT\n\t2.DISPLAY\n\t3.DELETE\n\t4.SEARCH\n\t5.MODIFY\n\t6."
-           "END\n");
+    printf("\n\t1.INSERT\n\t2.DISPLAY\n\t3.DELETE\n\t4.SEARCH\n\t5.END\n");
     printf("\n\tEnter your option : ");
     scanf("%d", &op);
     switch (op) {
@@ -65,9 +65,6 @@ void main() {
       log_search(label_found);
       break;
     case 5:
-      Modify();
-      break;
-    case 6:
       exit(0);
     }
   } while (op < 6);
@@ -126,78 +123,6 @@ int Search(char* label) {
     p = p->next;
   }
   return flag;
-}
-
-void Modify() {
-  char l[10], nl[10];
-  int add, choice, i, s;
-  struct SymbTab *p;
-  p = first;
-  printf("\n\tWhat do you want to modify?\n");
-  printf("\n\t1.Only the label\n\t2.Only the address\n\t3.Both the label and "
-         "address\n");
-  printf("\tEnter your choice : ");
-  scanf("%d", &choice);
-  switch (choice) {
-  case 1:
-    printf("\n\tEnter the old label : ");
-    scanf("%s", l);
-    s = Search(l);
-    if (s == 0)
-      printf("\n\tLabel not found\n");
-    else {
-      printf("\n\tEnter the new label : ");
-      scanf("%s", nl);
-      for (i = 0; i < size; i++) {
-        if (strcmp(p->label, l) == 0)
-          strcpy(p->label, nl);
-        p = p->next;
-      }
-      printf("\n\tAfter Modification:\n");
-      Display();
-    }
-    break;
-  case 2:
-    printf("\n\tEnter the label where the address is to be modified : ");
-    scanf("%s", l);
-    s = Search(l);
-    if (s == 0)
-      printf("\n\tLabel not found\n");
-    else {
-      printf("\n\tEnter the new address : ");
-      scanf("%d", &add);
-      for (i = 0; i < size; i++) {
-        if (strcmp(p->label, l) == 0)
-          p->addr = add;
-        p = p->next;
-      }
-      printf("\n\tAfter Modification:\n");
-      Display();
-    }
-    break;
-  case 3:
-    printf("\n\tEnter the old label : ");
-    scanf("%s", l);
-    s = Search(l);
-    if (s == 0)
-      printf("\n\tLabel not found\n");
-    else {
-      printf("\n\tEnter the new label : ");
-      scanf("%s", nl);
-      printf("\n\tEnter the new address : ");
-      scanf("%d", &add);
-      for (i = 0; i < size; i++) {
-        if (strcmp(p->label, l) == 0) {
-          strcpy(p->label, nl);
-          p->addr = add;
-        }
-        p = p->next;
-      }
-      printf("\n\tAfter Modification:\n");
-      Display();
-    }
-    break;
-  }
 }
 
 void Delete() {

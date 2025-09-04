@@ -10,8 +10,6 @@ void Delete(); // Remove!!!
 
 int Search(char *label); //takes a symbol and states if present or not returns 0 or 1.
 
-void Modify(); // Remove!!!
-
 struct SymbTab {
   char label[10];  // Remove!!!
   char symbol[10]; // Remove!!!
