@@ -37,7 +37,7 @@ TODO
 #include "symtable.h"
 
 int size = 0; // the number symbols in the symbol table
-
+#define MAX_SYMBOL_SIZE 11
 struct SymbTab *first, *last;
 
 void main() {
@@ -45,45 +45,21 @@ void main() {
   bool found;
   char *symbol;
   do {
-    option = prompt_option();
+    option = get_option();
     switch (option) {
-    case 1:
-      printf("\n\tEnter the symbol : ");
-      scanf("%s", symbol);
-      found = Search(symbol);
-
-      if (found) {
-        printf("\n\tThe symbol exists already in the symbol table\n");
-        printf("\tDuplicate can't be inserted\n");
-      } else {
-        int address;
-        printf("\n\tEnter the address : ");
-        scanf("%d", &address);
-        Insert(symbol, address);
-        printf("\n\tSymbol inserted\n");
-      }
+    case 1: // Insert
+      HandleInsert();
       break;
-    case 2:
+    case 2: // Display
       Display();
       break;
-    case 3:
-      printf("\n\tEnter the symbol to be deleted : ");
-      scanf("%s", symbol);
-      found = Search(symbol);
-      if (!found) {
-        printf("\n\tSymbol not found\n");
-      } else {
-        Delete(symbol);
-        printf("\n\tAfter Deletion:\n");
-        Display();
-      }
+    case 3: // Delete
+      HandleDelete();
       break;
-    case 4:
-      symbol = prompt_search();
-      found = Search(symbol);
-      log_search(found);
+    case 4: // Search
+      HandleSearch();
       break;
-    case 5:
+    case 5: // End
       exit(0);
     }
   } while (option < 5);
@@ -159,8 +135,9 @@ void Delete(char *symbol) {
 }
 
 
-// Helpers
-int prompt_option() {
+// Helpers Functions
+
+int get_option() {
   int option;
   printf("\n\tSYMBOL TABLE IMPLEMENTATION\n");
   printf("\n\t1.INSERT\n\t2.DISPLAY\n\t3.DELETE\n\t4.SEARCH\n\t5.END\n");
@@ -169,18 +146,54 @@ int prompt_option() {
   return option;
 }
 
-char* prompt_search() {
-  char * symbol;
-  printf("\n\tEnter the Symbol to be searched : ");
+void HandleInsert() {
+  char symbol[MAX_SYMBOL_SIZE];
+  bool found;
+
+  printf("\n\tEnter the symbol : ");
   scanf("%s", symbol);
-  return symbol;
+  found = Search(symbol);
+
+  if (found) {
+    printf("\n\tThe symbol exists already in the symbol table\n");
+    printf("\tDuplicate can't be inserted\n");
+  } else {
+    int address;
+    printf("\n\tEnter the address : ");
+    scanf("%d", &address);
+    Insert(symbol, address);
+    printf("\n\tSymbol inserted\n");
+  }
 }
 
+void HandleDelete() {
+  char symbol[MAX_SYMBOL_SIZE];
+  bool found;
 
-void log_search(bool symbol_found) {
+  printf("\n\tEnter the symbol to be deleted : ");
+  scanf("%s", symbol);
+  found = Search(symbol);
+  if (!found) {
+    printf("\n\tSymbol not found\n");
+  } else {
+    Delete(symbol);
+    printf("\n\tAfter Deletion:\n");
+    Display();
+  }
+}
+
+void HandleSearch() {
+  char symbol[MAX_SYMBOL_SIZE];
+  bool found;
+
+  printf("\n\tEnter the Symbol to be searched : ");
+  scanf("%s", symbol);
+
+  found = Search(symbol);
+
   printf("\n\tSearch Result:");
-  if (symbol_found)
-    printf("\n\tThe Symbol is present in the symbol table\n");
+  if (found)
+    printf("\n\tSymbol FOUND in symbol table\n");
   else
-    printf("\n\tThe Symbol is not present in the symbol table\n");
+    printf("\n\tSYMBOL NOT FOUND!\n");
 }

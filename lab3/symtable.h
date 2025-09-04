@@ -18,10 +18,11 @@ struct SymbTab {
 };
 
 
-// Helpers
-int prompt_option();
+// Helper Functions
+int get_option();
 
-char* prompt_search();
+void HandleInsert();
 
-void log_search(bool symbol_found);
+void HandleDelete();
 
+void HandleSearch();
