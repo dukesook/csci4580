@@ -13,6 +13,7 @@ Enhancements:
     - Updated Search(lab[]) to accept a char* instead.
     - Updated SymbTab.symbol to be a pointer instead of an array.
     - Completely removed Modify() function.
+    - Removed label field from SymbTab struct and code.
 */
 
 // char * strdup( const char *str1 ); // to duplicate strings
@@ -25,7 +26,6 @@ TODO
   - for loop comments
   - if comments
   - function comments
-  - throw away label
 */
 
 #include <stdio.h>
@@ -41,8 +41,8 @@ struct SymbTab *first, *last;
 
 void main() {
   int option;
-  int label_found;
-  char *label;
+  bool symbol_found;
+  char *symbol;
   do {
     option = prompt_option();
     switch (option) {
@@ -56,9 +56,9 @@ void main() {
       Delete();
       break;
     case 4:
-      label = prompt_search();
-      label_found = Search(label);
-      log_search(label_found);
+      symbol = prompt_search();
+      symbol_found = Search(symbol);
+      log_search(symbol_found);
       break;
     case 5:
       exit(0);
@@ -69,20 +69,18 @@ void main() {
 
 void Insert() {
   // You will need to use strdup() to make a copy of the string in Insert() 
-  int n;
-  char label[10];
-  printf("\n\tEnter the label : ");
-  scanf("%s", label);
-  n = Search(label);
-  if (n == 1)
-    printf("\n\tThe label exists already in the symbol table\n\tDuplicate "
-           "can.t be inserted");
-  else {
+  bool symbol_found;
+  char symbol[10];
+  printf("\n\tEnter the symbol : ");
+  scanf("%s", symbol);
+  symbol_found = Search(symbol);
+  if (symbol_found) {
+    printf("\n\tThe symbol exists already in the symbol table\n");
+    printf("\tDuplicate can't be inserted\n");
+  } else {
     struct SymbTab *p;
     p = malloc(sizeof(struct SymbTab));
-    strcpy(p->label, label);
-    printf("\n\tEnter the symbol : ");
-    scanf("%s", p->symbol);
+    p->symbol = strdup(symbol);
     printf("\n\tEnter the address : ");
     scanf("%d", &p->addr);
     p->next = NULL;
@@ -95,48 +93,48 @@ void Insert() {
     }
     size++;
   }
-  printf("\n\tLabel inserted\n");
+  printf("\n\tSymbol inserted\n");
 }
 
 void Display() {
   int i;
   struct SymbTab *p;
   p = first;
-  printf("\n\tLABEL\t\tSYMBOL\t\tADDRESS\n");
+  printf("\n\tSYMBOL\t\tADDRESS\n");
   for (i = 0; i < size; i++) {
-    printf("\t%s\t\t%s\t\t%d\n", p->label, p->symbol, p->addr);
+    printf("\t%s\t\t%d\n", p->symbol, p->addr);
     p = p->next;
   }
 }
 
-int Search(char* label) {
-  int i, flag = 0;
+bool Search(char* symbol) {
+  int i, exists = 0;
   struct SymbTab *p;
   p = first;
   for (i = 0; i < size; i++) {
-    if (strcmp(p->label, label) == 0)
-      flag = 1;
+    if (strcmp(p->symbol, symbol) == 0)
+      exists = 1;
     p = p->next;
   }
-  return flag;
+  return exists;
 }
 
 void Delete() {
-  int a;
-  char l[10];
+  int found;
+  char symbol[10];
   struct SymbTab *p, *q;
   p = first;
-  printf("\n\tEnter the label to be deleted : ");
-  scanf("%s", l);
-  a = Search(l);
-  if (a == 0)
-    printf("\n\tLabel not found\n");
-  else {
-    if (strcmp(first->label, l) == 0)
+  printf("\n\tEnter the symbol to be deleted : ");
+  scanf("%s", symbol);
+  found = Search(symbol);
+  if (!found) {
+    printf("\n\tSymbol not found\n");
+  } else {
+    if (strcmp(first->symbol, symbol) == 0)
       first = first->next;
-    else if (strcmp(last->label, l) == 0) {
+    else if (strcmp(last->symbol, symbol) == 0) {
       q = p->next;
-      while (strcmp(q->label, l) != 0) {
+      while (strcmp(q->symbol, symbol) != 0) {
         p = p->next;
         q = q->next;
       }
@@ -144,7 +142,7 @@ void Delete() {
       last = p;
     } else {
       q = p->next;
-      while (strcmp(q->label, l) != 0) {
+      while (strcmp(q->symbol, symbol) != 0) {
         p = p->next;
         q = q->next;
       }
@@ -168,24 +166,17 @@ int prompt_option() {
 }
 
 char* prompt_search() {
-  char * label;
-  printf("\n\tEnter the label to be searched : ");
-  scanf("%s", label);
-  return label;
-}
-
-char* prompt_for(char* variable) {
-  char * label;
-  printf("\n\tEnter the %s to be searched : ", variable);
-  scanf("%s", label);
-  return label;
+  char * symbol;
+  printf("\n\tEnter the Symbol to be searched : ");
+  scanf("%s", symbol);
+  return symbol;
 }
 
 
-void log_search(int label_found) {
+void log_search(bool symbol_found) {
   printf("\n\tSearch Result:");
-  if (label_found)
-    printf("\n\tThe label is present in the symbol table\n");
+  if (symbol_found)
+    printf("\n\tThe Symbol is present in the symbol table\n");
   else
-    printf("\n\tThe label is not present in the symbol table\n");
+    printf("\n\tThe Symbol is not present in the symbol table\n");
 }
