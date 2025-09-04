@@ -48,7 +48,20 @@ void main() {
     option = prompt_option();
     switch (option) {
     case 1:
-      Insert();
+      printf("\n\tEnter the symbol : ");
+      scanf("%s", symbol);
+      symbol_found = Search(symbol);
+
+      if (symbol_found) {
+        printf("\n\tThe symbol exists already in the symbol table\n");
+        printf("\tDuplicate can't be inserted\n");
+      } else {
+        int address;
+        printf("\n\tEnter the address : ");
+        scanf("%d", &address);
+        Insert(symbol, address);
+      }
+
       break;
     case 2:
       Display();
@@ -68,32 +81,24 @@ void main() {
 
 } /* end of main */
 
-void Insert() {
-  // You will need to use strdup() to make a copy of the string in Insert() 
+void Insert(char *symbol, int address) {
   bool symbol_found;
-  char symbol[10];
-  printf("\n\tEnter the symbol : ");
-  scanf("%s", symbol);
-  symbol_found = Search(symbol);
-  if (symbol_found) {
-    printf("\n\tThe symbol exists already in the symbol table\n");
-    printf("\tDuplicate can't be inserted\n");
+  // char symbol[10];
+  struct SymbTab *node;
+
+  node = malloc(sizeof(struct SymbTab));
+  node->symbol = strdup(symbol);
+  node->addr = address;
+
+  node->next = NULL;
+  if (size == 0) {
+    first = node;
+    last = node;
   } else {
-    struct SymbTab *p;
-    p = malloc(sizeof(struct SymbTab));
-    p->symbol = strdup(symbol);
-    printf("\n\tEnter the address : ");
-    scanf("%d", &p->addr);
-    p->next = NULL;
-    if (size == 0) {
-      first = p;
-      last = p;
-    } else {
-      last->next = p;
-      last = p;
-    }
-    size++;
+    last->next = node;
+    last = node;
   }
+  size++;
   printf("\n\tSymbol inserted\n");
 }
 
