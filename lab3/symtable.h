@@ -15,7 +15,6 @@ bool Search(char *symbol); //takes a symbol and states if present or not returns
 
 struct SymbTab {
   char label[10];  // Remove!!!
-  // char symbol[10]; // Remove!!!
   char *symbol;
   int addr;
   struct SymbTab *next;

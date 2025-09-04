@@ -14,6 +14,7 @@ Enhancements:
     - Updated SymbTab.symbol to be a pointer instead of an array.
     - Completely removed Modify() function.
     - Removed label field from SymbTab struct and code.
+    - Make SymbTab.symbol a pointer instead of an array.
 */
 
 // char * strdup( const char *str1 ); // to duplicate strings
