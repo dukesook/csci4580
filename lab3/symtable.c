@@ -15,10 +15,8 @@ Enhancements:
     - Completely removed Modify() function.
     - Removed label field from SymbTab struct and code.
     - Make SymbTab.symbol a pointer instead of an array.
+    - Replaced strcpy with strdup to for deep string copying.
 */
-
-// char * strdup( const char *str1 ); // to duplicate strings
-
 
 /*
 TODO
@@ -30,7 +28,6 @@ TODO
 */
 
 #include <stdio.h>
-/* #include<conio.h> */
 #include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
