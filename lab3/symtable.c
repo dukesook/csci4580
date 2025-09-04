@@ -19,9 +19,19 @@ Enhancements:
 */
 
 /*
+Describe the main data structure in this code:
+  - The main data structure is the Symbol Table.
+  - The Symbol Table is implemented as a linked list using the struct SymbTab.
+  - The struct SymbTab has three fields:
+    - char *symbol: A pointer to a string that represents the symbol (token).
+    - int addr: An integer representing the address of the symbol in memory.
+    - struct SymbTab *next: A pointer to the next node in the linked list, allowing traversal through the symbol table.
+    - The Symbol Table is built by dynamically allocating memory for each new symbol
+      and linking them using the next pointer.
+*/
+
+/*
 TODO
-  - A screenshot of at least 4 actions (Demonstrate that you understand the code by testing the functionality of the interface.)
-  - Describe the main data structure in this code.  What is it's name?  What are the fields and how is the structure built
   - for loop comments
   - if comments
   - function comments
