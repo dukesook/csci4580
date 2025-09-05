@@ -16,6 +16,9 @@ Enhancements:
     - Removed label field from SymbTab struct and code.
     - Make SymbTab.symbol a pointer instead of an array.
     - Replaced strcpy with strdup to for deep string copying.
+    - Commented every for loop.
+    - Commented every if statement.
+    - Commented every function.
 */
 
 /*
@@ -30,13 +33,6 @@ Describe the main data structure in this code:
       and linking them using the next pointer.
 */
 
-/*
-TODO
-  - for loop comments
-  - if comments
-  - function comments
-*/
-
 #include <stdio.h>
 #include <malloc.h>
 #include <stdlib.h>
@@ -47,10 +43,13 @@ int size = 0; // the number symbols in the symbol table
 #define MAX_SYMBOL_SIZE 11
 struct SymbTab *first, *last;
 
+// Main Function
 void main() {
   int option;
   bool found;
   char *symbol;
+  
+  // Main Loop - Gets the option and calls the appropriate handler
   do {
     option = get_option();
     switch (option) {
@@ -82,48 +81,54 @@ void Insert(char *symbol, int address) {
   node->addr = address;
 
   node->next = NULL;
-  if (size == 0) {
+  if (size == 0) { // handles the first insertion
     first = node;
     last = node;
-  } else {
+  } else { // handles all other insertions
     last->next = node;
     last = node;
-  }
+  } // end if else
   size++;
-}
+} // end of Insert()
 
 void Display() {
   int i;
   struct SymbTab *p;
   p = first;
   printf("\n\tSYMBOL\t\tADDRESS\n");
+  // For each symbol in the symbol table, print its details
   for (i = 0; i < size; i++) {
     printf("\t%s\t\t%d\n", p->symbol, p->addr);
     p = p->next;
-  }
-}
+  } // end for loop
+} // end of Display()
 
 bool Search(char* symbol) {
   int i, exists = 0;
   struct SymbTab *p;
   p = first;
+
+  // Traverse the symbol table to check if the symbol exists
   for (i = 0; i < size; i++) {
     if (strcmp(p->symbol, symbol) == 0)
       exists = 1;
     p = p->next;
-  }
+  } // end for loop
   return exists;
-}
+} // end of Search()
 
 void Delete(char *symbol) {
   bool found;
   struct SymbTab *p, *q;
   p = first;
 
+  // Check if the first symbol is the one to be deleted
   if (strcmp(first->symbol, symbol) == 0)
     first = first->next;
+  // Check if the last symbol is the one to be deleted
   else if (strcmp(last->symbol, symbol) == 0) {
     q = p->next;
+    // Traverse to the second last node
     while (strcmp(q->symbol, symbol) != 0) {
       p = p->next;
       q = q->next;
@@ -132,18 +137,17 @@ void Delete(char *symbol) {
     last = p;
   } else {
     q = p->next;
+    // Traverse the symbol table to find the symbol to be deleted
     while (strcmp(q->symbol, symbol) != 0) {
       p = p->next;
       q = q->next;
-    }
+    } // end while loop
     p->next = q->next;
-  }
+  } // end if else
   size--;
-}
+} // end of Delete()
 
-
-// Helpers Functions
-
+// Prompts the User to get the next option
 int get_option() {
   int option;
   printf("\n\tSYMBOL TABLE IMPLEMENTATION\n");
@@ -151,8 +155,9 @@ int get_option() {
   printf("\n\tEnter your option : ");
   scanf("%d", &option);
   return option;
-}
+} // end of get_option()
 
+// Handles the Insert Option
 void HandleInsert() {
   char symbol[MAX_SYMBOL_SIZE];
   bool found;
@@ -161,18 +166,20 @@ void HandleInsert() {
   scanf("%s", symbol);
   found = Search(symbol);
 
+  // Check if the symbol already exists
   if (found) {
     printf("\n\tThe symbol exists already in the symbol table\n");
     printf("\tDuplicate can't be inserted\n");
-  } else {
+  } else { // symbol does not exist, proceed with insertion
     int address;
     printf("\n\tEnter the address : ");
     scanf("%d", &address);
     Insert(symbol, address);
     printf("\n\tSymbol inserted\n");
-  }
-}
+  } // end if else
+} // end of HandleInsert()
 
+// Handles the Delete Option
 void HandleDelete() {
   char symbol[MAX_SYMBOL_SIZE];
   bool found;
@@ -180,15 +187,16 @@ void HandleDelete() {
   printf("\n\tEnter the symbol to be deleted : ");
   scanf("%s", symbol);
   found = Search(symbol);
-  if (!found) {
+  if (!found) { // check if symbol was not found
     printf("\n\tSymbol not found\n");
-  } else {
+  } else { // symbol was found
     Delete(symbol);
     printf("\n\tAfter Deletion:\n");
-    Display();
+    Display(); 
   }
-}
+} // end of HandleDelete()
 
+// Handles the Search Option
 void HandleSearch() {
   char symbol[MAX_SYMBOL_SIZE];
   bool found;
@@ -199,8 +207,8 @@ void HandleSearch() {
   found = Search(symbol);
 
   printf("\n\tSearch Result:");
-  if (found)
+  if (found) // check if symbol was found
     printf("\n\tSymbol FOUND in symbol table\n");
-  else
+  else // symbol was not found
     printf("\n\tSYMBOL NOT FOUND!\n");
-}
+} // end of HandleSearch()

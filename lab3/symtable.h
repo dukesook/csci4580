@@ -1,5 +1,19 @@
 #pragma once
 
+/*
+Devon Sookhoo
+September 8th, 2025
+Lab 3 Symbol Table
+Assignment Description: Refactor the code to made it readable and parameterize each helper function.
+
+Description of Code:
+  - This header file was originally created by Devon Sookhoo.
+  - It contains the function declarations pulled from symtable.c.
+  - It also contains the struct definition for the symbol table.
+  - The functions were parameterized for better reusability and clarity.
+  - I also added helper functions so main wasn't too cluttered.
+ */
+
 #include <stdbool.h>
 
 // The Primary Data Structure
