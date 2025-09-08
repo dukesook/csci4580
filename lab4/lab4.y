@@ -95,6 +95,13 @@ DECLS : DECLS DECL
 			;
 
 DECL : T_INT VARIABLE ';' '\n'
+		{
+			// TODO: Check if variable ($2) is already defined.
+			// TODO: if not, check to make sure our symtable has enough room
+			// TODO: you should use a global varible that defines the size of the our memory, reg
+			// TODO: you will have to maintain a global varible that tells you now many are defined
+			// TODO: if not there, and there is room, then add the symbol table and "allocate" it a slot in regs.
+		}
 		 ;
 
 
@@ -110,7 +117,8 @@ stat	:	expr
 			/* Fixed Typo: answer*/
 			{ fprintf(stderr,"the answer is %d \n", $1); }
 	|	VARIABLE '=' expr
-			{ regs[FetchAddress($1)] = $3; }
+			{ // TODO: make sure that $1 has bee defined
+				regs[FetchAddress($1)] = $3; }
 	;
 
 expr	:	'(' expr ')'
@@ -136,6 +144,7 @@ expr	:	'(' expr ')'
 			{ $$ = -$2; }
 	
 	|	VARIABLE { 
+				// TODO: Make sure that $1 has been defined
 				$$ = regs[FetchAddress($1)]; 
 				/* Using debugsw variable to toggle debug statements*/
 				if (debugsw) 
