@@ -44,6 +44,7 @@
 	/* begin specs */
 #include <stdio.h>
 #include <ctype.h>
+#include "symtable.h"
 
 /* declare function prototype to resolve warning */
 int yylex(void);
@@ -63,9 +64,16 @@ void yyerror (s)  /* Called by yyparse on error */
 
 %start P
 
+%union
+{
+	int value;
+	char* string;
+}
+
 /* defines the expected tokens from Lex*/
-%token INTEGER
-%token VARIABLE
+%type <value> expr
+%token <value> INTEGER
+%token <string> VARIABLE
 %token T_INT
 
 %left '|'					/* lowest precedence */
@@ -102,7 +110,7 @@ stat	:	expr
 			/* Fixed Typo: answer*/
 			{ fprintf(stderr,"the answer is %d \n", $1); }
 	|	VARIABLE '=' expr
-			{ regs[$1] = $3; }
+			{ regs[FetchAddress($1)] = $3; }
 	;
 
 expr	:	'(' expr ')'
@@ -128,10 +136,10 @@ expr	:	'(' expr ')'
 			{ $$ = -$2; }
 	
 	|	VARIABLE { 
-				$$ = regs[$1]; 
+				$$ = regs[FetchAddress($1)]; 
 				/* Using debugsw variable to toggle debug statements*/
 				if (debugsw) 
-					fprintf(stderr,"found a variable value = %d\n",$1); /* Added whitespace to improve readability*/
+					fprintf(stderr,"found a variable value = %s\n",$1); /* Added whitespace to improve readability*/
 			}
 	
 	|	INTEGER {

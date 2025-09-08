@@ -33,9 +33,9 @@ int mydebug=0;
 "int"    {if (mydebug) fprintf(stderr,"Type declaration found\n"); 
                        return(T_INT);}
 [a-z]		{if (mydebug) fprintf(stderr,"Letter found\n"); 
-                       yylval=*yytext-'a'; return(VARIABLE);}
+                       yylval.string=strdup(yytext); return(VARIABLE);}
 [0-9][0-9]*	{if (mydebug) fprintf(stderr,"Digit found\n"); 
-                       yylval=atoi((const char *)yytext); return(INTEGER);}
+                       yylval.value=atoi((const char *)yytext); return(INTEGER);}
 [ \t]		{if (mydebug) fprintf(stderr,"Whitespace found\n");}
 [=\-+*/%&|()] 	{ if (mydebug) fprintf(stderr,"return a token %c\n",*yytext); 
                        return (*yytext);}

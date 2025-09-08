@@ -128,3 +128,9 @@ void Delete(char *symbol) {
   } // end if else
   size--;
 } // end of Delete()
+
+int FetchAddress(char * symbol) {
+  // This needs to look at the list and return the match address
+  return (1); // REMOVE!!!
+}
+

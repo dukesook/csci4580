@@ -1,4 +1,15 @@
 #pragma once
+/*
+Devon Sookhoo
+September 19th, 2025
+Lab 4 Symbol Table with YACC
+Assignment Description: Extend the single letter register names to variable names.
+
+Enhancements:
+  - New function: FetchAddress().
+
+*/
+
 
 /*
 Devon Sookhoo
@@ -35,14 +46,5 @@ void Delete(char *symbol);
 // takes a symbol and states if present or not returns 0 or 1.
 bool Search(char *symbol);
 
-// Prompts the User to get the next option
-int get_option();
-
-// Handles the Insert Option
-void HandleInsert();
-
-// Handles the Delete Option
-void HandleDelete();
-
-// Handles the Search Option
-void HandleSearch();
+// takes a symbol and returns its address in memory
+int FetchAddress(char * symbol);
