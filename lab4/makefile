@@ -10,10 +10,10 @@ all: lab4
 
 # the yacc -d flag: generate the header file lab4.tab.h
 
-lab4: symtable.c symtable.h
+lab4: lab4.y lab4.l symtable.c symtable.h
 	yacc -d lab4.y 
 	lex lab4.l
 	gcc $(CFLAGS) -o lab4 lex.yy.c y.tab.c symtable.c
 
 clean:
-	rm -f lab3
+	rm -f lab4

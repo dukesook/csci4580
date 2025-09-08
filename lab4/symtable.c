@@ -1,5 +1,16 @@
 /*
 Devon Sookhoo
+September 19th, 2025
+Lab 4 Symbol Table with YACC
+Assignment Description: Extend the single letter register names to variable names.
+
+Enhancements:
+  - Removed main() function.
+
+*/
+
+/*
+Devon Sookhoo
 September 8th, 2025
 Lab 3 Symbol Table
 Assignment Description: Refactor the code to made it readable and parameterize each helper function.

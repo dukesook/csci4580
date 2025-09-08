@@ -61,11 +61,12 @@ void yyerror (s)  /* Called by yyparse on error */
 %}
 /*  defines the start symbol, what values come back from LEX and how the operators are associated  */
 
-%start list
+%start P
 
 /* defines the expected tokens from Lex*/
 %token INTEGER
-%token  VARIABLE
+%token VARIABLE
+%token T_INT
 
 %left '|'					/* lowest precedence */
 %left '&'
@@ -77,6 +78,18 @@ void yyerror (s)  /* Called by yyparse on error */
 %%	/* end specs, begin rules */
 
 /* For each rule, precedence is determined by the last token */
+
+P : DECLS list
+	;
+
+DECLS : DECLS DECL 
+			| /* empty */
+			;
+
+DECL : T_INT VARIABLE ';' '\n'
+		 ;
+
+
 
 list	:	/* empty */
 	|	list stat '\n'
@@ -109,21 +122,30 @@ expr	:	'(' expr ')'
 			{ $$ = $1 & $3; }
 	|	expr '|' expr
 			{ $$ = $1 | $3; }
+	
 	/* Fixed unary minus by removing extra expr symbol */
 	|	'-' expr	%prec UMINUS
 			{ $$ = -$2; }
+	
 	|	VARIABLE { 
 				$$ = regs[$1]; 
 				/* Using debugsw variable to toggle debug statements*/
 				if (debugsw) 
 					fprintf(stderr,"found a variable value = %d\n",$1); /* Added whitespace to improve readability*/
 			}
+	
 	|	INTEGER {
 		$$=$1;
 			/* Using debugsw variable to toggle debug statements*/
 			if (debugsw)
 				fprintf(stderr,"found an integer\n");
 		}
+
+	/* | T_INT {
+		$$=$1;
+		if (debugsw)
+				fprintf(stderr,"found a type declaration\n");
+	} */
 	;
 
 /* $1 gets the value of yylval */
