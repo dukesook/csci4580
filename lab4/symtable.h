@@ -48,3 +48,6 @@ bool Search(char *symbol);
 
 // takes a symbol and returns its address in memory
 int FetchAddress(char * symbol);
+
+// Gets the node for a given symbol
+struct SymbTab* GetNode(char *symbol);

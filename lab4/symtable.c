@@ -131,6 +131,24 @@ void Delete(char *symbol) {
 
 int FetchAddress(char * symbol) {
   // This needs to look at the list and return the match address
-  return (1); // REMOVE!!!
+  struct SymbTab * node = GetNode(symbol);
+  if (node == NULL) {
+    printf("Error: Symbol '%s' not found in the symbol table.\n", symbol);
+    return (0); // Symbol not found
+  }
+  return (node->addr); // Return the address if found
 }
 
+struct SymbTab* GetNode(char *symbol) {
+  int i;
+  struct SymbTab *p;
+  p = first;
+
+  // Traverse the symbol table to find the node with the given symbol
+  for (i = 0; i < size; i++) {
+    if (strcmp(p->symbol, symbol) == 0)
+      return p; // Return the node if found
+    p = p->next;
+  } // end for loop
+  return NULL; // Return NULL if the symbol is not found
+} // end of GetNode()
