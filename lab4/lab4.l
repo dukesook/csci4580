@@ -25,6 +25,7 @@
 /* Turned off debugging statement */
 int mydebug=0;
 #include "y.tab.h"
+// [a-zA-Z][a-zA-Z0-9_]*
 %}
 
 
