@@ -49,7 +49,7 @@
 /* declare function prototype to resolve warning */
 int yylex(void);
 
-int regs[26];
+int regs[4]; // values[address] = value
 extern int line_num;
 int debugsw=0;
 
@@ -98,6 +98,14 @@ DECLS : DECLS DECL
 DECL : T_INT VARIABLE ';' '\n'
 		{
 			// Try to declare a variable
+			bool found = Search($2);
+			if (found) {
+				printf("The variable exists\n");
+			} else {
+				printf("The varible does NOT exist\n");
+				printf("Adding %s to the symbol table\n", $2);
+				Insert($2, 0);
+			}
 			// TODO: Check if variable ($2) is already defined.
 			// TODO: if not, check to make sure our symtable has enough room
 			// TODO: you should use a global varible that defines the size of the our memory, reg
