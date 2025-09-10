@@ -51,7 +51,7 @@ int yylex(void);
 
 int regs[26];
 extern int line_num;
-int base, debugsw=0;
+int debugsw=0;
 
 void yyerror (s)  /* Called by yyparse on error */
      char *s;
