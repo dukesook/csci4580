@@ -50,12 +50,13 @@
 int yylex(void);
 
 int regs[26];
+extern int line_num;
 int base, debugsw=0;
 
 void yyerror (s)  /* Called by yyparse on error */
      char *s;
 {
-  printf ("%s\n", s);
+  printf ("%s on line number %d\n", s, line_num);
 }
 
 
@@ -96,11 +97,13 @@ DECLS : DECLS DECL
 
 DECL : T_INT VARIABLE ';' '\n'
 		{
+			// Try to declare a variable
 			// TODO: Check if variable ($2) is already defined.
 			// TODO: if not, check to make sure our symtable has enough room
 			// TODO: you should use a global varible that defines the size of the our memory, reg
 			// TODO: you will have to maintain a global varible that tells you now many are defined
 			// TODO: if not there, and there is room, then add the symbol table and "allocate" it a slot in regs.
+			// TODO: increment the "oneup"?
 		}
 		 ;
 
@@ -118,6 +121,7 @@ stat	:	expr
 			{ fprintf(stderr,"the answer is %d \n", $1); }
 	|	VARIABLE '=' expr
 			{ // TODO: make sure that $1 has bee defined
+				// TODO: YACC musk fail if $1 is not defined, not LEX
 				regs[FetchAddress($1)] = $3; }
 	;
 
@@ -144,7 +148,7 @@ expr	:	'(' expr ')'
 			{ $$ = -$2; }
 	
 	|	VARIABLE { 
-				// TODO: Make sure that $1 has been defined
+				// TODO: Make sure that $1 has been defined. (else, throw an error);
 				$$ = regs[FetchAddress($1)]; 
 				/* Using debugsw variable to toggle debug statements*/
 				if (debugsw) 

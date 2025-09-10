@@ -24,6 +24,7 @@
 
 /* Turned off debugging statement */
 int mydebug=0;
+int line_num=1;
 #include "y.tab.h"
 // [a-zA-Z][a-zA-Z0-9_]*
 %}
@@ -41,6 +42,7 @@ int mydebug=0;
 [=\-+*/%&|();] 	{ if (mydebug) fprintf(stderr,"return a token %c\n",*yytext); 
                        return (*yytext);}
 \n 		{ if (mydebug) fprintf(stderr,"cariage return %c\n",*yytext); 
+                       line_num++;
                        return (*yytext);}
 
 %%
