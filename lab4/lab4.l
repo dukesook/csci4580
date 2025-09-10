@@ -38,7 +38,7 @@ int mydebug=0;
 [0-9][0-9]*	{if (mydebug) fprintf(stderr,"Digit found\n"); 
                        yylval.value=atoi((const char *)yytext); return(INTEGER);}
 [ \t]		{if (mydebug) fprintf(stderr,"Whitespace found\n");}
-[=\-+*/%&|()] 	{ if (mydebug) fprintf(stderr,"return a token %c\n",*yytext); 
+[=\-+*/%&|();] 	{ if (mydebug) fprintf(stderr,"return a token %c\n",*yytext); 
                        return (*yytext);}
 \n 		{ if (mydebug) fprintf(stderr,"cariage return %c\n",*yytext); 
                        return (*yytext);}
