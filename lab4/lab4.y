@@ -14,42 +14,20 @@
 
 %{
 
-/*
- *			**** CALC ****
- *
- * This routine will function like a desk calculator
- * There are 26 integer registers, named 'a' thru 'z'
- *
- */
-
-/* This calculator depends on a LEX description which outputs either VARIABLE or INTEGER.
-   The return type via yylval is integer 
-
-   When we need to make yylval more complicated, we need to define a pointer type for yylval 
-   and to instruct YACC to use a new type so that we can pass back better values
- 
-   The registers are based on 0, so we substract 'a' from each single letter we get.
-
-   based on context, we have YACC do the correct memmory look up or the storage depending
-   on position
-
-   Shaun Cooper
-    January 2015
-
-   problems  fix unary minus, fix parenthesis, add multiplication
-   problems  make it so that verbose is on and off with an input argument instead of compiled in
-*/
 
 
-	/* begin specs */
+/* begin specs */
 #include <stdio.h>
 #include <ctype.h>
 #include "symtable.h"
 
+#define MAX_VARIABLES 4
+#define ERROR -1
+
 /* declare function prototype to resolve warning */
 int yylex(void);
-
-int regs[4]; // values[address] = value
+int regs[MAX_VARIABLES]; // values[address] = value
+int variable_count = 0; // how variables many are defined
 extern int line_num;
 int debugsw=0;
 
@@ -98,20 +76,25 @@ DECLS : DECLS DECL
 DECL : T_INT VARIABLE ';' '\n'
 		{
 			// Try to declare a variable
+			
+			// Assert variable doesn't exist
 			bool found = Search($2);
 			if (found) {
-				printf("The variable exists\n");
-			} else {
-				printf("The varible does NOT exist\n");
-				printf("Adding %s to the symbol table\n", $2);
-				Insert($2, 0);
+				printf("Error! You can't declare a variable that already exists!\n");
+				return ERROR;
 			}
-			// TODO: Check if variable ($2) is already defined.
-			// TODO: if not, check to make sure our symtable has enough room
-			// TODO: you should use a global varible that defines the size of the our memory, reg
-			// TODO: you will have to maintain a global varible that tells you now many are defined
-			// TODO: if not there, and there is room, then add the symbol table and "allocate" it a slot in regs.
-			// TODO: increment the "oneup"?
+
+			// Assert room in symbol table
+			if (variable_count >= MAX_VARIABLES) {
+				printf("Error! No more room in the symbol table!\n");
+				return ERROR;
+			}
+			Insert($2, variable_count); // use variable_count as the address
+			variable_count++; // increment the count of defined variables
+			
+			printf("Added variable: %s\n", $2);
+			printf("\tThere are now %d variables defined\n", variable_count);
+			printf("\tMax number of variables is %d\n", MAX_VARIABLES);
 		}
 		 ;
 
