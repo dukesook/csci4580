@@ -95,6 +95,8 @@ DECL : T_INT VARIABLE ';' '\n'
 			printf("Added variable: %s\n", $2);
 			printf("\tThere are now %d variables defined\n", variable_count);
 			printf("\tMax number of variables is %d\n", MAX_VARIABLES);
+
+			Display();
 		}
 		 ;
 
@@ -108,7 +110,7 @@ list	:	/* empty */
 
 stat	:	expr
 			/* Added appropriate whitespace */
-			/* Fixed Typo: answer*/
+			/* Fixed Typo: answer */
 			{ fprintf(stderr,"the answer is %d \n", $1); }
 	|	VARIABLE '=' expr
 			{ // TODO: make sure that $1 has bee defined
@@ -169,3 +171,13 @@ expr	:	'(' expr ')'
 int main()
 { yyparse();
 }
+
+
+/*
+
+example input:
+int foo;
+int bar;
+
+
+*/
