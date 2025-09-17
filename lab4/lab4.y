@@ -1,7 +1,7 @@
 /*
     Devon Sookhoo
-    September 1st, 2025
-    Lab22
+    September 19th, 2025
+    Lab4
     Enhancements:
 			1. Fixed unary minus by removing extra expr symbol.
 			2. Added whitespace to final answer.
@@ -21,6 +21,7 @@
 #include <ctype.h>
 #include "symtable.h"
 
+// Use to manage the size of the symbol table
 #define MAX_VARIABLES 4
 #define ERROR -1
 
@@ -113,8 +114,15 @@ stat	:	expr
 			/* Fixed Typo: answer */
 			{ fprintf(stderr,"the answer is %d \n", $1); }
 	|	VARIABLE '=' expr
-			{ // TODO: make sure that $1 has bee defined
-				// TODO: YACC musk fail if $1 is not defined, not LEX
+			{
+				// make sure that VARIABLE has bee defined
+				bool found = Search($1);
+				if (!found) {
+					// YACC musk fail if VARIABLE is not defined, not LEX
+					printf("Error! You can't assign a value to an undefined variable!\n");
+					return ERROR;
+				}
+				/* assign value to variable */
 				regs[FetchAddress($1)] = $3; }
 	;
 
