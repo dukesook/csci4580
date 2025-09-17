@@ -149,7 +149,13 @@ expr	:	'(' expr ')'
 			{ $$ = -$2; }
 	
 	|	VARIABLE { 
-				// TODO: Make sure that $1 has been defined. (else, throw an error);
+				// TMake sure that $1 has been defined. (else, throw an error);
+				bool found = Search($1);
+				if (!found) {
+					// YACC musk fail if VARIABLE is not defined, not LEX
+					printf("Error! You can't use an undefined variable!\n");
+					return ERROR;
+				}
 				$$ = regs[FetchAddress($1)]; 
 				/* Using debugsw variable to toggle debug statements*/
 				if (debugsw) 
