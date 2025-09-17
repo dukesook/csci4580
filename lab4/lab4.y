@@ -95,9 +95,9 @@ DECL : T_INT VARIABLE ';' '\n'
 			
 			printf("Added variable: %s\n", $2);
 			printf("\tThere are now %d variables defined\n", variable_count);
-			printf("\tMax number of variables is %d\n", MAX_VARIABLES);
+			// printf("\tMax number of variables is %d\n", MAX_VARIABLES);
 
-			Display();
+			// Display();
 		}
 		 ;
 
