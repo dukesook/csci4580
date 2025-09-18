@@ -31,6 +31,9 @@ write   { return T_WRITE;}
 not     { return T_NOT;}
 true    { return T_TRUE;}
 false   { return T_FALSE;}
+if      { return T_IF;}
+then    { return T_THEN;}
+endif   { return T_ENDIF;}
 
 
 
