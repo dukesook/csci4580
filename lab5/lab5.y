@@ -1,15 +1,10 @@
 /*
     Devon Sookhoo
-    September 1st, 2025
-    Lab22
+    September 2nd, 2025
+    Lab 5 ALGO-C
     Enhancements:
-			1. Fixed unary minus by removing extra expr symbol.
-			2. Added whitespace to final answer.
-			3. Added multiplcation operator.
-			4. Specified int as the return value for main().
-			5. Declared the function prototype for yylex() to resolve warning.
-			6. Fixed Typo: answer
-			7. Use debugsw variable to toggle debug statements instead of always printing them.
+				1. 
+				2.
 */
 
 %{

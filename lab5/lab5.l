@@ -1,23 +1,11 @@
   /*
     Devon Sookhoo
-    September 1st, 2025
-    Lab22
+    September 2nd, 2025
+    Lab 5 ALGO-C
     Enhancements:
-      - The regex rule for symbols was missing the parentheses.
-      - Turned off debugging statement to reduce clutter in output.
+      - 
+      - 
   */
-
-
-
-     /*            Small LEX routine which returns two formal tokens (INTEGER and VARIABLE)
-                   along with single string elements like '+'.
- 
-                    This LEX definition is the companion to the docalc.y YACC routine which
-                   is a simple calculator
-
-                    Shaun Cooper
-                    January 2015
-     */
 
 
 %{
