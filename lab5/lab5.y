@@ -117,9 +117,8 @@ Statement_List: Statement Statement_List
               | /* empty */;
 
 /* Rule #13 */
-/* TODO add more statements! */
 Statement: Expression_Stmt
-				 /* | Compound_Stmt */
+				 | Compound_Stmt
 				 | Selection_Stmt
 				 | Iteration_Stmt
 				 | Assignment_Stmt
