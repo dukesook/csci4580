@@ -79,10 +79,10 @@ Var_Declaration: Type_Specifier Var_List ';';
 
 /* Rule 4a */
 Var_List: T_ID
-						{printf("found ID in Var_List -> T_ID %s %d\n", $1, line_num);}
+						{printf("found ID in Var_List: %s  Line: %d\n", $1, line_num);}
         | T_ID '[' T_NUM ']'
 				| T_ID ',' Var_List
-						{printf("found ID in Var_List -> T_ID %s %d\n", $1, line_num);}
+						{printf("found ID in Var_List: %s  Line: %d\n", $1, line_num);}
 				| T_ID '[' T_NUM ']' ',' Var_List;
 
 /* Rule #5 */
@@ -162,6 +162,7 @@ Variable: T_ID
 /* Rule #23 */
 Simple_Expression: Additive_Expression
                  | Additive_Expression Relop Additive_Expression;
+
 /* Rule #22 */
 Relop: T_LE
      | T_LT
