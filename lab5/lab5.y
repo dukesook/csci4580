@@ -163,7 +163,7 @@ Variable: T_ID
 /* Rule #23 */
 Simple_Expression: Additive_Expression
                  | Additive_Expression Relop Additive_Expression;
-
+/* Rule #22 */
 Relop: T_LE
      | T_LT
 		 | T_GT
@@ -171,20 +171,25 @@ Relop: T_LE
 		 | T_EQ
 		 | T_NE;
 
-Additive_Expression:  Additive_Expression Add_Op Term
-									 | Term;
+/* Rule #23 */
+Additive_Expression: Term
+                   | Additive_Expression Add_Op Term;
 
+/* Rule #24 */
 Add_Op: '+'
-		 | '-';
+		  | '-';
 
-Term: Term Multop Factor
-		| Factor;
+/* Rule #25 */
+Term: Factor
+		| Term Multop Factor;
 
+/* Rule #26 */
 Multop: '*'
 		 | '/'
 		 | T_AND
 		 | T_OR;
 
+/* Rule #27 */
 Factor: '(' Expression ')'
       | T_NUM
 			| Variable
