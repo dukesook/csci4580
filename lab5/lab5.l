@@ -29,15 +29,12 @@ return  { return T_RETURN;}
 write   { return T_WRITE;}
 read    { return T_READ;}
 "<="    { return T_LE;}
-\".*\"  { yylval.string=strdup(yytext); return(T_STRING); }"
+\".*\"  { yylval.string=strdup(yytext); return(T_STRING); }
 
-"int"    {if (mydebug) fprintf(stderr,"Type declaration found\n"); 
-                       return(T_INT);}
-void    { return T_VOID; }
 [a-zA-Z][a-zA-Z0-9_]*		{if (mydebug) fprintf(stderr,"Letter found\n"); 
-                       yylval.string=strdup(yytext); return(VARIABLE);}
+                       yylval.string=strdup(yytext); return(T_ID);}
 [0-9][0-9]*	{if (mydebug) fprintf(stderr,"Digit found\n"); 
-                       yylval.value=atoi((const char *)yytext); return(INTEGER);}
+                       yylval.value=atoi((const char *)yytext); return(T_NUM);}
 [ \t]		{if (mydebug) fprintf(stderr,"Whitespace found\n");}
 [=\-+*/%&|();,[\]] 	{ if (mydebug) fprintf(stderr,"return a token %c\n",*yytext); 
                        return (*yytext);}

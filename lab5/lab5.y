@@ -36,7 +36,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %}
 /*  defines the start symbol, what values come back from LEX and how the operators are associated  */
 
-%start P
+%start Program
 
 %union
 {
@@ -45,29 +45,46 @@ void yyerror (s)  /* Called by yyparse on error */
 }
 
 /* defines the expected tokens from Lex*/
-%type <value> expr
-%token <value> INTEGER
-%token <string> VARIABLE T_STRING
-%token T_INT T_BEGIN T_END T_VOID
+%token <value> T_NUM
+%token <string> T_ID
+%token T_INT T_VOID T_BOOLEAN
+%token T_WRITE T_READ T_RETURN T_GE T_LE
+%token T_BEGIN T_END
+%token T_STRING
 
 %left '|'					/* lowest precedence */
 %left '&'
 %left '+' '-'
 %left '*' '/' '%'
-%left UMINUS			/* highest precedence */
+//%left UMINUS			/* highest precedence */
 
 
 %%	/* end specs, begin rules */
 
-/* For each rule, precedence is determined by the last token */
 
-Program : DECLS list
-	;
+Program: Declaration_List;
 
+Declaration_List: Declaration 
+								| Declaration_List Declaration; /* WARNING */
 
+Declaration: Var_Declaration
+					 | Func_Declaration;
 
+Var_Declaration: Type_Specifier Var_List ';';
 
-/* $1 gets the value of yylval */
+Type_Specifier: T_INT
+							| T_VOID
+							| T_BOOLEAN;
+
+Var_List: T_ID
+        | T_ID '[' T_NUM ']'
+				| T_ID ',' Var_List
+				| T_ID '[' T_NUM ']' ',' Var_List;
+
+Func_Declaration: FOOBAR
+                ;
+
+FOOBAR: T_BEGIN T_END T_STRING T_WRITE T_READ T_RETURN T_GE T_LE;
 
 
 %%	/* end of rules, start of program */
