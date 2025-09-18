@@ -146,7 +146,8 @@ Return_Stmt: T_RETURN ';'
 Read_Stmt: T_READ Variable ';';
 
 /* Rule #19 */
-Write_Stmt: T_WRITE T_STRING ';'
+Write_Stmt: T_WRITE Expression ';'
+					| T_WRITE T_STRING ';'
 			        { printf("found a string in WRITE with value %s on line %d\n", $2, line_num); }
 
 /* Rule #20 */
