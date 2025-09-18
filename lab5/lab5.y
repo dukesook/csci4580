@@ -122,7 +122,7 @@ Statement: Expression_Stmt
 				 /* | Compound_Stmt */
 				 | Selection_Stmt
 				 | Iteration_Stmt
-				 /* | Assignment_Stmt */
+				 | Assignment_Stmt
 				 | Return_Stmt
          | Write_Stmt
          | Read_Stmt;
@@ -151,15 +151,16 @@ Write_Stmt: T_WRITE Expression ';'
 			        { printf("found a string in WRITE with value %s on line %d\n", $2, line_num); }
 
 /* Rule #20 */
+Assignment_Stmt: Variable '=' Simple_Expression ';';
 
 /* Rule #21 */
+Expression: Simple_Expression;
 
 /* Rule #22 */
 Variable: T_ID
         | T_ID '[' Expression ']';
 
-Expression: Simple_Expression;
-
+/* Rule #23 */
 Simple_Expression: Additive_Expression
                  | Additive_Expression Relop Additive_Expression;
 
