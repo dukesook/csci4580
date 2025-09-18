@@ -44,13 +44,14 @@ void yyerror (s)  /* Called by yyparse on error */
 	char* string;
 }
 
-/* defines the expected tokens from Lex*/
+/* The Expected Tokens From Lex */
 %token <value> T_NUM
-%token <string> T_ID
+%token <string> T_ID T_STRING
 %token T_INT T_VOID T_BOOLEAN
-%token T_WRITE T_READ T_RETURN T_GE T_LE
+%token T_WRITE T_READ T_RETURN
+%token T_GE T_LE
 %token T_BEGIN T_END
-%token T_STRING
+
 
 %left '|'					/* lowest precedence */
 %left '&'
@@ -64,7 +65,7 @@ void yyerror (s)  /* Called by yyparse on error */
 
 Program: Declaration_List;
 
-Declaration_List: Declaration 
+Declaration_List: Declaration
 								| Declaration_List Declaration; /* WARNING */
 
 Declaration: Var_Declaration
@@ -83,12 +84,29 @@ Var_List: T_ID
 						{printf("found ID in Var_List -> T_ID %s %d\n", $1, line_num);}
 				| T_ID '[' T_NUM ']' ',' Var_List;
 
-Func_Declaration: 
-							  |
-                | FOOBAR
-                ;
+Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt;
 
-FOOBAR: T_BEGIN T_END T_STRING T_WRITE T_READ T_RETURN T_GE T_LE;
+Params: T_VOID
+      | Param_List;
+
+Param_List: Param
+				  | Param ',' Param_List;
+
+Param: Type_Specifier T_ID
+			| Type_Specifier T_ID '[' ']';
+
+Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END
+
+Local_Declarations: Var_Declaration Local_Declarations
+                  |  /* empty */;
+
+Statement_List: Statement Statement_List
+              | /* empty */;
+
+Statement: Write_Stmt;
+
+
+Write_Stmt: T_WRITE T_STRING ';'
 
 
 %%	/* end of rules, start of program */
