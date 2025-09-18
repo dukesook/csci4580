@@ -51,7 +51,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %token T_WRITE T_READ T_RETURN
 %token T_TRUE T_FALSE T_NOT T_AND T_OR
 %token T_GE T_LE T_NE T_EQ T_LT T_GT
-%token T_BEGIN T_END T_IF T_THEN T_ENDIF T_WHILE T_DO
+%token T_BEGIN T_END T_IF T_THEN T_ENDIF T_WHILE T_DO T_ELSE
 
 
 %left '|'					/* lowest precedence */
@@ -133,6 +133,7 @@ Expression_Stmt: Expression ';'
 
 /* Rule #15 */
 Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF
+              | T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF;
 
 /* Rule #16 */
 Iteration_Stmt: T_WHILE Expression T_DO Statement
