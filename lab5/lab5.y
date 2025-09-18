@@ -123,7 +123,7 @@ Statement: Expression_Stmt
 				 | Selection_Stmt
 				 | Iteration_Stmt
 				 /* | Assignment_Stmt */
-				 /* | Return_Stmt */
+				 | Return_Stmt
          | Write_Stmt
          | Read_Stmt;
 
@@ -139,6 +139,8 @@ Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF
 Iteration_Stmt: T_WHILE Expression T_DO Statement
 
 /* Rule #17 */
+Return_Stmt: T_RETURN ';'
+					 | T_RETURN Expression ';';
 
 /* Rule #18 */
 Read_Stmt: T_READ Variable ';';

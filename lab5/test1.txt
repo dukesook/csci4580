@@ -11,4 +11,6 @@ begin
   write "I love Compilers";
   write "not so much";
   read foo [4+5<6];
+  return;
+  return 4+4;
 end
