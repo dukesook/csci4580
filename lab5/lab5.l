@@ -14,7 +14,7 @@
 int mydebug=0;
 int line_num=1;
 #include "y.tab.h"
-// [a-zA-Z][a-zA-Z0-9_]*
+
 %}
 
 

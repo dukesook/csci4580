@@ -77,11 +77,15 @@ Type_Specifier: T_INT
 							| T_BOOLEAN;
 
 Var_List: T_ID
+						{printf("found ID in Var_List -> T_ID %s %d\n", $1, line_num);}
         | T_ID '[' T_NUM ']'
 				| T_ID ',' Var_List
+						{printf("found ID in Var_List -> T_ID %s %d\n", $1, line_num);}
 				| T_ID '[' T_NUM ']' ',' Var_List;
 
-Func_Declaration: FOOBAR
+Func_Declaration: 
+							  |
+                | FOOBAR
                 ;
 
 FOOBAR: T_BEGIN T_END T_STRING T_WRITE T_READ T_RETURN T_GE T_LE;
