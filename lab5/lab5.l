@@ -34,6 +34,8 @@ false   { return T_FALSE;}
 if      { return T_IF;}
 then    { return T_THEN;}
 endif   { return T_ENDIF;}
+while   { return T_WHILE;}
+do      { return T_DO;}
 
 
 
