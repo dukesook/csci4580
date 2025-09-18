@@ -1,0 +1,14 @@
+
+
+int v;
+int f[100];
+
+int foo ( void) begin end
+
+void bar (int bar, void foo[])
+begin
+  int bar;
+  write "I love Compilers";
+  write "not so much";
+  read foo;
+end

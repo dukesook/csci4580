@@ -49,7 +49,8 @@ void yyerror (s)  /* Called by yyparse on error */
 %token <string> T_ID T_STRING
 %token T_INT T_VOID T_BOOLEAN
 %token T_WRITE T_READ T_RETURN
-%token T_GE T_LE
+%token T_TRUE T_FALSE T_NOT T_AND T_OR
+%token T_GE T_LE T_NE T_EQ T_LT T_GT
 %token T_BEGIN T_END
 
 
@@ -103,11 +104,51 @@ Local_Declarations: Var_Declaration Local_Declarations
 Statement_List: Statement Statement_List
               | /* empty */;
 
-Statement: Write_Stmt;
+Statement: Write_Stmt
+         | Read_Stmt;
 
 
 Write_Stmt: T_WRITE T_STRING ';'
+			        { printf("found a string in WRITE with value %s on line %d\n", $2, line_num); }
 
+Read_Stmt: T_READ Variable ';';
+
+Variable: T_ID
+        | T_ID '[' Expr ']';
+
+Expr: Simple_Expression;
+
+Simple_Expression: Additive_Expression
+                 | Additive_Expression Relop Additive_Expression;
+
+Relop: T_LE
+     | T_LT
+		 | T_GT
+		 | T_GE
+		 | T_EQ
+		 | T_NE;
+
+Additive_Expression:  Additive_Expression Add_Op Term
+									 | Term;
+
+Add_Op: '+'
+		 | '-';
+
+Term: Term Multop Factor
+		| Factor;
+
+Multop: '*'
+		 | '/'
+		 | T_AND
+		 | T_OR;
+
+Factor: '(' Expr ')'
+      | T_NUM
+			| Variable
+			/* | TODO call */
+			| T_TRUE
+			| T_FALSE
+			| T_NOT Factor;
 
 %%	/* end of rules, start of program */
 

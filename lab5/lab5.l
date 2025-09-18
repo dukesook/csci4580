@@ -26,8 +26,14 @@ end     { return T_END;}
 void    { return T_VOID;}
 boolean { return T_BOOLEAN;}
 return  { return T_RETURN;}
-write   { return T_WRITE;}
 read    { return T_READ;}
+write   { return T_WRITE;}
+not     { return T_NOT;}
+true    { return T_TRUE;}
+false   { return T_FALSE;}
+
+
+
 "<="    { return T_LE;}
 \".*\"  { yylval.string=strdup(yytext); return(T_STRING); }
 
