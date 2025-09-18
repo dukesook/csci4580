@@ -35,6 +35,12 @@ false   { return T_FALSE;}
 
 
 "<="    { return T_LE;}
+"<"     { return T_LT;}
+">="    { return T_GE;}
+">"     { return T_GT;}
+"=="    { return T_EQ;}
+"!="    { return T_NE;}
+
 \".*\"  { yylval.string=strdup(yytext); return(T_STRING); }
 
 [a-zA-Z][a-zA-Z0-9_]*		{if (mydebug) fprintf(stderr,"Letter found\n"); 
