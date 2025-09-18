@@ -193,12 +193,21 @@ Multop: '*'
 Factor: '(' Expression ')'
       | T_NUM
 			| Variable
-			/* | TODO call */
+			| Call
 			| T_TRUE
 			| T_FALSE
 			| T_NOT Factor;
 
+/* Rule #28 */
+Call: T_ID '(' Args ')';
 
+/* Rule #29 */
+Args: Arg_List
+    | /* empty */;
+
+/* Rule #30 */
+Arg_List: Expression
+				| Expression ',' Expression;
 
 
 %%	/* end of rules, start of program */
