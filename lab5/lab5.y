@@ -4,7 +4,9 @@
     Lab 5 ALGO-C
     Enhancements:
 				1. Caught error in rule #3, #4, & #11 var-declaration(s)
-				2.
+				2. Added Function Prototypes
+				3. Print every T_ID
+				4. Print every string for write
 */
 
 %{
@@ -91,7 +93,9 @@ Declaration_List: Declaration
 
 /* Rule #3 */
 Declaration: Var_Declaration
-					 | Func_Declaration;
+					 | Func_Declaration
+					 | Func_Prototype;
+
 
 /* Rule #4 */
 Var_Declaration: Type_Specifier Var_List ';';
@@ -227,6 +231,7 @@ Args: Arg_List
 Arg_List: Expression
 				| Expression ',' Arg_List;
 
+Func_Prototype: Type_Specifier T_ID '(' Params ')' ';';
 
 %%	/* end of rules, start of program */
 
