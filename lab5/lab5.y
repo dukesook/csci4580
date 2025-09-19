@@ -181,13 +181,13 @@ Add_Op: '+'
 
 /* Rule #25 */
 Term: Factor
-		| Term Multop Factor;
+		| Term Mult_Op Factor;
 
 /* Rule #26 */
-Multop: '*'
-		 | '/'
-		 | T_AND
-		 | T_OR;
+Mult_Op: '*'
+		   | '/'
+		   | T_AND
+		   | T_OR;
 
 /* Rule #27 */
 Factor: '(' Expression ')'
@@ -204,12 +204,13 @@ Call: T_ID '(' Args ')'
 	{ printf("Rule #28: %s\n", $1); };
 
 /* Rule #29 */
-Args: Arg_List
+Args: Arg_List {printf("rule #29a\n");}
     | /* empty */;
 
 /* Rule #30 */
-Arg_List: Expression
-				| Expression ',' Expression;
+Arg_List: Expression {printf("rule #30a\n");}
+				| Expression ',' Expression {printf("rule #30b\n");}
+				;
 
 
 %%	/* end of rules, start of program */

@@ -15,66 +15,68 @@ int mydebug=1;
 int line_num=1;
 #include "y.tab.h"
 
+void debug() {
+  if (mydebug) {
+    fprintf(stderr, "Lex: %s\n", yytext); 
+  }
+}
+
 %}
 
 
 %%
 
-int     { return T_INT;}
-begin   { return T_BEGIN;}
-end     { return T_END;}
-void    { return T_VOID;}
-boolean { return T_BOOLEAN;}
-return  { return T_RETURN;}
-read    { return T_READ;}
-write   { return T_WRITE;}
-not     { return T_NOT;}
-true    { return T_TRUE;}
-false   { return T_FALSE;}
-if      { return T_IF;}
-then    { return T_THEN;}
-endif   { return T_ENDIF;}
-while   { return T_WHILE;}
-do      { return T_DO;}
-else    { return T_ELSE;}
-"<="    { return T_LE;}
-"<"     { return T_LT;}
-">="    { return T_GE;}
-">"     { return T_GT;}
-"=="    { return T_EQ;}
-"!="    { return T_NE;}
-\".*\"  { yylval.string=strdup(yytext); return(T_STRING); }
+int     { debug(); return T_INT;}
+begin   { debug(); return T_BEGIN;}
+end     { debug(); return T_END;}
+void    { debug(); return T_VOID;}
+boolean { debug(); return T_BOOLEAN;}
+return  { debug(); return T_RETURN;}
+read    { debug(); return T_READ;}
+write   { debug(); return T_WRITE;}
+not     { debug(); return T_NOT;}
+true    { debug(); return T_TRUE;}
+false   { debug(); return T_FALSE;}
+if      { debug(); return T_IF;}
+then    { debug(); return T_THEN;}
+endif   { debug(); return T_ENDIF;}
+while   { debug(); return T_WHILE;}
+do      { debug(); return T_DO;}
+else    { debug(); return T_ELSE;}
+"<="    { debug(); return T_LE;}
+"<"     { debug(); return T_LT;}
+">="    { debug(); return T_GE;}
+">"     { debug(); return T_GT;}
+"=="    { debug(); return T_EQ;}
+"!="    { debug(); return T_NE;}
+\".*\"  { debug(); yylval.string=strdup(yytext); return(T_STRING); }
 
 [a-zA-Z][a-zA-Z0-9_]* {
-  if (mydebug) {
-    fprintf(stderr,"id found: %s\n", yytext); 
-  }
-  yylval.string=strdup(yytext); return(T_ID);
+  debug();
+  yylval.string=strdup(yytext);
+  return(T_ID);
 }
 
 [0-9][0-9]* {
-  if (mydebug) {
-    fprintf(stderr,"Digit found\n"); 
-  }
-  yylval.value=atoi((const char *)yytext); return(T_NUM);
+  debug();
+  yylval.value=atoi((const char *)yytext);
+  return(T_NUM);
 }
 
 [ \t] {
   if (mydebug) {
-    fprintf(stderr,"Whitespace found\n");
+    // fprintf(stderr, "Whitespace found\n");
   }
 }
 
 [=\-+*/%&|();,[\]] 	{
-  if (mydebug) {
-    fprintf(stderr,"return a token %c\n",*yytext); 
-  }
+  debug();
   return (*yytext);
 }
 
 \n  {
   if (mydebug) {
-    fprintf(stderr,"cariage return %c\n",*yytext); 
+    // fprintf(stderr, "New Line return %c\n",*yytext); 
   }
   line_num++;
   //  return (*yytext); // don't return new line
