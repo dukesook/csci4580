@@ -3,7 +3,7 @@
     September 2nd, 2025
     Lab 5 ALGO-C
     Enhancements:
-				1. 
+				1. Caught error in rule #3, #4, & #11 var-declaration(s)
 				2.
 */
 
@@ -79,10 +79,11 @@ Var_Declaration: Type_Specifier Var_List ';';
 
 /* Rule 4a */
 Var_List: T_ID
-						{printf("found ID in Var_List: %s  Line: %d\n", $1, line_num);}
+						{ printf("YACC %d: rule #4a-1: %s\n", line_num, $1); }
         | T_ID '[' T_NUM ']'
+						{ printf("YACC %d: rule #4a-2: %s[%d]\n", line_num, $1, $3); }
 				| T_ID ',' Var_List
-						{printf("found ID in Var_List: %s  Line: %d\n", $1, line_num);}
+						{ printf("YACC %d: rule #4a-3: %s\n", line_num, $1); }
 				| T_ID '[' T_NUM ']' ',' Var_List;
 
 /* Rule #5 */
@@ -91,7 +92,8 @@ Type_Specifier: T_INT
 							| T_BOOLEAN;
 
 /* Rule #6 */
-Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt;
+Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
+	{printf("YACC %d: rule #6: %s\n", line_num, $2); };
 
 /* Rule #7 */
 Params: T_VOID
@@ -117,8 +119,8 @@ Statement_List: Statement Statement_List
               | /* empty */;
 
 /* Rule #13 */
-Statement: Expression_Stmt
-				 | Compound_Stmt
+Statement: Expression_Stmt {printf("rule #13 - Expression_Statmement\n");}
+				 | Compound_Stmt		
 				 | Selection_Stmt
 				 | Iteration_Stmt
 				 | Assignment_Stmt
@@ -156,7 +158,7 @@ Assignment_Stmt: Variable '=' Simple_Expression ';';
 Expression: Simple_Expression;
 
 /* Rule #22 */
-Variable: T_ID
+Variable: T_ID {printf("rule #22\n");}
         | T_ID '[' Expression ']';
 
 /* Rule #23 */
@@ -200,7 +202,6 @@ Factor: '(' Expression ')'
 
 /* Rule #28 */
 Call: T_ID '(' Args ')'
-	/* { printf("Rule #28: %s %s %s %s\n", $1, $2, $3, $4); }; */
 	{ printf("Rule #28: %s\n", $1); };
 
 /* Rule #29 */

@@ -11,7 +11,7 @@
 %{
 
 /* Turned off debugging statement */
-int mydebug=1;
+int mydebug=0;
 int line_num=1;
 #include "y.tab.h"
 
@@ -43,6 +43,8 @@ endif   { debug(); return T_ENDIF;}
 while   { debug(); return T_WHILE;}
 do      { debug(); return T_DO;}
 else    { debug(); return T_ELSE;}
+and     { debug(); return T_AND;}
+or      { debug(); return T_OR;}
 "<="    { debug(); return T_LE;}
 "<"     { debug(); return T_LT;}
 ">="    { debug(); return T_GE;}
