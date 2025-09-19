@@ -26,33 +26,35 @@ void debug() {
 
 %%
 
-int     { debug(); return T_INT;}
-begin   { debug(); return T_BEGIN;}
-end     { debug(); return T_END;}
-void    { debug(); return T_VOID;}
-boolean { debug(); return T_BOOLEAN;}
-return  { debug(); return T_RETURN;}
-read    { debug(); return T_READ;}
-write   { debug(); return T_WRITE;}
-not     { debug(); return T_NOT;}
-true    { debug(); return T_TRUE;}
-false   { debug(); return T_FALSE;}
-if      { debug(); return T_IF;}
-then    { debug(); return T_THEN;}
-endif   { debug(); return T_ENDIF;}
-while   { debug(); return T_WHILE;}
-do      { debug(); return T_DO;}
-else    { debug(); return T_ELSE;}
-and     { debug(); return T_AND;}
-or      { debug(); return T_OR;}
-"<="    { debug(); return T_LE;}
-"<"     { debug(); return T_LT;}
-">="    { debug(); return T_GE;}
-">"     { debug(); return T_GT;}
-"=="    { debug(); return T_EQ;}
-"!="    { debug(); return T_NE;}
-\/\/.*  { debug(); /*comment found */ }
-\".*\"  { debug(); yylval.string=strdup(yytext); return(T_STRING); }
+int      { debug(); return T_INT;}
+begin    { debug(); return T_BEGIN;}
+end      { debug(); return T_END;}
+void     { debug(); return T_VOID;}
+boolean  { debug(); return T_BOOLEAN;}
+return   { debug(); return T_RETURN;}
+read     { debug(); return T_READ;}
+write    { debug(); return T_WRITE;}
+not      { debug(); return T_NOT;}
+true     { debug(); return T_TRUE;}
+false    { debug(); return T_FALSE;}
+if       { debug(); return T_IF;}
+then     { debug(); return T_THEN;}
+endif    { debug(); return T_ENDIF;}
+while    { debug(); return T_WHILE;}
+do       { debug(); return T_DO;}
+else     { debug(); return T_ELSE;}
+and      { debug(); return T_AND;}
+or       { debug(); return T_OR;}
+continue { debug(); return T_CONTINUE;}
+break    { debug(); return T_BREAK;}
+"<="     { debug(); return T_LE;}
+"<"      { debug(); return T_LT;}
+">="     { debug(); return T_GE;}
+">"      { debug(); return T_GT;}
+"=="     { debug(); return T_EQ;}
+"!="     { debug(); return T_NE;}
+\/\/.*   { debug(); /*comment found */ }
+\".*\"   { debug(); yylval.string=strdup(yytext); return(T_STRING); }
 
 [a-zA-Z][a-zA-Z0-9_]* {
   debug();
