@@ -146,7 +146,9 @@ Statement: Expression_Stmt
 				 | Assignment_Stmt
 				 | Return_Stmt
          | Write_Stmt
-         | Read_Stmt;
+         | Read_Stmt
+				 | Continue_Stmt
+				 | Break_Stmt;
 
 /* Rule #14 */
 Expression_Stmt: Expression ';'
@@ -232,6 +234,10 @@ Arg_List: Expression
 				| Expression ',' Arg_List;
 
 Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' {log_id("Func_Prototype", $2);};
+
+Continue_Stmt: T_CONTINUE ';' { log_token("Continue_Stmt", "T_CONTINUE", "continue"); } ;
+
+Break_Stmt: T_BREAK ';' { log_token("Break_Stmt", "T_BREAK", "break"); } ;
 
 %%	/* end of rules, start of program */
 
