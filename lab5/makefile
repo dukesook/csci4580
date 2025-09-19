@@ -16,4 +16,5 @@ lab5: lab5.y lab5.l symtable.c symtable.h
 	gcc $(CFLAGS) -o lab5 lex.yy.c y.tab.c symtable.c
 
 clean:
-	rm -f lab5
+	rm -f lab5 y.tab.c y.tab.h
+	rm -rf tests_output/

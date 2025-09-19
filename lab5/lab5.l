@@ -3,8 +3,13 @@
     September 2nd, 2025
     Lab 5 ALGO-C
     Enhancements:
-      - 
-      - 
+      - Added keywords for "continue" and "break"
+      - Added all other keywords from the ALGO-C language spec
+      - Added relational operators: <=, <, >=, >, ==, !=
+      - Added support for string literals
+      - Added helper functions to log tokens, identifiers, and numbers
+      - Added error handling function
+      - Added rule for function prototypes
   */
 
 

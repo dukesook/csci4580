@@ -7,6 +7,11 @@
 				2. Added Function Prototypes
 				3. Print every T_ID
 				4. Print every string for write
+				5. Made additive_expression, simple_expression and term LEFT RECURSIVE
+				6. Update yyerror() such that it prints the error along with the global line number;
+				7. All tokens coming from LEX shall be upper case and start with "T_" 
+				8. Added Continue and Break statements
+				9. All non-terminals will be Camel Case
 */
 
 %{
@@ -28,24 +33,29 @@ int variable_count = 0; // how variables many are defined
 extern int line_num;
 int debugsw=0;
 
+// Helper Function to log strings
 void log_string(char* rule, char* t_string) {
 	printf("Rule %s: \t line: %d \t T_STRING: %s\n", rule, line_num, t_string);
 }
 
+// Helper Function to log tokens
 void log_token(char* rule, char* type, char* token) {
 	printf("Rule %s: \t line: %d \t %s: %s\n", rule, line_num, type, token);
 }
 
+// Helper Function to log identifiers
 void log_id(char* rule_number, char* t_id) {
 	// printf("Rule %s: \t line: %d \t T_ID: %s\n", rule_number, line_num, t_id);
 	// printf("calling log_token:\n");
 	log_token(rule_number, "T_ID", t_id);
 }
 
+// Helper Function to log numbers
 void log_t_num(char* rule_number, int t_num) {
 	printf("Rule %s: \t line: %d \t T_NUM: %d\n", rule_number, line_num, t_num);
 }
 
+// Error Handling Function
 void yyerror (s)  /* Called by yyparse on error */
      char *s;
 {
@@ -233,15 +243,18 @@ Args: Arg_List
 Arg_List: Expression
 				| Expression ',' Arg_List;
 
+/* Graduate Student Required Rule */
 Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' {log_id("Func_Prototype", $2);};
 
+/* Graduate Student Required Rule */
 Continue_Stmt: T_CONTINUE ';' { log_token("Continue_Stmt", "T_CONTINUE", "continue"); } ;
 
+/* Graduate Student Required Rule */
 Break_Stmt: T_BREAK ';' { log_token("Break_Stmt", "T_BREAK", "break"); } ;
 
 %%	/* end of rules, start of program */
 
-/* Specify Return value*/
+/* The main function which calls yyparse() */
 int main() { 
 	yyparse();
 }
