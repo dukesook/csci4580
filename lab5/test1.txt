@@ -1,32 +1,41 @@
-int x;
-void x;
-boolean x;
+int A[100], z, y;
+boolean A[100], z, y;
+void  y;
+int main(void)
+begin int x[100];
+   x=10;
+  while  i <= 10  do
+    begin  x=i;
+       i[x+4 <= 10 ]=i+1;
+       i = x and y or  z;
+    end
+   foo(a,b, c[4], d);
+   if a and b then
+       x = 1;
+   else
+       z = 10;
+   endif
 
-int x[99];
-int x, y;
-int rule4[17], rule4_2[92];
-
-int func_declaration (void) begin
+   if a and b then
+       x = 1;
+   endif
 
 end
+// this is comment
 
-int func_declaration (void) begin
-    int x;
-    void x;
-    boolean x;
+boolean A[100], z, y;
+void  y;
+void foo(int A, int B)
+begin
 
-    int x[99];
-    int x, y;
-    int rule4[17], rule4_2[92];
-
-    42;
-    10 < 5;
-    11 <= 2;
-    11 >= 2;
-    11 > 2;
-    11 == 2;
-    11 == 2 + 3;
-    2 * 2 == 2 + 3;
-    2 and 2 == 2 or 3;
-    i = x and y or  z;
+   write "hello";
+   write 1<2;
+   write 1<=2;
+   write 1>2;
+   write 1>=2;
+   write 1==2;
+   write 1!=2;
+   write not 2;
+  read X;
+  read X[3+4<5];
 end

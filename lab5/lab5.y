@@ -96,12 +96,12 @@ Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
 	{printf("YACC %d: rule #6: %s\n", line_num, $2); };
 
 /* Rule #7 */
-Params: T_VOID
-      | Param_List;
+Params: T_VOID {printf("rule #7a\n");}
+      | Param_List {printf("rule #7b\n");};
 
 /* Rule #8 */
-Param_List: Param
-				  | Param ',' Param_List;
+Param_List: Param {printf("rule #8a\n");}
+				  | Param ',' Param_List {printf("rule #8b\n");};
 
 /* Rule #9 */
 Param: Type_Specifier T_ID
@@ -210,7 +210,7 @@ Args: Arg_List {printf("rule #29a\n");}
 
 /* Rule #30 */
 Arg_List: Expression {printf("rule #30a\n");}
-				| Expression ',' Expression {printf("rule #30b\n");}
+				| Expression ',' Arg_List {printf("rule #30b\n");}
 				;
 
 
