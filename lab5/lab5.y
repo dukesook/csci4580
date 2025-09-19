@@ -184,7 +184,7 @@ Variable: T_ID 										  { log_id("22", $1);}
 
 /* Rule #23 */
 Simple_Expression: Additive_Expression
-                 | Additive_Expression Relop Additive_Expression;
+                 | Simple_Expression Relop Additive_Expression;
 
 /* Rule #22 */
 Relop: T_LE
