@@ -68,7 +68,7 @@ Program: Declaration_List;
 
 /* Rule #2 */
 Declaration_List: Declaration
-								| Declaration_List Declaration; /* WARNING */
+								| Declaration_List Declaration;
 
 /* Rule #3 */
 Declaration: Var_Declaration
@@ -106,7 +106,7 @@ Param: Type_Specifier T_ID
 			| Type_Specifier T_ID '[' ']';
 
 /* Rule #10 */
-Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END
+Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END;
 
 /* Rule #11 */
 Local_Declarations: Var_Declaration Local_Declarations
@@ -135,7 +135,7 @@ Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF
               | T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF;
 
 /* Rule #16 */
-Iteration_Stmt: T_WHILE Expression T_DO Statement
+Iteration_Stmt: T_WHILE Expression T_DO Statement;
 
 /* Rule #17 */
 Return_Stmt: T_RETURN ';'
@@ -147,7 +147,7 @@ Read_Stmt: T_READ Variable ';';
 /* Rule #19 */
 Write_Stmt: T_WRITE Expression ';'
 					| T_WRITE T_STRING ';'
-			        { printf("found a string in WRITE with value %s on line %d\n", $2, line_num); }
+			        { printf("found a string in WRITE with value %s on line %d\n", $2, line_num); } ;
 
 /* Rule #20 */
 Assignment_Stmt: Variable '=' Simple_Expression ';';
@@ -199,7 +199,9 @@ Factor: '(' Expression ')'
 			| T_NOT Factor;
 
 /* Rule #28 */
-Call: T_ID '(' Args ')';
+Call: T_ID '(' Args ')'
+	/* { printf("Rule #28: %s %s %s %s\n", $1, $2, $3, $4); }; */
+	{ printf("Rule #28: %s\n", $1); };
 
 /* Rule #29 */
 Args: Arg_List
@@ -213,16 +215,7 @@ Arg_List: Expression
 %%	/* end of rules, start of program */
 
 /* Specify Return value*/
-int main()
-{ yyparse();
+int main() { 
+	yyparse();
 }
 
-
-/*
-
-example input:
-int foo;
-int bar;
-
-
-*/
