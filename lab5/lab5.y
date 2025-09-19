@@ -32,6 +32,10 @@ void ybug(int rule_number) {
 	}
 }
 
+void log_id(char* rule_number, char* t_id) {
+	printf("Rule %s: \t line: %d \t T_ID: %s\n", rule_number, line_num, t_id);
+}
+
 void yyerror (s)  /* Called by yyparse on error */
      char *s;
 {
@@ -85,13 +89,10 @@ Declaration: Var_Declaration
 Var_Declaration: Type_Specifier Var_List ';';
 
 /* Rule 4a */
-Var_List: T_ID
-						{ ybug(4); }
-        | T_ID '[' T_NUM ']'
-						{ ybug(4); }
-				| T_ID ',' Var_List
-						{ ybug(4); }
-				| T_ID '[' T_NUM ']' ',' Var_List;
+Var_List: T_ID 															{ log_id("4a", $1); }
+        | T_ID '[' T_NUM ']'								{ log_id("4a", $1); }
+				| T_ID ',' Var_List									{ log_id("4a", $1); }
+				| T_ID '[' T_NUM ']' ',' Var_List		{ log_id("4a", $1); };
 
 /* Rule #5 */
 Type_Specifier: T_INT
@@ -100,7 +101,7 @@ Type_Specifier: T_INT
 
 /* Rule #6 */
 Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
-	{ ybug(6); };
+	{ log_id("6", $2); };
 
 /* Rule #7 */
 Params: T_VOID { ybug(7); }
@@ -111,8 +112,8 @@ Param_List: Param { ybug(8);}
 				  | Param ',' Param_List { ybug(8);};
 
 /* Rule #9 */
-Param: Type_Specifier T_ID
-			| Type_Specifier T_ID '[' ']';
+Param: Type_Specifier T_ID 						{ log_id("9", $2); }
+			| Type_Specifier T_ID '[' ']' 	{ log_id("9", $2); };
 
 /* Rule #10 */
 Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END;
@@ -126,7 +127,7 @@ Statement_List: Statement Statement_List
               | /* empty */;
 
 /* Rule #13 */
-Statement: Expression_Stmt {printf("rule #13 - Expression_Statmement\n");}
+Statement: Expression_Stmt
 				 | Compound_Stmt		
 				 | Selection_Stmt
 				 | Iteration_Stmt
@@ -155,8 +156,7 @@ Read_Stmt: T_READ Variable ';';
 
 /* Rule #19 */
 Write_Stmt: T_WRITE Expression ';'
-					| T_WRITE T_STRING ';'
-			        { printf("found a string in WRITE with value %s on line %d\n", $2, line_num); } ;
+					| T_WRITE T_STRING ';';
 
 /* Rule #20 */
 Assignment_Stmt: Variable '=' Simple_Expression ';';
@@ -165,8 +165,8 @@ Assignment_Stmt: Variable '=' Simple_Expression ';';
 Expression: Simple_Expression;
 
 /* Rule #22 */
-Variable: T_ID { ybug(22);}
-        | T_ID '[' Expression ']';
+Variable: T_ID 										 { log_id("22", $1);}
+        | T_ID '[' Expression ']' { log_id("22", $1);}
 
 /* Rule #23 */
 Simple_Expression: Additive_Expression
@@ -208,17 +208,16 @@ Factor: '(' Expression ')'
 			| T_NOT Factor;
 
 /* Rule #28 */
-Call: T_ID '(' Args ')'
-	{ printf("Rule #28: %s\n", $1); };
+Call: T_ID '(' Args ')' 
+			{ log_id("28", $1); };
 
 /* Rule #29 */
-Args: Arg_List {printf("rule #29a\n");}
+Args: Arg_List
     | /* empty */;
 
 /* Rule #30 */
-Arg_List: Expression { ybug(30);}
-				| Expression ',' Arg_List { ybug(30); }
-				;
+Arg_List: Expression
+				| Expression ',' Arg_List;
 
 
 %%	/* end of rules, start of program */
