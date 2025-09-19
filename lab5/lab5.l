@@ -51,6 +51,7 @@ or      { debug(); return T_OR;}
 ">"     { debug(); return T_GT;}
 "=="    { debug(); return T_EQ;}
 "!="    { debug(); return T_NE;}
+\/\/.*  { debug(); /*comment found */ }
 \".*\"  { debug(); yylval.string=strdup(yytext); return(T_STRING); }
 
 [a-zA-Z][a-zA-Z0-9_]* {

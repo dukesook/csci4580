@@ -26,6 +26,12 @@ int variable_count = 0; // how variables many are defined
 extern int line_num;
 int debugsw=0;
 
+void ybug(int rule_number) {
+	if (debugsw) {
+		printf("YACC %d: rule #%d\n", line_num, rule_number);
+	}
+}
+
 void yyerror (s)  /* Called by yyparse on error */
      char *s;
 {
@@ -64,7 +70,8 @@ void yyerror (s)  /* Called by yyparse on error */
 %%	/* end specs, begin rules */
 
 /* Rule #1 */
-Program: Declaration_List;
+Program: Declaration_List
+			{ printf("============= Successful Parse! =============\n"); };
 
 /* Rule #2 */
 Declaration_List: Declaration
@@ -79,11 +86,11 @@ Var_Declaration: Type_Specifier Var_List ';';
 
 /* Rule 4a */
 Var_List: T_ID
-						{ printf("YACC %d: rule #4a-1: %s\n", line_num, $1); }
+						{ ybug(4); }
         | T_ID '[' T_NUM ']'
-						{ printf("YACC %d: rule #4a-2: %s[%d]\n", line_num, $1, $3); }
+						{ ybug(4); }
 				| T_ID ',' Var_List
-						{ printf("YACC %d: rule #4a-3: %s\n", line_num, $1); }
+						{ ybug(4); }
 				| T_ID '[' T_NUM ']' ',' Var_List;
 
 /* Rule #5 */
@@ -93,15 +100,15 @@ Type_Specifier: T_INT
 
 /* Rule #6 */
 Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
-	{printf("YACC %d: rule #6: %s\n", line_num, $2); };
+	{ ybug(6); };
 
 /* Rule #7 */
-Params: T_VOID {printf("rule #7a\n");}
-      | Param_List {printf("rule #7b\n");};
+Params: T_VOID { ybug(7); }
+      | Param_List {  ybug(7); };
 
 /* Rule #8 */
-Param_List: Param {printf("rule #8a\n");}
-				  | Param ',' Param_List {printf("rule #8b\n");};
+Param_List: Param { ybug(8);}
+				  | Param ',' Param_List { ybug(8);};
 
 /* Rule #9 */
 Param: Type_Specifier T_ID
@@ -158,7 +165,7 @@ Assignment_Stmt: Variable '=' Simple_Expression ';';
 Expression: Simple_Expression;
 
 /* Rule #22 */
-Variable: T_ID {printf("rule #22\n");}
+Variable: T_ID { ybug(22);}
         | T_ID '[' Expression ']';
 
 /* Rule #23 */
@@ -209,8 +216,8 @@ Args: Arg_List {printf("rule #29a\n");}
     | /* empty */;
 
 /* Rule #30 */
-Arg_List: Expression {printf("rule #30a\n");}
-				| Expression ',' Arg_List {printf("rule #30b\n");}
+Arg_List: Expression { ybug(30);}
+				| Expression ',' Arg_List { ybug(30); }
 				;
 
 
