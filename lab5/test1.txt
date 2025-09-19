@@ -27,7 +27,8 @@ boolean A[100], z, y;
 void  y;
 void foo(int A, int B)
 begin
-
+   69;
+   true;
    write "hello";
    write 1<2;
    write 1<=2;

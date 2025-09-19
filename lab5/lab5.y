@@ -26,14 +26,22 @@ int variable_count = 0; // how variables many are defined
 extern int line_num;
 int debugsw=0;
 
-void ybug(int rule_number) {
-	if (debugsw) {
-		printf("YACC %d: rule #%d\n", line_num, rule_number);
-	}
+void log_string(char* rule, char* t_string) {
+	printf("Rule %s: \t line: %d \t T_STRING: %s\n", rule, line_num, t_string);
+}
+
+void log_token(char* rule, char* type, char* token) {
+	printf("Rule %s: \t line: %d \t %s: %s\n", rule, line_num, type, token);
 }
 
 void log_id(char* rule_number, char* t_id) {
-	printf("Rule %s: \t line: %d \t T_ID: %s\n", rule_number, line_num, t_id);
+	// printf("Rule %s: \t line: %d \t T_ID: %s\n", rule_number, line_num, t_id);
+	// printf("calling log_token:\n");
+	log_token(rule_number, "T_ID", t_id);
+}
+
+void log_t_num(char* rule_number, int t_num) {
+	printf("Rule %s: \t line: %d \t T_NUM: %d\n", rule_number, line_num, t_num);
 }
 
 void yyerror (s)  /* Called by yyparse on error */
@@ -104,12 +112,12 @@ Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
 	{ log_id("6", $2); };
 
 /* Rule #7 */
-Params: T_VOID { ybug(7); }
-      | Param_List {  ybug(7); };
+Params: T_VOID
+      | Param_List;
 
 /* Rule #8 */
-Param_List: Param { ybug(8);}
-				  | Param ',' Param_List { ybug(8);};
+Param_List: Param
+				  | Param ',' Param_List;
 
 /* Rule #9 */
 Param: Type_Specifier T_ID 						{ log_id("9", $2); }
@@ -156,7 +164,7 @@ Read_Stmt: T_READ Variable ';';
 
 /* Rule #19 */
 Write_Stmt: T_WRITE Expression ';'
-					| T_WRITE T_STRING ';';
+					| T_WRITE T_STRING ';' { log_string("19", $2); };
 
 /* Rule #20 */
 Assignment_Stmt: Variable '=' Simple_Expression ';';
@@ -165,8 +173,8 @@ Assignment_Stmt: Variable '=' Simple_Expression ';';
 Expression: Simple_Expression;
 
 /* Rule #22 */
-Variable: T_ID 										 { log_id("22", $1);}
-        | T_ID '[' Expression ']' { log_id("22", $1);}
+Variable: T_ID 										  { log_id("22", $1);}
+        | T_ID '[' Expression ']' 	{ log_id("22", $1);}
 
 /* Rule #23 */
 Simple_Expression: Additive_Expression
@@ -200,11 +208,11 @@ Mult_Op: '*'
 
 /* Rule #27 */
 Factor: '(' Expression ')'
-      | T_NUM
+      | T_NUM  { log_t_num("27", $1); }
 			| Variable
 			| Call
-			| T_TRUE
-			| T_FALSE
+			| T_TRUE 	{ log_token("27", "T_TRUE", "true"); }
+			| T_FALSE { log_token("27", "T_FALSE", "false"); }
 			| T_NOT Factor;
 
 /* Rule #28 */
