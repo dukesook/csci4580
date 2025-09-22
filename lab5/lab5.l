@@ -1,6 +1,6 @@
   /*
     Devon Sookhoo
-    September 2nd, 2025
+    September 22nd, 2025
     Lab 5 ALGO-C
     Enhancements:
       - Added keywords for "continue" and "break"
@@ -20,6 +20,7 @@ int mydebug=0;
 int line_num=1;
 #include "y.tab.h"
 
+// Debug function to reduce clutter
 void debug() {
   if (mydebug) {
     fprintf(stderr, "Lex: %s\n", yytext); 

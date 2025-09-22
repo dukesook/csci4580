@@ -6,6 +6,12 @@ Assignment Description: Extend the single letter register names to variable name
 
 Enhancements:
   - Removed main() function.
+  - New function: FetchAddress().
+  - New function: GetNode().
+  - Updated Insert() to use strdup for deep string copying.
+  - Updated Search() to return bool instead of int.
+  - Updated Delete() to return void instead of int.
+  - Added comments to every function and major code block for clarity.
 
 */
 
@@ -51,9 +57,10 @@ Describe the main data structure in this code:
 #include "symtable.h"
 
 int size = 0; // the number symbols in the symbol table
-#define MAX_SYMBOL_SIZE 11
-struct SymbTab *first, *last;
+#define MAX_SYMBOL_SIZE 11 // max size of a symbol
+struct SymbTab *first, *last; // pointers to the first and last nodes
 
+// takes a symbol and address and inserts if the symbold is not there
 void Insert(char *symbol, int address) {
   bool symbol_found;
   struct SymbTab *node;
@@ -73,6 +80,7 @@ void Insert(char *symbol, int address) {
   size++;
 } // end of Insert()
 
+// Displays the Main UI Options
 void Display() {
   int i;
   struct SymbTab *p;
@@ -85,6 +93,7 @@ void Display() {
   } // end for loop
 } // end of Display()
 
+// takes a symbols and removes it if present
 bool Search(char* symbol) {
   int i, exists = 0;
   struct SymbTab *p;
@@ -99,6 +108,7 @@ bool Search(char* symbol) {
   return exists;
 } // end of Search()
 
+// takes a symbol and states if present or not returns 0 or 1.
 void Delete(char *symbol) {
   bool found;
   struct SymbTab *p, *q;
@@ -129,6 +139,7 @@ void Delete(char *symbol) {
   size--;
 } // end of Delete()
 
+// takes a symbol and returns its address in memory
 int FetchAddress(char * symbol) {
   // This needs to look at the list and return the match address
   struct SymbTab * node = GetNode(symbol);
@@ -139,6 +150,7 @@ int FetchAddress(char * symbol) {
   return (node->addr); // Return the address if found
 }
 
+// Gets the node for a given symbol
 struct SymbTab* GetNode(char *symbol) {
   int i;
   struct SymbTab *p;

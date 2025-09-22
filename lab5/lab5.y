@@ -1,6 +1,6 @@
 /*
     Devon Sookhoo
-    September 2nd, 2025
+    September 22nd, 2025
     Lab 5 ALGO-C
     Enhancements:
 				1. Caught error in rule #3, #4, & #11 var-declaration(s)
@@ -12,6 +12,9 @@
 				7. All tokens coming from LEX shall be upper case and start with "T_" 
 				8. Added Continue and Break statements
 				9. All non-terminals will be Camel Case
+				10. Added comments to every rule and major code block for clarity
+				11. Added symtable.c and symtable.h with basic functions to manage a symbol
+				12. Added helper functions to log strings, tokens, identifiers, and numbers
 */
 
 %{
@@ -23,15 +26,15 @@
 #include <ctype.h>
 #include "symtable.h"
 
-#define MAX_VARIABLES 4
-#define ERROR -1
+#define MAX_VARIABLES 4 // max number of variables
+#define ERROR -1 // error code
 
 /* declare function prototype to resolve warning */
-int yylex(void);
+int yylex(void); // prototype for the lexing function
 int regs[MAX_VARIABLES]; // values[address] = value
 int variable_count = 0; // how variables many are defined
-extern int line_num;
-int debugsw=0;
+extern int line_num; // the current line number
+int debugsw=0; // debug switch
 
 // Helper Function to log strings
 void log_string(char* rule, char* t_string) {
@@ -64,19 +67,21 @@ void yyerror (s)  /* Called by yyparse on error */
 
 
 %}
-/*  defines the start symbol, what values come back from LEX and how the operators are associated  */
 
+/*  defines the start symbol, what values come back from LEX and how the operators are associated  */
 %start Program
 
+// Define the union for YYSTYPE
+// The union must cover all possible types of values that can be returned by the tokens and non-terminals.
 %union
 {
-	int value;
-	char* string;
+	int value; // for T_NUM
+	char* string; // for T_ID and T_STRING
 }
 
 /* The Expected Tokens From Lex */
-%token <value> T_NUM
-%token <string> T_ID T_STRING
+%token <value> T_NUM // integer number
+%token <string> T_ID T_STRING // identifier and string
 %token T_INT T_VOID T_BOOLEAN
 %token T_WRITE T_READ T_RETURN
 %token T_TRUE T_FALSE T_NOT T_AND T_OR

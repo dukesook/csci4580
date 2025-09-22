@@ -1,12 +1,17 @@
 #pragma once
 /*
 Devon Sookhoo
-September 19th, 2025
-Lab 4 Symbol Table with YACC
+September 22nd, 2025
+Lab 5 Symbol Table with YACC
 Assignment Description: Extend the single letter register names to variable names.
 
 Enhancements:
   - New function: FetchAddress().
+  - New function: GetNode().
+  - Updated Insert() to use strdup for deep string copying.
+  - Updated Search() to return bool instead of int.
+  - Updated Delete() to return void instead of int.
+  - Added comments to every function and major code block for clarity.
 
 */
 
