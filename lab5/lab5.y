@@ -15,6 +15,7 @@
 				10. Added comments to every rule and major code block for clarity
 				11. Added symtable.c and symtable.h with basic functions to manage a symbol
 				12. Added helper functions to log strings, tokens, identifiers, and numbers
+				13. Removed regs[] variable from the calculator
 */
 
 %{
@@ -31,7 +32,6 @@
 
 /* declare function prototype to resolve warning */
 int yylex(void); // prototype for the lexing function
-int regs[MAX_VARIABLES]; // values[address] = value
 int variable_count = 0; // how variables many are defined
 extern int line_num; // the current line number
 int debugsw=0; // debug switch

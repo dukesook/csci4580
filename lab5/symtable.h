@@ -6,29 +6,11 @@ Lab 5 Symbol Table with YACC
 Assignment Description: Extend the single letter register names to variable names.
 
 Enhancements:
-  - New function: FetchAddress().
-  - New function: GetNode().
-  - Updated Insert() to use strdup for deep string copying.
-  - Updated Search() to return bool instead of int.
-  - Updated Delete() to return void instead of int.
-  - Added comments to every function and major code block for clarity.
-
+  - This file was coppied from lab4/symtable.h
+  - Removed the calculator comments from lab4.
 */
 
 
-/*
-Devon Sookhoo
-September 8th, 2025
-Lab 3 Symbol Table
-Assignment Description: Refactor the code to made it readable and parameterize each helper function.
-
-Description of Code:
-  - This header file was originally created by Devon Sookhoo.
-  - It contains the function declarations pulled from symtable.c.
-  - It also contains the struct definition for the symbol table.
-  - The functions were parameterized for better reusability and clarity.
-  - I also added helper functions so main wasn't too cluttered.
- */
 
 #include <stdbool.h>
 

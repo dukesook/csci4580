@@ -1,16 +1,12 @@
 /*
 Devon Sookhoo
 September 19th, 2025
-Lab 4 Symbol Table with YACC
-Assignment Description: Extend the single letter register names to variable names.
+Lab 5 Symbol Table with YACC
+Assignment Description: Implement the Al
 
 Enhancements:
-  - Removed main() function.
-  - New function: FetchAddress().
-  - New function: GetNode().
-  - Updated Insert() to use strdup for deep string copying.
-  - Updated Search() to return bool instead of int.
-  - Updated Delete() to return void instead of int.
+  - This file was coppied from lab4/symtable.h
+  - Removed the calculator comments from lab4.
   - Added comments to every function and major code block for clarity.
 
 */
