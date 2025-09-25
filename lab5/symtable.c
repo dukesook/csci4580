@@ -2,48 +2,14 @@
 Devon Sookhoo
 September 19th, 2025
 Lab 5 Symbol Table with YACC
-Assignment Description: Implement the Al
+Assignment Description: Implement The Context Free Grammar for ALGO-C
 
 Enhancements:
   - This file was coppied from lab4/symtable.h
   - Removed the calculator comments from lab4.
   - Added comments to every function and major code block for clarity.
+  - No other changes were made for lab5.
 
-*/
-
-/*
-Devon Sookhoo
-September 8th, 2025
-Lab 3 Symbol Table
-Assignment Description: Refactor the code to made it readable and parameterize each helper function.
-
-Description of Code:
-  - The original code was found here: https://forgetcode.com/C/101-Symbol-table
-  - The code implements a symbol table using a linked list in C.
-  - Each function is parameterless, which is not ideal for reusability and clarity.
-Enhancements:
-    - Formatted code for better readability.
-    - Updated Search(lab[]) to accept a char* instead.
-    - Updated SymbTab.symbol to be a pointer instead of an array.
-    - Completely removed Modify() function.
-    - Removed label field from SymbTab struct and code.
-    - Make SymbTab.symbol a pointer instead of an array.
-    - Replaced strcpy with strdup to for deep string copying.
-    - Commented every for loop.
-    - Commented every if statement.
-    - Commented every function.
-*/
-
-/*
-Describe the main data structure in this code:
-  - The main data structure is the Symbol Table.
-  - The Symbol Table is implemented as a linked list using the struct SymbTab.
-  - The struct SymbTab has three fields:
-    - char *symbol: A pointer to a string that represents the symbol (token).
-    - int addr: An integer representing the address of the symbol in memory.
-    - struct SymbTab *next: A pointer to the next node in the linked list, allowing traversal through the symbol table.
-    - The Symbol Table is built by dynamically allocating memory for each new symbol
-      and linking them using the next pointer.
 */
 
 #include <stdio.h>

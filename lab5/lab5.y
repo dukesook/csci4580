@@ -3,19 +3,24 @@
     September 22nd, 2025
     Lab 5 ALGO-C
     Enhancements:
-				1. Caught error in rule #3, #4, & #11 var-declaration(s)
-				2. Added Function Prototypes
-				3. Print every T_ID
-				4. Print every string for write
-				5. Made additive_expression, simple_expression and term LEFT RECURSIVE
-				6. Update yyerror() such that it prints the error along with the global line number;
-				7. All tokens coming from LEX shall be upper case and start with "T_" 
-				8. Added Continue and Break statements
-				9. All non-terminals will be Camel Case
-				10. Added comments to every rule and major code block for clarity
-				11. Added symtable.c and symtable.h with basic functions to manage a symbol
-				12. Added helper functions to log strings, tokens, identifiers, and numbers
-				13. Removed regs[] variable from the calculator
+				- Removed comments from previous labs
+				- Caught error in rule #3, #4, & #11 var-declaration(s)
+				- Added Function Prototypes
+				- Print every T_ID and the rule referencing it
+				- Print every string for write
+				- Made additive_expression, simple_expression and term LEFT RECURSIVE
+				- Update yyerror() such that it prints the error along with the global line number;
+				- All tokens coming from LEX shall be upper case and start with "T_" 
+				- Added Continue and Break statements
+				- All non-terminals will be Camel Case
+				- Added comments to every rule and major code block for clarity
+				- Added symtable.c and symtable.h with basic functions to manage a symbol
+				- Added helper functions to log strings, tokens, identifiers, and numbers
+				- Removed regs[] variable from the calculator
+				- Use the extern keyword to access the line_num variable from lab5.l
+				- Use yyerror() to print error messages
+				- removed all shift reduce errors
+				- Makde all non-terminals CamelCase
 */
 
 %{

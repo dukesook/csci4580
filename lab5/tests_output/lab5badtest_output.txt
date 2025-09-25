@@ -1,0 +1,11 @@
+Rule 4a: 	 line: 1 	 T_ID: A
+Rule 4a: 	 line: 3 	 T_ID: x
+Rule 22: 	 line: 4 	 T_ID: x
+Rule 27: 	 line: 4 	 T_NUM: 10
+Rule 22: 	 line: 5 	 T_ID: i
+Rule 27: 	 line: 5 	 T_NUM: 10
+Rule 22: 	 line: 6 	 T_ID: x
+Rule 22: 	 line: 6 	 T_ID: i
+Rule 27: 	 line: 7 	 T_NUM: 0
+Rule 22: 	 line: 7 	 T_ID: i
+syntax error on line number 7

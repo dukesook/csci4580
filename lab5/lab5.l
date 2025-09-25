@@ -3,6 +3,7 @@
     September 22nd, 2025
     Lab 5 ALGO-C
     Enhancements:
+      - Removed comments from previous labs
       - Added keywords for "continue" and "break"
       - Added all other keywords from the ALGO-C language spec
       - Added relational operators: <=, <, >=, >, ==, !=
@@ -10,15 +11,16 @@
       - Added helper functions to log tokens, identifiers, and numbers
       - Added error handling function
       - Added rule for function prototypes
+      - Counting line numbers
   */
 
 
 %{
 
 /* Turned off debugging statement */
-int mydebug=0;
-int line_num=1;
-#include "y.tab.h"
+int mydebug=0; // set to 1 to see debug info
+int line_num=1; // line number for error reporting
+#include "y.tab.h" // for token defines
 
 // Debug function to reduce clutter
 void debug() {

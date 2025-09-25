@@ -3,11 +3,12 @@
 Devon Sookhoo
 September 22nd, 2025
 Lab 5 Symbol Table with YACC
-Assignment Description: Extend the single letter register names to variable names.
+Assignment Description: Implement The Context Free Grammar for ALGO-C
 
 Enhancements:
   - This file was coppied from lab4/symtable.h
   - Removed the calculator comments from lab4.
+  - No other changes were made for lab5.
 */
 
 
