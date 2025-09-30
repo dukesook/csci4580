@@ -1,0 +1,1743 @@
+Terminals unused in grammar
+
+    '|'
+    '&'
+    '%'
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: Declaration_List
+
+    2 Declaration_List: Declaration
+    3                 | Declaration_List Declaration
+
+    4 Declaration: Var_Declaration
+    5            | Func_Declaration
+    6            | Func_Prototype
+
+    7 Var_Declaration: Type_Specifier Var_List ';'
+
+    8 Var_List: T_ID
+    9         | T_ID '[' T_NUM ']'
+   10         | T_ID ',' Var_List
+   11         | T_ID '[' T_NUM ']' ',' Var_List
+
+   12 Type_Specifier: T_INT
+   13               | T_VOID
+   14               | T_BOOLEAN
+
+   15 Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
+
+   16 Params: T_VOID
+   17       | Param_List
+
+   18 Param_List: Param
+   19           | Param ',' Param_List
+
+   20 Param: Type_Specifier T_ID
+   21      | Type_Specifier T_ID '[' ']'
+
+   22 Compound_Stmt: T_BEGIN Local_Declarations Statement_List T_END
+
+   23 Local_Declarations: Var_Declaration Local_Declarations
+   24                   | ε
+
+   25 Statement_List: Statement Statement_List
+   26               | ε
+
+   27 Statement: Expression_Stmt
+   28          | Compound_Stmt
+   29          | Selection_Stmt
+   30          | Iteration_Stmt
+   31          | Assignment_Stmt
+   32          | Return_Stmt
+   33          | Write_Stmt
+   34          | Read_Stmt
+   35          | Continue_Stmt
+   36          | Break_Stmt
+
+   37 Expression_Stmt: Expression ';'
+   38                | ';'
+
+   39 Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF
+   40               | T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF
+
+   41 Iteration_Stmt: T_WHILE Expression T_DO Statement
+
+   42 Return_Stmt: T_RETURN ';'
+   43            | T_RETURN Expression ';'
+
+   44 Read_Stmt: T_READ Variable ';'
+
+   45 Write_Stmt: T_WRITE Expression ';'
+   46           | T_WRITE T_STRING ';'
+
+   47 Assignment_Stmt: Variable '=' Simple_Expression ';'
+
+   48 Expression: Simple_Expression
+
+   49 Variable: T_ID
+   50         | T_ID '[' Expression ']'
+
+   51 Simple_Expression: Additive_Expression
+   52                  | Simple_Expression Relop Additive_Expression
+
+   53 Relop: T_LE
+   54      | T_LT
+   55      | T_GT
+   56      | T_GE
+   57      | T_EQ
+   58      | T_NE
+
+   59 Additive_Expression: Term
+   60                    | Additive_Expression Add_Op Term
+
+   61 Add_Op: '+'
+   62       | '-'
+
+   63 Term: Factor
+   64     | Term Mult_Op Factor
+
+   65 Mult_Op: '*'
+   66        | '/'
+   67        | T_AND
+   68        | T_OR
+
+   69 Factor: '(' Expression ')'
+   70       | T_NUM
+   71       | Variable
+   72       | Call
+   73       | T_TRUE
+   74       | T_FALSE
+   75       | T_NOT Factor
+
+   76 Call: T_ID '(' Args ')'
+
+   77 Args: Arg_List
+   78     | ε
+
+   79 Arg_List: Expression
+   80         | Expression ',' Arg_List
+
+   81 Func_Prototype: Type_Specifier T_ID '(' Params ')' ';'
+
+   82 Continue_Stmt: T_CONTINUE ';'
+
+   83 Break_Stmt: T_BREAK ';'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '%' (37)
+    '&' (38)
+    '(' (40) 15 69 76 81
+    ')' (41) 15 69 76 81
+    '*' (42) 65
+    '+' (43) 61
+    ',' (44) 10 11 19 80
+    '-' (45) 62
+    '/' (47) 66
+    ';' (59) 7 37 38 42 43 44 45 46 47 81 82 83
+    '=' (61) 47
+    '[' (91) 9 11 21 50
+    ']' (93) 9 11 21 50
+    '|' (124)
+    error (256)
+    T_NUM <value> (258) 9 11 70
+    T_ID <string> (259) 8 9 10 11 15 20 21 49 50 76 81
+    T_STRING <string> (260) 46
+    T_INT (261) 12
+    T_VOID (262) 13 16
+    T_BOOLEAN (263) 14
+    T_WRITE (264) 45 46
+    T_READ (265) 44
+    T_RETURN (266) 42 43
+    T_TRUE (267) 73
+    T_FALSE (268) 74
+    T_NOT (269) 75
+    T_AND (270) 67
+    T_OR (271) 68
+    T_GE (272) 56
+    T_LE (273) 53
+    T_NE (274) 58
+    T_EQ (275) 57
+    T_LT (276) 54
+    T_GT (277) 55
+    T_BEGIN (278) 22
+    T_END (279) 22
+    T_IF (280) 39 40
+    T_THEN (281) 39 40
+    T_ENDIF (282) 39 40
+    T_WHILE (283) 41
+    T_DO (284) 41
+    T_ELSE (285) 40
+    T_CONTINUE (286) 82
+    T_BREAK (287) 83
+
+
+Nonterminals, with rules where they appear
+
+    $accept (47)
+        on left: 0
+    Program (48)
+        on left: 1
+        on right: 0
+    Declaration_List (49)
+        on left: 2 3
+        on right: 1 3
+    Declaration (50)
+        on left: 4 5 6
+        on right: 2 3
+    Var_Declaration (51)
+        on left: 7
+        on right: 4 23
+    Var_List (52)
+        on left: 8 9 10 11
+        on right: 7 10 11
+    Type_Specifier (53)
+        on left: 12 13 14
+        on right: 7 15 20 21 81
+    Func_Declaration (54)
+        on left: 15
+        on right: 5
+    Params (55)
+        on left: 16 17
+        on right: 15 81
+    Param_List (56)
+        on left: 18 19
+        on right: 17 19
+    Param (57)
+        on left: 20 21
+        on right: 18 19
+    Compound_Stmt (58)
+        on left: 22
+        on right: 15 28
+    Local_Declarations (59)
+        on left: 23 24
+        on right: 22 23
+    Statement_List (60)
+        on left: 25 26
+        on right: 22 25
+    Statement (61)
+        on left: 27 28 29 30 31 32 33 34 35 36
+        on right: 25 39 40 41
+    Expression_Stmt (62)
+        on left: 37 38
+        on right: 27
+    Selection_Stmt (63)
+        on left: 39 40
+        on right: 29
+    Iteration_Stmt (64)
+        on left: 41
+        on right: 30
+    Return_Stmt (65)
+        on left: 42 43
+        on right: 32
+    Read_Stmt (66)
+        on left: 44
+        on right: 34
+    Write_Stmt (67)
+        on left: 45 46
+        on right: 33
+    Assignment_Stmt (68)
+        on left: 47
+        on right: 31
+    Expression (69)
+        on left: 48
+        on right: 37 39 40 41 43 45 50 69 79 80
+    Variable (70)
+        on left: 49 50
+        on right: 44 47 71
+    Simple_Expression (71)
+        on left: 51 52
+        on right: 47 48 52
+    Relop (72)
+        on left: 53 54 55 56 57 58
+        on right: 52
+    Additive_Expression (73)
+        on left: 59 60
+        on right: 51 52 60
+    Add_Op (74)
+        on left: 61 62
+        on right: 60
+    Term (75)
+        on left: 63 64
+        on right: 59 60 64
+    Mult_Op (76)
+        on left: 65 66 67 68
+        on right: 64
+    Factor (77)
+        on left: 69 70 71 72 73 74 75
+        on right: 63 64 75
+    Call (78)
+        on left: 76
+        on right: 72
+    Args (79)
+        on left: 77 78
+        on right: 76
+    Arg_List (80)
+        on left: 79 80
+        on right: 77 80
+    Func_Prototype (81)
+        on left: 81
+        on right: 6
+    Continue_Stmt (82)
+        on left: 82
+        on right: 35
+    Break_Stmt (83)
+        on left: 83
+        on right: 36
+
+
+State 0
+
+    0 $accept: • Program $end
+
+    T_INT      shift, and go to state 1
+    T_VOID     shift, and go to state 2
+    T_BOOLEAN  shift, and go to state 3
+
+    Program           go to state 4
+    Declaration_List  go to state 5
+    Declaration       go to state 6
+    Var_Declaration   go to state 7
+    Type_Specifier    go to state 8
+    Func_Declaration  go to state 9
+    Func_Prototype    go to state 10
+
+
+State 1
+
+   12 Type_Specifier: T_INT •
+
+    $default  reduce using rule 12 (Type_Specifier)
+
+
+State 2
+
+   13 Type_Specifier: T_VOID •
+
+    $default  reduce using rule 13 (Type_Specifier)
+
+
+State 3
+
+   14 Type_Specifier: T_BOOLEAN •
+
+    $default  reduce using rule 14 (Type_Specifier)
+
+
+State 4
+
+    0 $accept: Program • $end
+
+    $end  shift, and go to state 11
+
+
+State 5
+
+    1 Program: Declaration_List •
+    3 Declaration_List: Declaration_List • Declaration
+
+    T_INT      shift, and go to state 1
+    T_VOID     shift, and go to state 2
+    T_BOOLEAN  shift, and go to state 3
+
+    $default  reduce using rule 1 (Program)
+
+    Declaration       go to state 12
+    Var_Declaration   go to state 7
+    Type_Specifier    go to state 8
+    Func_Declaration  go to state 9
+    Func_Prototype    go to state 10
+
+
+State 6
+
+    2 Declaration_List: Declaration •
+
+    $default  reduce using rule 2 (Declaration_List)
+
+
+State 7
+
+    4 Declaration: Var_Declaration •
+
+    $default  reduce using rule 4 (Declaration)
+
+
+State 8
+
+    7 Var_Declaration: Type_Specifier • Var_List ';'
+   15 Func_Declaration: Type_Specifier • T_ID '(' Params ')' Compound_Stmt
+   81 Func_Prototype: Type_Specifier • T_ID '(' Params ')' ';'
+
+    T_ID  shift, and go to state 13
+
+    Var_List  go to state 14
+
+
+State 9
+
+    5 Declaration: Func_Declaration •
+
+    $default  reduce using rule 5 (Declaration)
+
+
+State 10
+
+    6 Declaration: Func_Prototype •
+
+    $default  reduce using rule 6 (Declaration)
+
+
+State 11
+
+    0 $accept: Program $end •
+
+    $default  accept
+
+
+State 12
+
+    3 Declaration_List: Declaration_List Declaration •
+
+    $default  reduce using rule 3 (Declaration_List)
+
+
+State 13
+
+    8 Var_List: T_ID •
+    9         | T_ID • '[' T_NUM ']'
+   10         | T_ID • ',' Var_List
+   11         | T_ID • '[' T_NUM ']' ',' Var_List
+   15 Func_Declaration: Type_Specifier T_ID • '(' Params ')' Compound_Stmt
+   81 Func_Prototype: Type_Specifier T_ID • '(' Params ')' ';'
+
+    '['  shift, and go to state 15
+    ','  shift, and go to state 16
+    '('  shift, and go to state 17
+
+    $default  reduce using rule 8 (Var_List)
+
+
+State 14
+
+    7 Var_Declaration: Type_Specifier Var_List • ';'
+
+    ';'  shift, and go to state 18
+
+
+State 15
+
+    9 Var_List: T_ID '[' • T_NUM ']'
+   11         | T_ID '[' • T_NUM ']' ',' Var_List
+
+    T_NUM  shift, and go to state 19
+
+
+State 16
+
+   10 Var_List: T_ID ',' • Var_List
+
+    T_ID  shift, and go to state 20
+
+    Var_List  go to state 21
+
+
+State 17
+
+   15 Func_Declaration: Type_Specifier T_ID '(' • Params ')' Compound_Stmt
+   81 Func_Prototype: Type_Specifier T_ID '(' • Params ')' ';'
+
+    T_INT      shift, and go to state 1
+    T_VOID     shift, and go to state 22
+    T_BOOLEAN  shift, and go to state 3
+
+    Type_Specifier  go to state 23
+    Params          go to state 24
+    Param_List      go to state 25
+    Param           go to state 26
+
+
+State 18
+
+    7 Var_Declaration: Type_Specifier Var_List ';' •
+
+    $default  reduce using rule 7 (Var_Declaration)
+
+
+State 19
+
+    9 Var_List: T_ID '[' T_NUM • ']'
+   11         | T_ID '[' T_NUM • ']' ',' Var_List
+
+    ']'  shift, and go to state 27
+
+
+State 20
+
+    8 Var_List: T_ID •
+    9         | T_ID • '[' T_NUM ']'
+   10         | T_ID • ',' Var_List
+   11         | T_ID • '[' T_NUM ']' ',' Var_List
+
+    '['  shift, and go to state 15
+    ','  shift, and go to state 16
+
+    $default  reduce using rule 8 (Var_List)
+
+
+State 21
+
+   10 Var_List: T_ID ',' Var_List •
+
+    $default  reduce using rule 10 (Var_List)
+
+
+State 22
+
+   13 Type_Specifier: T_VOID •
+   16 Params: T_VOID •
+
+    ')'       reduce using rule 16 (Params)
+    $default  reduce using rule 13 (Type_Specifier)
+
+
+State 23
+
+   20 Param: Type_Specifier • T_ID
+   21      | Type_Specifier • T_ID '[' ']'
+
+    T_ID  shift, and go to state 28
+
+
+State 24
+
+   15 Func_Declaration: Type_Specifier T_ID '(' Params • ')' Compound_Stmt
+   81 Func_Prototype: Type_Specifier T_ID '(' Params • ')' ';'
+
+    ')'  shift, and go to state 29
+
+
+State 25
+
+   17 Params: Param_List •
+
+    $default  reduce using rule 17 (Params)
+
+
+State 26
+
+   18 Param_List: Param •
+   19           | Param • ',' Param_List
+
+    ','  shift, and go to state 30
+
+    $default  reduce using rule 18 (Param_List)
+
+
+State 27
+
+    9 Var_List: T_ID '[' T_NUM ']' •
+   11         | T_ID '[' T_NUM ']' • ',' Var_List
+
+    ','  shift, and go to state 31
+
+    $default  reduce using rule 9 (Var_List)
+
+
+State 28
+
+   20 Param: Type_Specifier T_ID •
+   21      | Type_Specifier T_ID • '[' ']'
+
+    '['  shift, and go to state 32
+
+    $default  reduce using rule 20 (Param)
+
+
+State 29
+
+   15 Func_Declaration: Type_Specifier T_ID '(' Params ')' • Compound_Stmt
+   81 Func_Prototype: Type_Specifier T_ID '(' Params ')' • ';'
+
+    T_BEGIN  shift, and go to state 33
+    ';'      shift, and go to state 34
+
+    Compound_Stmt  go to state 35
+
+
+State 30
+
+   19 Param_List: Param ',' • Param_List
+
+    T_INT      shift, and go to state 1
+    T_VOID     shift, and go to state 2
+    T_BOOLEAN  shift, and go to state 3
+
+    Type_Specifier  go to state 23
+    Param_List      go to state 36
+    Param           go to state 26
+
+
+State 31
+
+   11 Var_List: T_ID '[' T_NUM ']' ',' • Var_List
+
+    T_ID  shift, and go to state 20
+
+    Var_List  go to state 37
+
+
+State 32
+
+   21 Param: Type_Specifier T_ID '[' • ']'
+
+    ']'  shift, and go to state 38
+
+
+State 33
+
+   22 Compound_Stmt: T_BEGIN • Local_Declarations Statement_List T_END
+
+    T_INT      shift, and go to state 1
+    T_VOID     shift, and go to state 2
+    T_BOOLEAN  shift, and go to state 3
+
+    $default  reduce using rule 24 (Local_Declarations)
+
+    Var_Declaration     go to state 39
+    Type_Specifier      go to state 40
+    Local_Declarations  go to state 41
+
+
+State 34
+
+   81 Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' •
+
+    $default  reduce using rule 81 (Func_Prototype)
+
+
+State 35
+
+   15 Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt •
+
+    $default  reduce using rule 15 (Func_Declaration)
+
+
+State 36
+
+   19 Param_List: Param ',' Param_List •
+
+    $default  reduce using rule 19 (Param_List)
+
+
+State 37
+
+   11 Var_List: T_ID '[' T_NUM ']' ',' Var_List •
+
+    $default  reduce using rule 11 (Var_List)
+
+
+State 38
+
+   21 Param: Type_Specifier T_ID '[' ']' •
+
+    $default  reduce using rule 21 (Param)
+
+
+State 39
+
+   23 Local_Declarations: Var_Declaration • Local_Declarations
+
+    T_INT      shift, and go to state 1
+    T_VOID     shift, and go to state 2
+    T_BOOLEAN  shift, and go to state 3
+
+    $default  reduce using rule 24 (Local_Declarations)
+
+    Var_Declaration     go to state 39
+    Type_Specifier      go to state 40
+    Local_Declarations  go to state 42
+
+
+State 40
+
+    7 Var_Declaration: Type_Specifier • Var_List ';'
+
+    T_ID  shift, and go to state 20
+
+    Var_List  go to state 14
+
+
+State 41
+
+   22 Compound_Stmt: T_BEGIN Local_Declarations • Statement_List T_END
+
+    T_NUM       shift, and go to state 43
+    T_ID        shift, and go to state 44
+    T_WRITE     shift, and go to state 45
+    T_READ      shift, and go to state 46
+    T_RETURN    shift, and go to state 47
+    T_TRUE      shift, and go to state 48
+    T_FALSE     shift, and go to state 49
+    T_NOT       shift, and go to state 50
+    T_BEGIN     shift, and go to state 33
+    T_IF        shift, and go to state 51
+    T_WHILE     shift, and go to state 52
+    T_CONTINUE  shift, and go to state 53
+    T_BREAK     shift, and go to state 54
+    ';'         shift, and go to state 55
+    '('         shift, and go to state 56
+
+    $default  reduce using rule 26 (Statement_List)
+
+    Compound_Stmt        go to state 57
+    Statement_List       go to state 58
+    Statement            go to state 59
+    Expression_Stmt      go to state 60
+    Selection_Stmt       go to state 61
+    Iteration_Stmt       go to state 62
+    Return_Stmt          go to state 63
+    Read_Stmt            go to state 64
+    Write_Stmt           go to state 65
+    Assignment_Stmt      go to state 66
+    Expression           go to state 67
+    Variable             go to state 68
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+    Continue_Stmt        go to state 74
+    Break_Stmt           go to state 75
+
+
+State 42
+
+   23 Local_Declarations: Var_Declaration Local_Declarations •
+
+    $default  reduce using rule 23 (Local_Declarations)
+
+
+State 43
+
+   70 Factor: T_NUM •
+
+    $default  reduce using rule 70 (Factor)
+
+
+State 44
+
+   49 Variable: T_ID •
+   50         | T_ID • '[' Expression ']'
+   76 Call: T_ID • '(' Args ')'
+
+    '['  shift, and go to state 76
+    '('  shift, and go to state 77
+
+    $default  reduce using rule 49 (Variable)
+
+
+State 45
+
+   45 Write_Stmt: T_WRITE • Expression ';'
+   46           | T_WRITE • T_STRING ';'
+
+    T_NUM     shift, and go to state 43
+    T_ID      shift, and go to state 44
+    T_STRING  shift, and go to state 78
+    T_TRUE    shift, and go to state 48
+    T_FALSE   shift, and go to state 49
+    T_NOT     shift, and go to state 50
+    '('       shift, and go to state 56
+
+    Expression           go to state 79
+    Variable             go to state 80
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+
+
+State 46
+
+   44 Read_Stmt: T_READ • Variable ';'
+
+    T_ID  shift, and go to state 81
+
+    Variable  go to state 82
+
+
+State 47
+
+   42 Return_Stmt: T_RETURN • ';'
+   43            | T_RETURN • Expression ';'
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    ';'      shift, and go to state 83
+    '('      shift, and go to state 56
+
+    Expression           go to state 84
+    Variable             go to state 80
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+
+
+State 48
+
+   73 Factor: T_TRUE •
+
+    $default  reduce using rule 73 (Factor)
+
+
+State 49
+
+   74 Factor: T_FALSE •
+
+    $default  reduce using rule 74 (Factor)
+
+
+State 50
+
+   75 Factor: T_NOT • Factor
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Variable  go to state 80
+    Factor    go to state 85
+    Call      go to state 73
+
+
+State 51
+
+   39 Selection_Stmt: T_IF • Expression T_THEN Statement T_ENDIF
+   40               | T_IF • Expression T_THEN Statement T_ELSE Statement T_ENDIF
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Expression           go to state 86
+    Variable             go to state 80
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+
+
+State 52
+
+   41 Iteration_Stmt: T_WHILE • Expression T_DO Statement
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Expression           go to state 87
+    Variable             go to state 80
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+
+
+State 53
+
+   82 Continue_Stmt: T_CONTINUE • ';'
+
+    ';'  shift, and go to state 88
+
+
+State 54
+
+   83 Break_Stmt: T_BREAK • ';'
+
+    ';'  shift, and go to state 89
+
+
+State 55
+
+   38 Expression_Stmt: ';' •
+
+    $default  reduce using rule 38 (Expression_Stmt)
+
+
+State 56
+
+   69 Factor: '(' • Expression ')'
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Expression           go to state 90
+    Variable             go to state 80
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+
+
+State 57
+
+   28 Statement: Compound_Stmt •
+
+    $default  reduce using rule 28 (Statement)
+
+
+State 58
+
+   22 Compound_Stmt: T_BEGIN Local_Declarations Statement_List • T_END
+
+    T_END  shift, and go to state 91
+
+
+State 59
+
+   25 Statement_List: Statement • Statement_List
+
+    T_NUM       shift, and go to state 43
+    T_ID        shift, and go to state 44
+    T_WRITE     shift, and go to state 45
+    T_READ      shift, and go to state 46
+    T_RETURN    shift, and go to state 47
+    T_TRUE      shift, and go to state 48
+    T_FALSE     shift, and go to state 49
+    T_NOT       shift, and go to state 50
+    T_BEGIN     shift, and go to state 33
+    T_IF        shift, and go to state 51
+    T_WHILE     shift, and go to state 52
+    T_CONTINUE  shift, and go to state 53
+    T_BREAK     shift, and go to state 54
+    ';'         shift, and go to state 55
+    '('         shift, and go to state 56
+
+    $default  reduce using rule 26 (Statement_List)
+
+    Compound_Stmt        go to state 57
+    Statement_List       go to state 92
+    Statement            go to state 59
+    Expression_Stmt      go to state 60
+    Selection_Stmt       go to state 61
+    Iteration_Stmt       go to state 62
+    Return_Stmt          go to state 63
+    Read_Stmt            go to state 64
+    Write_Stmt           go to state 65
+    Assignment_Stmt      go to state 66
+    Expression           go to state 67
+    Variable             go to state 68
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+    Continue_Stmt        go to state 74
+    Break_Stmt           go to state 75
+
+
+State 60
+
+   27 Statement: Expression_Stmt •
+
+    $default  reduce using rule 27 (Statement)
+
+
+State 61
+
+   29 Statement: Selection_Stmt •
+
+    $default  reduce using rule 29 (Statement)
+
+
+State 62
+
+   30 Statement: Iteration_Stmt •
+
+    $default  reduce using rule 30 (Statement)
+
+
+State 63
+
+   32 Statement: Return_Stmt •
+
+    $default  reduce using rule 32 (Statement)
+
+
+State 64
+
+   34 Statement: Read_Stmt •
+
+    $default  reduce using rule 34 (Statement)
+
+
+State 65
+
+   33 Statement: Write_Stmt •
+
+    $default  reduce using rule 33 (Statement)
+
+
+State 66
+
+   31 Statement: Assignment_Stmt •
+
+    $default  reduce using rule 31 (Statement)
+
+
+State 67
+
+   37 Expression_Stmt: Expression • ';'
+
+    ';'  shift, and go to state 93
+
+
+State 68
+
+   47 Assignment_Stmt: Variable • '=' Simple_Expression ';'
+   71 Factor: Variable •
+
+    '='  shift, and go to state 94
+
+    $default  reduce using rule 71 (Factor)
+
+
+State 69
+
+   48 Expression: Simple_Expression •
+   52 Simple_Expression: Simple_Expression • Relop Additive_Expression
+
+    T_GE  shift, and go to state 95
+    T_LE  shift, and go to state 96
+    T_NE  shift, and go to state 97
+    T_EQ  shift, and go to state 98
+    T_LT  shift, and go to state 99
+    T_GT  shift, and go to state 100
+
+    $default  reduce using rule 48 (Expression)
+
+    Relop  go to state 101
+
+
+State 70
+
+   51 Simple_Expression: Additive_Expression •
+   60 Additive_Expression: Additive_Expression • Add_Op Term
+
+    '+'  shift, and go to state 102
+    '-'  shift, and go to state 103
+
+    $default  reduce using rule 51 (Simple_Expression)
+
+    Add_Op  go to state 104
+
+
+State 71
+
+   59 Additive_Expression: Term •
+   64 Term: Term • Mult_Op Factor
+
+    T_AND  shift, and go to state 105
+    T_OR   shift, and go to state 106
+    '*'    shift, and go to state 107
+    '/'    shift, and go to state 108
+
+    $default  reduce using rule 59 (Additive_Expression)
+
+    Mult_Op  go to state 109
+
+
+State 72
+
+   63 Term: Factor •
+
+    $default  reduce using rule 63 (Term)
+
+
+State 73
+
+   72 Factor: Call •
+
+    $default  reduce using rule 72 (Factor)
+
+
+State 74
+
+   35 Statement: Continue_Stmt •
+
+    $default  reduce using rule 35 (Statement)
+
+
+State 75
+
+   36 Statement: Break_Stmt •
+
+    $default  reduce using rule 36 (Statement)
+
+
+State 76
+
+   50 Variable: T_ID '[' • Expression ']'
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Expression           go to state 110
+    Variable             go to state 80
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+
+
+State 77
+
+   76 Call: T_ID '(' • Args ')'
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    $default  reduce using rule 78 (Args)
+
+    Expression           go to state 111
+    Variable             go to state 80
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+    Args                 go to state 112
+    Arg_List             go to state 113
+
+
+State 78
+
+   46 Write_Stmt: T_WRITE T_STRING • ';'
+
+    ';'  shift, and go to state 114
+
+
+State 79
+
+   45 Write_Stmt: T_WRITE Expression • ';'
+
+    ';'  shift, and go to state 115
+
+
+State 80
+
+   71 Factor: Variable •
+
+    $default  reduce using rule 71 (Factor)
+
+
+State 81
+
+   49 Variable: T_ID •
+   50         | T_ID • '[' Expression ']'
+
+    '['  shift, and go to state 76
+
+    $default  reduce using rule 49 (Variable)
+
+
+State 82
+
+   44 Read_Stmt: T_READ Variable • ';'
+
+    ';'  shift, and go to state 116
+
+
+State 83
+
+   42 Return_Stmt: T_RETURN ';' •
+
+    $default  reduce using rule 42 (Return_Stmt)
+
+
+State 84
+
+   43 Return_Stmt: T_RETURN Expression • ';'
+
+    ';'  shift, and go to state 117
+
+
+State 85
+
+   75 Factor: T_NOT Factor •
+
+    $default  reduce using rule 75 (Factor)
+
+
+State 86
+
+   39 Selection_Stmt: T_IF Expression • T_THEN Statement T_ENDIF
+   40               | T_IF Expression • T_THEN Statement T_ELSE Statement T_ENDIF
+
+    T_THEN  shift, and go to state 118
+
+
+State 87
+
+   41 Iteration_Stmt: T_WHILE Expression • T_DO Statement
+
+    T_DO  shift, and go to state 119
+
+
+State 88
+
+   82 Continue_Stmt: T_CONTINUE ';' •
+
+    $default  reduce using rule 82 (Continue_Stmt)
+
+
+State 89
+
+   83 Break_Stmt: T_BREAK ';' •
+
+    $default  reduce using rule 83 (Break_Stmt)
+
+
+State 90
+
+   69 Factor: '(' Expression • ')'
+
+    ')'  shift, and go to state 120
+
+
+State 91
+
+   22 Compound_Stmt: T_BEGIN Local_Declarations Statement_List T_END •
+
+    $default  reduce using rule 22 (Compound_Stmt)
+
+
+State 92
+
+   25 Statement_List: Statement Statement_List •
+
+    $default  reduce using rule 25 (Statement_List)
+
+
+State 93
+
+   37 Expression_Stmt: Expression ';' •
+
+    $default  reduce using rule 37 (Expression_Stmt)
+
+
+State 94
+
+   47 Assignment_Stmt: Variable '=' • Simple_Expression ';'
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Variable             go to state 80
+    Simple_Expression    go to state 121
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+
+
+State 95
+
+   56 Relop: T_GE •
+
+    $default  reduce using rule 56 (Relop)
+
+
+State 96
+
+   53 Relop: T_LE •
+
+    $default  reduce using rule 53 (Relop)
+
+
+State 97
+
+   58 Relop: T_NE •
+
+    $default  reduce using rule 58 (Relop)
+
+
+State 98
+
+   57 Relop: T_EQ •
+
+    $default  reduce using rule 57 (Relop)
+
+
+State 99
+
+   54 Relop: T_LT •
+
+    $default  reduce using rule 54 (Relop)
+
+
+State 100
+
+   55 Relop: T_GT •
+
+    $default  reduce using rule 55 (Relop)
+
+
+State 101
+
+   52 Simple_Expression: Simple_Expression Relop • Additive_Expression
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Variable             go to state 80
+    Additive_Expression  go to state 122
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+
+
+State 102
+
+   61 Add_Op: '+' •
+
+    $default  reduce using rule 61 (Add_Op)
+
+
+State 103
+
+   62 Add_Op: '-' •
+
+    $default  reduce using rule 62 (Add_Op)
+
+
+State 104
+
+   60 Additive_Expression: Additive_Expression Add_Op • Term
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Variable  go to state 80
+    Term      go to state 123
+    Factor    go to state 72
+    Call      go to state 73
+
+
+State 105
+
+   67 Mult_Op: T_AND •
+
+    $default  reduce using rule 67 (Mult_Op)
+
+
+State 106
+
+   68 Mult_Op: T_OR •
+
+    $default  reduce using rule 68 (Mult_Op)
+
+
+State 107
+
+   65 Mult_Op: '*' •
+
+    $default  reduce using rule 65 (Mult_Op)
+
+
+State 108
+
+   66 Mult_Op: '/' •
+
+    $default  reduce using rule 66 (Mult_Op)
+
+
+State 109
+
+   64 Term: Term Mult_Op • Factor
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Variable  go to state 80
+    Factor    go to state 124
+    Call      go to state 73
+
+
+State 110
+
+   50 Variable: T_ID '[' Expression • ']'
+
+    ']'  shift, and go to state 125
+
+
+State 111
+
+   79 Arg_List: Expression •
+   80         | Expression • ',' Arg_List
+
+    ','  shift, and go to state 126
+
+    $default  reduce using rule 79 (Arg_List)
+
+
+State 112
+
+   76 Call: T_ID '(' Args • ')'
+
+    ')'  shift, and go to state 127
+
+
+State 113
+
+   77 Args: Arg_List •
+
+    $default  reduce using rule 77 (Args)
+
+
+State 114
+
+   46 Write_Stmt: T_WRITE T_STRING ';' •
+
+    $default  reduce using rule 46 (Write_Stmt)
+
+
+State 115
+
+   45 Write_Stmt: T_WRITE Expression ';' •
+
+    $default  reduce using rule 45 (Write_Stmt)
+
+
+State 116
+
+   44 Read_Stmt: T_READ Variable ';' •
+
+    $default  reduce using rule 44 (Read_Stmt)
+
+
+State 117
+
+   43 Return_Stmt: T_RETURN Expression ';' •
+
+    $default  reduce using rule 43 (Return_Stmt)
+
+
+State 118
+
+   39 Selection_Stmt: T_IF Expression T_THEN • Statement T_ENDIF
+   40               | T_IF Expression T_THEN • Statement T_ELSE Statement T_ENDIF
+
+    T_NUM       shift, and go to state 43
+    T_ID        shift, and go to state 44
+    T_WRITE     shift, and go to state 45
+    T_READ      shift, and go to state 46
+    T_RETURN    shift, and go to state 47
+    T_TRUE      shift, and go to state 48
+    T_FALSE     shift, and go to state 49
+    T_NOT       shift, and go to state 50
+    T_BEGIN     shift, and go to state 33
+    T_IF        shift, and go to state 51
+    T_WHILE     shift, and go to state 52
+    T_CONTINUE  shift, and go to state 53
+    T_BREAK     shift, and go to state 54
+    ';'         shift, and go to state 55
+    '('         shift, and go to state 56
+
+    Compound_Stmt        go to state 57
+    Statement            go to state 128
+    Expression_Stmt      go to state 60
+    Selection_Stmt       go to state 61
+    Iteration_Stmt       go to state 62
+    Return_Stmt          go to state 63
+    Read_Stmt            go to state 64
+    Write_Stmt           go to state 65
+    Assignment_Stmt      go to state 66
+    Expression           go to state 67
+    Variable             go to state 68
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+    Continue_Stmt        go to state 74
+    Break_Stmt           go to state 75
+
+
+State 119
+
+   41 Iteration_Stmt: T_WHILE Expression T_DO • Statement
+
+    T_NUM       shift, and go to state 43
+    T_ID        shift, and go to state 44
+    T_WRITE     shift, and go to state 45
+    T_READ      shift, and go to state 46
+    T_RETURN    shift, and go to state 47
+    T_TRUE      shift, and go to state 48
+    T_FALSE     shift, and go to state 49
+    T_NOT       shift, and go to state 50
+    T_BEGIN     shift, and go to state 33
+    T_IF        shift, and go to state 51
+    T_WHILE     shift, and go to state 52
+    T_CONTINUE  shift, and go to state 53
+    T_BREAK     shift, and go to state 54
+    ';'         shift, and go to state 55
+    '('         shift, and go to state 56
+
+    Compound_Stmt        go to state 57
+    Statement            go to state 129
+    Expression_Stmt      go to state 60
+    Selection_Stmt       go to state 61
+    Iteration_Stmt       go to state 62
+    Return_Stmt          go to state 63
+    Read_Stmt            go to state 64
+    Write_Stmt           go to state 65
+    Assignment_Stmt      go to state 66
+    Expression           go to state 67
+    Variable             go to state 68
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+    Continue_Stmt        go to state 74
+    Break_Stmt           go to state 75
+
+
+State 120
+
+   69 Factor: '(' Expression ')' •
+
+    $default  reduce using rule 69 (Factor)
+
+
+State 121
+
+   47 Assignment_Stmt: Variable '=' Simple_Expression • ';'
+   52 Simple_Expression: Simple_Expression • Relop Additive_Expression
+
+    T_GE  shift, and go to state 95
+    T_LE  shift, and go to state 96
+    T_NE  shift, and go to state 97
+    T_EQ  shift, and go to state 98
+    T_LT  shift, and go to state 99
+    T_GT  shift, and go to state 100
+    ';'   shift, and go to state 130
+
+    Relop  go to state 101
+
+
+State 122
+
+   52 Simple_Expression: Simple_Expression Relop Additive_Expression •
+   60 Additive_Expression: Additive_Expression • Add_Op Term
+
+    '+'  shift, and go to state 102
+    '-'  shift, and go to state 103
+
+    $default  reduce using rule 52 (Simple_Expression)
+
+    Add_Op  go to state 104
+
+
+State 123
+
+   60 Additive_Expression: Additive_Expression Add_Op Term •
+   64 Term: Term • Mult_Op Factor
+
+    T_AND  shift, and go to state 105
+    T_OR   shift, and go to state 106
+    '*'    shift, and go to state 107
+    '/'    shift, and go to state 108
+
+    $default  reduce using rule 60 (Additive_Expression)
+
+    Mult_Op  go to state 109
+
+
+State 124
+
+   64 Term: Term Mult_Op Factor •
+
+    $default  reduce using rule 64 (Term)
+
+
+State 125
+
+   50 Variable: T_ID '[' Expression ']' •
+
+    $default  reduce using rule 50 (Variable)
+
+
+State 126
+
+   80 Arg_List: Expression ',' • Arg_List
+
+    T_NUM    shift, and go to state 43
+    T_ID     shift, and go to state 44
+    T_TRUE   shift, and go to state 48
+    T_FALSE  shift, and go to state 49
+    T_NOT    shift, and go to state 50
+    '('      shift, and go to state 56
+
+    Expression           go to state 111
+    Variable             go to state 80
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+    Arg_List             go to state 131
+
+
+State 127
+
+   76 Call: T_ID '(' Args ')' •
+
+    $default  reduce using rule 76 (Call)
+
+
+State 128
+
+   39 Selection_Stmt: T_IF Expression T_THEN Statement • T_ENDIF
+   40               | T_IF Expression T_THEN Statement • T_ELSE Statement T_ENDIF
+
+    T_ENDIF  shift, and go to state 132
+    T_ELSE   shift, and go to state 133
+
+
+State 129
+
+   41 Iteration_Stmt: T_WHILE Expression T_DO Statement •
+
+    $default  reduce using rule 41 (Iteration_Stmt)
+
+
+State 130
+
+   47 Assignment_Stmt: Variable '=' Simple_Expression ';' •
+
+    $default  reduce using rule 47 (Assignment_Stmt)
+
+
+State 131
+
+   80 Arg_List: Expression ',' Arg_List •
+
+    $default  reduce using rule 80 (Arg_List)
+
+
+State 132
+
+   39 Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF •
+
+    $default  reduce using rule 39 (Selection_Stmt)
+
+
+State 133
+
+   40 Selection_Stmt: T_IF Expression T_THEN Statement T_ELSE • Statement T_ENDIF
+
+    T_NUM       shift, and go to state 43
+    T_ID        shift, and go to state 44
+    T_WRITE     shift, and go to state 45
+    T_READ      shift, and go to state 46
+    T_RETURN    shift, and go to state 47
+    T_TRUE      shift, and go to state 48
+    T_FALSE     shift, and go to state 49
+    T_NOT       shift, and go to state 50
+    T_BEGIN     shift, and go to state 33
+    T_IF        shift, and go to state 51
+    T_WHILE     shift, and go to state 52
+    T_CONTINUE  shift, and go to state 53
+    T_BREAK     shift, and go to state 54
+    ';'         shift, and go to state 55
+    '('         shift, and go to state 56
+
+    Compound_Stmt        go to state 57
+    Statement            go to state 134
+    Expression_Stmt      go to state 60
+    Selection_Stmt       go to state 61
+    Iteration_Stmt       go to state 62
+    Return_Stmt          go to state 63
+    Read_Stmt            go to state 64
+    Write_Stmt           go to state 65
+    Assignment_Stmt      go to state 66
+    Expression           go to state 67
+    Variable             go to state 68
+    Simple_Expression    go to state 69
+    Additive_Expression  go to state 70
+    Term                 go to state 71
+    Factor               go to state 72
+    Call                 go to state 73
+    Continue_Stmt        go to state 74
+    Break_Stmt           go to state 75
+
+
+State 134
+
+   40 Selection_Stmt: T_IF Expression T_THEN Statement T_ELSE Statement • T_ENDIF
+
+    T_ENDIF  shift, and go to state 135
+
+
+State 135
+
+   40 Selection_Stmt: T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF •
+
+    $default  reduce using rule 40 (Selection_Stmt)
