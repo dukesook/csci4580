@@ -4,6 +4,8 @@
     Lab 6 Abstract Syntax Tree
     Enhancements:
 				- Removed comments from previous labs
+				- Added ASTNode structure to union
+				- #include "ast.h"
 
 */
 
@@ -14,6 +16,7 @@
 /* begin specs */
 #include <stdio.h>
 #include <ctype.h>
+#include "ast.h" // include the AST header file
 
 #define MAX_VARIABLES 4 // max number of variables
 #define ERROR -1 // error code
@@ -65,6 +68,7 @@ void yyerror (s)  /* Called by yyparse on error */
 {
 	int value; // for T_NUM
 	char* string; // for T_ID and T_STRING
+	ASTnode* node; // for AST nodes
 }
 
 /* The Expected Tokens From Lex */

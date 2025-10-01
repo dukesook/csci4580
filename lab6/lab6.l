@@ -4,6 +4,7 @@
     Lab 6 Abstract Syntax Tree
     Enhancements:
       - Removed comments from previous labs
+      - #include "ast.h"
   */
 
 
@@ -12,6 +13,7 @@
 /* Turned off debugging statement */
 int mydebug=0; // set to 1 to see debug info
 int line_num=1; // line number for error reporting
+#include "ast.h" // include the AST header file
 #include "y.tab.h" // for token defines
 
 // Debug function to reduce clutter
