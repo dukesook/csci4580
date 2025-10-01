@@ -1,12 +1,9 @@
-/*   Abstract syntax tree code
-
-     This code is used to define an AST node, 
-    routine for printing out the AST
-    defining an enumerated nodetype so we can figure out what we need to
-    do with this.  The ENUM is basically going to be every non-terminal
-    and terminal in our language.
-
-    Shaun Cooper February 2023
+/*
+    Devon Sookhoo
+    October 13th, 2025
+    Lab 6 Abstract Syntax Tree
+    Enhancements:
+				- Moved ASTnode *program to ast.c to avoid multiple definition errors
 
 */
 
@@ -15,6 +12,8 @@
 #include<stdlib.h>
 #include "ast.h" 
 
+
+ASTnode *program; // pointer to the tree
 
 /* uses malloc to create an ASTnode and passes back the heap address of the newley created node */
 // PRE: ???
@@ -33,8 +32,8 @@ ASTnode *ASTCreateNode(enum ASTtype mytype)
 
 /*  Helper function to print tabbing */
 
-// PRE: ???
-//  POST:   ???
+// PRE: Given a positive integer
+// POST:   Print that number of tabs
 void PT(int howmany)
 {
 	 // MISSING
@@ -54,6 +53,8 @@ char * DataTypeToString(enum DataTypes mydatatype){
 
 
 /*  Print out the abstract syntax tree */
+// PRE: Pointer to an AST Tree
+// POST: Print formatted tree output
 void ASTprint(int level,ASTnode *p)
 {
    int i;
@@ -70,7 +71,7 @@ void ASTprint(int level,ASTnode *p)
 		         ASTprint(level,p->s1); 
                      break;
 
-        default: printf("unknown type in ASTprint\n");
+        default: printf("unknown type in ASTprint %d\n", p->nodetype);
                  printf("Exiting ASTprint immediately\n");
                  exit(1);
 

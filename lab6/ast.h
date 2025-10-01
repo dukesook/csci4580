@@ -13,14 +13,15 @@
 #define AST_H
 extern int mydebug;
 
-/* define the enumerated types for the AST.  THis is used to tell us what 
+/* define the enumerated types for the AST.  This is used to tell us what 
 sort of production rule we came across */
 
 enum ASTtype {
-   A_PROGRAM,
+   // A_PROGRAM,
    A_VARDEC,
    A_FUNCTIONDEC,
-   A_IDENT,
+   A_DEC_LIST,
+   // A_IDENT,
    A_NUMBER,
    A_EXPR,
    A_IFSTMT
@@ -62,7 +63,7 @@ ASTnode *ASTCreateNode(enum ASTtype mytype);
 void PT(int howmany);
 
 
-ASTnode *program; // pointer to the tree
+// extern ASTnode *program; // pointer to the tree
 
 /*  Print out the abstract syntax tree */
 void ASTprint(int level,ASTnode *p);

@@ -81,6 +81,8 @@ void yyerror (s)  /* Called by yyparse on error */
 %token T_BEGIN T_END T_IF T_THEN T_ENDIF T_WHILE T_DO T_ELSE
 %token T_CONTINUE T_BREAK
 
+%type <node> Declaration Declaration_List
+
 %left '|'					/* lowest precedence */
 %left '&'
 %left '+' '-'
@@ -95,13 +97,22 @@ Program: Declaration_List
 			{ printf("============= Successful Parse! =============\n"); };
 
 /* Rule #2 */
-Declaration_List: Declaration
-								| Declaration_List Declaration;
+Declaration_List: Declaration { 
+	$$ = ASTCreateNode(A_DEC_LIST);
+	$$->s1 = $1;
+}
+								| Declaration_List Declaration { 
+	$$ = ASTCreateNode(A_DEC_LIST);
+	$$->s1 = $1;
+	$$->s2 = $2;
+}
+								;
 
 /* Rule #3 */
-Declaration: Var_Declaration
-					 | Func_Declaration
-					 | Func_Prototype;
+Declaration: Var_Declaration { $$ = NULL; }
+					 | Func_Declaration { $$ = NULL; }
+					 | Func_Prototype { $$ = NULL; }
+					 ;
 
 
 /* Rule #4 */
