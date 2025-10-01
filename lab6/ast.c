@@ -46,6 +46,8 @@ char * DataTypeToString(enum DataTypes mydatatype){
     switch (mydatatype) {
            case A_VOIDTYPE:  return ("void");
                              break;
+            case A_INTTYPE:  return ("int");
+                             break;
            default: printf("Unknown type in DataTypeToString\n");
                      exit(1);
       } //of switch

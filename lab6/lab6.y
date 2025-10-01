@@ -132,11 +132,12 @@ Var_Declaration: Type_Specifier Var_List ';' {
 };
 
 /* Rule 4a */
-Var_List: T_ID 															{ log_id("4a", $1); 
-					                                    $$ = ASTCreateNode(A_VARDEC);
+Var_List: T_ID 															{ $$ = ASTCreateNode(A_VARDEC);
 																							$$->name = $1; }
         | T_ID '[' T_NUM ']'								{ $$ = NULL; /* TODO! */ }
-				| T_ID ',' Var_List									{ $$ = NULL; /* TODO! */ }
+				| T_ID ',' Var_List									{ $$ = ASTCreateNode(A_VARDEC);
+																							$$->name = $1; 
+																							$$->s1 = $3;}
 				| T_ID '[' T_NUM ']' ',' Var_List		{ $$ = NULL; /* TODO! */ };
 
 /* Rule #5 */
