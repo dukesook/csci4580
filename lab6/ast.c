@@ -74,6 +74,7 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level, p->s2);
     break;
   case A_VARDEC:
+    PT(level);
     printf("Variable ");
     printf("%s ", DataTypeToString(p->datatype));
     printf(" %s", p->name);
@@ -83,6 +84,13 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level, p->s1);
     break;
   case A_FUNCTIONDEC:
+    PT(level);
+    printf("Function ");
+    printf("%s ", DataTypeToString(p->datatype));
+    printf(" %s", p->name);
+    printf("\n");
+    ASTprint(level, p->s1); // parameters
+    ASTprint(level, p->s2); // compound
     printf("ASTprint(): todo! case: A_FUNCTIONDEC\n");
     break;
   case A_NUMBER:
