@@ -83,8 +83,10 @@ void yyerror (s)  /* Called by yyparse on error */
 %token T_CONTINUE T_BREAK
 
 %type <node> Declaration Declaration_List Var_Declaration
-%type <node> Var_List Func_Declaration Compound_Stmt Param
+%type <node> Var_List Func_Declaration Compound_Stmt Param Local_Declarations
+%type <node> Statement Statement_List
 %type <datatype> Type_Specifier
+%type <string> T_BEGIN
 
 %left '|'					/* lowest precedence */
 %left '&'
@@ -167,27 +169,47 @@ Param: Type_Specifier T_ID 						{ log_id("9", $2); }
 			| Type_Specifier T_ID '[' ']' 	{ log_id("9", $2); };
 
 /* Rule #10 */
-Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END { $$ = NULL; /* TODO FIX!*/ };
+Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END 
+{ 
+	$$ = ASTCreateNode(A_COMPOUND); /* TODO FIX!*/ 
+	$$->s1 = $2;
+	$$->s2 = $3;
+};
 
 /* Rule #11 */
 Local_Declarations: Var_Declaration Local_Declarations
-                  |  /* empty */;
+{
+	$$ = $1;
+	$$->s2 = $2;
+}
+                  |  /* empty */ { $$ = NULL; }
+									;
 
 /* Rule #12 */
 Statement_List: Statement Statement_List
-              | /* empty */;
+{
+	$$ = ASTCreateNode(A_STMT_LIST);
+	$$->s1 = $1;
+	$$->s2 = $2;
+}
+              | /* empty */
+{
+	$$ = ASTCreateNode(A_STMT_LIST);
+}
+		;
 
 /* Rule #13 */
-Statement: Expression_Stmt
-				 | Compound_Stmt		
-				 | Selection_Stmt
-				 | Iteration_Stmt
-				 | Assignment_Stmt
-				 | Return_Stmt
-         | Write_Stmt
-         | Read_Stmt
-				 | Continue_Stmt
-				 | Break_Stmt;
+Statement: Expression_Stmt { $$ = NULL; }
+				 | Compound_Stmt		{ $$ = NULL; }
+				 | Selection_Stmt { $$ = NULL; }
+				 | Iteration_Stmt { $$ = NULL; }
+				 | Assignment_Stmt { $$ = NULL; }
+				 | Return_Stmt { $$ = NULL; }
+         | Write_Stmt { $$ = NULL; }
+         | Read_Stmt { $$ = NULL; }
+				 | Continue_Stmt { $$ = NULL; }
+				 | Break_Stmt { $$ = NULL; }
+				 ;
 
 /* Rule #14 */
 Expression_Stmt: Expression ';'

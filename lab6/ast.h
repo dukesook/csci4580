@@ -24,9 +24,9 @@ enum ASTtype {
    A_FUNCTIONDEC,
    A_NUMBER,
    A_EXPR,
-   A_IFSTMT
- 
-	   //missing
+   A_IFSTMT,
+   A_COMPOUND,
+   A_STMT_LIST,
 };
 
 enum DataTypes {
@@ -39,8 +39,6 @@ enum OPERATORS {
    A_PLUS,
    A_MINUS,
    A_TIMES
- 
-	   //missing
 };
 
 /* define a type AST node which will hold pointers to AST structs that will
