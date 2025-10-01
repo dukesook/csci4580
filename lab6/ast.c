@@ -103,10 +103,14 @@ void ASTprint(int level, ASTnode *p) {
     printf("ASTprint(): todo! case: A_IFSTMT \n");
     break;
   case A_COMPOUND:
-    printf("ASTprint(): todo! case: A_COMPOUND \n");
+    PT(level);
+    ASTprint(level, p->s1); // Local Declarations
+    ASTprint(level, p->s2); // Statement List
     break;
   case A_STMT_LIST:
-    printf("ASTprint(): todo! case: A_STMT_LIST \n");
+    PT(level);
+    ASTprint(level, p->s1); // Local Declarations
+    ASTprint(level, p->s2); // Statement List
     break;
   default:
     printf("unknown type in ASTprint %d\n", p->nodetype);

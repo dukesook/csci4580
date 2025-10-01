@@ -135,11 +135,15 @@ Var_Declaration: Type_Specifier Var_List ';' {
 /* Rule 4a */
 Var_List: T_ID 															{ $$ = ASTCreateNode(A_VARDEC);
 																							$$->name = $1; }
-        | T_ID '[' T_NUM ']'								{ $$ = NULL; /* TODO! */ }
+        | T_ID '[' T_NUM ']'								{ $$ = ASTCreateNode(A_VARDEC);
+																							$$->name = $1; 
+																							}
 				| T_ID ',' Var_List									{ $$ = ASTCreateNode(A_VARDEC);
 																							$$->name = $1; 
 																							$$->s1 = $3;}
-				| T_ID '[' T_NUM ']' ',' Var_List		{ $$ = NULL; /* TODO! */ };
+				| T_ID '[' T_NUM ']' ',' Var_List		{ $$ = ASTCreateNode(A_VARDEC);
+																							$$->name = $1;
+																							$$->s1 = $6; };
 
 /* Rule #5 */
 Type_Specifier: T_INT { $$ = A_INTTYPE; }
