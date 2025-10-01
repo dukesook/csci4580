@@ -36,7 +36,9 @@ ASTnode *ASTCreateNode(enum ASTtype mytype)
 // POST:   Print that number of tabs
 void PT(int howmany)
 {
-	 // MISSING
+    for (int i = 0; i < howmany; i++) {
+        printf(" ");
+    }
 }
 
 // PRE:  a Data Type
@@ -44,10 +46,12 @@ void PT(int howmany)
 
 char * DataTypeToString(enum DataTypes mydatatype){
     switch (mydatatype) {
-           case A_VOIDTYPE:  return ("void");
-                             break;
-            case A_INTTYPE:  return ("int");
-                             break;
+           case A_VOIDTYPE:
+                return ("void");
+            case A_INTTYPE:
+                return ("int");
+            case A_BOOLEANTYPE:
+                return ("boolean");
            default: printf("Unknown type in DataTypeToString\n");
                      exit(1);
       } //of switch
