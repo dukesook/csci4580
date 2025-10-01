@@ -19,11 +19,9 @@ extern int mydebug;
 sort of production rule we came across */
 
 enum ASTtype {
-   // A_PROGRAM,
    A_VARDEC,
    A_DEC_LIST,
    A_FUNCTIONDEC,
-   // A_IDENT,
    A_NUMBER,
    A_EXPR,
    A_IFSTMT

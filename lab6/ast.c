@@ -68,7 +68,8 @@ void ASTprint(int level,ASTnode *p)
 
     // when here p is not NULL
    switch (p->nodetype) {
-        case A_DEC_LIST:  ASTprint(level, p->s1);
+        case A_DEC_LIST:
+            ASTprint(level, p->s1);
                           ASTprint(level, p->s2);
                           break;
         case A_VARDEC:  printf("Variable ");
@@ -79,7 +80,18 @@ void ASTprint(int level,ASTnode *p)
                          printf("\n");
 		         ASTprint(level,p->s1); 
                      break;
-
+        case A_FUNCTIONDEC:
+            printf("ASTprint(): todo! case: A_FUNCTIONDEC\n");
+            break;
+        case A_NUMBER:
+            printf("ASTprint(): todo! case: A_NUMBER n\n");
+            break;
+        case A_EXPR:
+            printf("ASTprint(): todo! case: A_EXPR n\n");
+            break;
+        case A_IFSTMT:
+            printf("ASTprint(): todo! case: A_IFSTMT n\n");
+            break;
         default: printf("unknown type in ASTprint %d\n", p->nodetype);
                  printf("Exiting ASTprint immediately\n");
                  exit(1);
