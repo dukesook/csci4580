@@ -88,8 +88,8 @@ void ASTprint(int level, ASTnode *p) {
     printf("%s ", DataTypeToString(p->datatype));
     printf(" %s", p->name);
     printf("\n");
-    ASTprint(level, p->s1); // parameters
-    ASTprint(level, p->s2); // compound
+    ASTprint(level+1, p->s1); // parameters
+    ASTprint(level+1, p->s2); // compound
     printf("ASTprint(): todo! case: A_FUNCTIONDEC\n");
     break;
   case A_NUMBER:
