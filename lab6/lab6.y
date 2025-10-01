@@ -85,6 +85,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Declaration Declaration_List Var_Declaration
 %type <node> Var_List Func_Declaration Compound_Stmt Param Local_Declarations
 %type <node> Statement Statement_List
+%type <node> Write_Stmt
 %type <datatype> Type_Specifier
 
 %left '|'					/* lowest precedence */
@@ -208,7 +209,7 @@ Statement: Expression_Stmt { $$ = NULL; }
 				 | Iteration_Stmt { $$ = NULL; }
 				 | Assignment_Stmt { $$ = NULL; }
 				 | Return_Stmt { $$ = NULL; }
-         | Write_Stmt { $$ = NULL; }
+         | Write_Stmt { $$ = $1; }
          | Read_Stmt { $$ = NULL; }
 				 | Continue_Stmt { $$ = NULL; }
 				 | Break_Stmt { $$ = NULL; }
@@ -233,8 +234,11 @@ Return_Stmt: T_RETURN ';'
 Read_Stmt: T_READ Variable ';';
 
 /* Rule #19 */
-Write_Stmt: T_WRITE Expression ';'
-					| T_WRITE T_STRING ';' { log_string("19", $2); };
+Write_Stmt: T_WRITE Expression ';' { $$ = ASTCreateNode(A_WRITE);
+																		 $$->s1 = NULL; // TODO: assign s1 to not null
+																		}
+					| T_WRITE T_STRING ';' { $$ = ASTCreateNode(A_WRITE);
+																	 $$->name = $2; };
 
 /* Rule #20 */
 Assignment_Stmt: Variable '=' Simple_Expression ';';

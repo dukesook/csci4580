@@ -68,13 +68,13 @@ void ASTprint(int level, ASTnode *p) {
     return;
 
   // when here p is not NULL
+  PT(level);
   switch (p->nodetype) {
   case A_DEC_LIST:
     ASTprint(level, p->s1);
     ASTprint(level, p->s2);
     break;
   case A_VARDEC:
-    PT(level);
     printf("Variable ");
     printf("%s ", DataTypeToString(p->datatype));
     printf(" %s", p->name);
@@ -84,7 +84,6 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level, p->s1);
     break;
   case A_FUNCTIONDEC:
-    PT(level);
     printf("Function ");
     printf("%s ", DataTypeToString(p->datatype));
     printf(" %s", p->name);
@@ -103,7 +102,6 @@ void ASTprint(int level, ASTnode *p) {
     printf("ASTprint(): todo! case: A_IFSTMT \n");
     break;
   case A_COMPOUND:
-    PT(level);
     ASTprint(level, p->s1); // Local Declarations
     ASTprint(level, p->s2); // Statement List
     break;
@@ -111,6 +109,14 @@ void ASTprint(int level, ASTnode *p) {
     PT(level);
     ASTprint(level, p->s1); // Local Declarations
     ASTprint(level, p->s2); // Statement List
+    break;
+  case A_WRITE:
+    printf("WRITE ");
+    if (p->name) {
+      printf("%s \n", p->name);
+    } else {
+      ASTprint(level+1, p->s1);
+    }
     break;
   default:
     printf("unknown type in ASTprint %d\n", p->nodetype);

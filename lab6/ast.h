@@ -27,6 +27,7 @@ enum ASTtype {
    A_IFSTMT,
    A_COMPOUND,
    A_STMT_LIST,
+   A_WRITE,
 };
 
 enum DataTypes {
