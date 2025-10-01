@@ -83,7 +83,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %token T_CONTINUE T_BREAK
 
 %type <node> Declaration Declaration_List Var_Declaration
-%type <node> Var_List
+%type <node> Var_List Func_Declaration Compound_Stmt Param
 %type <datatype> Type_Specifier
 
 %left '|'					/* lowest precedence */
@@ -115,7 +115,7 @@ Declaration_List: Declaration {
 
 /* Rule #3 */
 Declaration: Var_Declaration { $$ = $1; }
-					 | Func_Declaration { $$ = NULL; }
+					 | Func_Declaration { $$ = $1; }
 					 | Func_Prototype { $$ = NULL; }
 					 ;
 
@@ -147,7 +147,12 @@ Type_Specifier: T_INT { $$ = A_INTTYPE; }
 
 /* Rule #6 */
 Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
-	{ log_id("6", $2); };
+	{ $$ = ASTCreateNode(A_FUNCTIONDEC);
+		$$->name = $2;
+		$$->datatype = $1;
+		$$->s1 = NULL; //todo: fix
+		$$->s2 = $6;
+	 };
 
 /* Rule #7 */
 Params: T_VOID
@@ -162,7 +167,7 @@ Param: Type_Specifier T_ID 						{ log_id("9", $2); }
 			| Type_Specifier T_ID '[' ']' 	{ log_id("9", $2); };
 
 /* Rule #10 */
-Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END;
+Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END { $$ = NULL; /* TODO FIX!*/ };
 
 /* Rule #11 */
 Local_Declarations: Var_Declaration Local_Declarations
