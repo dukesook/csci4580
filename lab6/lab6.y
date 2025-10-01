@@ -69,6 +69,7 @@ void yyerror (s)  /* Called by yyparse on error */
 	int value; // for T_NUM
 	char* string; // for T_ID and T_STRING
 	ASTnode* node; // for AST nodes
+	enum DataTypes datatype; // for data types
 }
 
 /* The Expected Tokens From Lex */
@@ -83,6 +84,7 @@ void yyerror (s)  /* Called by yyparse on error */
 
 %type <node> Declaration Declaration_List Var_Declaration
 %type <node> Var_List
+%type <datatype> Type_Specifier
 
 %left '|'					/* lowest precedence */
 %left '&'
@@ -95,7 +97,9 @@ void yyerror (s)  /* Called by yyparse on error */
 
 /* Rule #1 */
 Program: Declaration_List
-			{ printf("============= Successful Parse! =============\n"); };
+			{ printf("============= Successful Parse! =============\n"); 
+				program = $1;
+			};
 
 /* Rule #2 */
 Declaration_List: Declaration { 
@@ -119,6 +123,12 @@ Declaration: Var_Declaration { $$ = $1; }
 /* Rule #4 */
 Var_Declaration: Type_Specifier Var_List ';' {
 	$$ = $2;
+	ASTnode* p;
+	p = $2;
+	while (p != NULL) {
+		p->datatype = $1;
+		p = p->s1;
+	}
 };
 
 /* Rule 4a */
@@ -130,9 +140,9 @@ Var_List: T_ID 															{ log_id("4a", $1);
 				| T_ID '[' T_NUM ']' ',' Var_List		{ $$ = NULL; /* TODO! */ };
 
 /* Rule #5 */
-Type_Specifier: T_INT
-							| T_VOID
-							| T_BOOLEAN;
+Type_Specifier: T_INT { $$ = A_INTTYPE; }
+							| T_VOID { $$ = A_VOIDTYPE; }
+							| T_BOOLEAN { $$ = A_BOOLEANTYPE; };
 
 /* Rule #6 */
 Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
@@ -270,5 +280,11 @@ Break_Stmt: T_BREAK ';' { log_token("Break_Stmt", "T_BREAK", "break"); } ;
 /* The main function which calls yyparse() */
 int main() { 
 	yyparse();
+
+	// Sets the program variable to an AST.
+
+	ASTprint(0, program); // print the AST
+	
+	return 0;
 }
 

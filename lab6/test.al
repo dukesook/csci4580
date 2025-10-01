@@ -1,1 +1,1 @@
-int x;
+void x;

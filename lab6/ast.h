@@ -1,8 +1,10 @@
-/*   Abstract syntax tree code
-
-
- Header file   
- Shaun Cooper January 2022
+/*
+    Devon Sookhoo
+    October 13th, 2025
+    Lab 6 Abstract Syntax Tree
+    Enhancements:
+				- Resolved multiple definition errors by moving ASTnode *program to ast.c
+            - Resolved multiple definition errors by adding extern to ASTnode *program in ast.h
 
 */
 
@@ -19,8 +21,8 @@ sort of production rule we came across */
 enum ASTtype {
    // A_PROGRAM,
    A_VARDEC,
-   A_FUNCTIONDEC,
    A_DEC_LIST,
+   A_FUNCTIONDEC,
    // A_IDENT,
    A_NUMBER,
    A_EXPR,
@@ -31,7 +33,8 @@ enum ASTtype {
 
 enum DataTypes {
   A_INTTYPE,
-   A_VOIDTYPE
+  A_VOIDTYPE,
+  A_BOOLEANTYPE
 };
 
 enum OPERATORS {
@@ -62,8 +65,8 @@ ASTnode *ASTCreateNode(enum ASTtype mytype);
 
 void PT(int howmany);
 
-
-// extern ASTnode *program; // pointer to the tree
+// declared as extern to resolve multiple definition errors
+extern ASTnode *program; // pointer to the tree
 
 /*  Print out the abstract syntax tree */
 void ASTprint(int level,ASTnode *p);

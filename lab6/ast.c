@@ -62,7 +62,10 @@ void ASTprint(int level,ASTnode *p)
 
     // when here p is not NULL
    switch (p->nodetype) {
-        case A_VARDEC :  printf("Variable ");
+        case A_DEC_LIST:  ASTprint(level, p->s1);
+                          ASTprint(level, p->s2);
+                          break;
+        case A_VARDEC:  printf("Variable ");
                          printf("%s ", DataTypeToString(p->datatype));
                          printf(" %s",p->name);
                          if (p->value > 0)
