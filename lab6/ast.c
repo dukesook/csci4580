@@ -94,13 +94,19 @@ void ASTprint(int level, ASTnode *p) {
     printf("ASTprint(): todo! case: A_FUNCTIONDEC\n");
     break;
   case A_NUMBER:
-    printf("ASTprint(): todo! case: A_NUMBER n\n");
+    printf("ASTprint(): todo! case: A_NUMBER \n");
     break;
   case A_EXPR:
-    printf("ASTprint(): todo! case: A_EXPR n\n");
+    printf("ASTprint(): todo! case: A_EXPR \n");
     break;
   case A_IFSTMT:
-    printf("ASTprint(): todo! case: A_IFSTMT n\n");
+    printf("ASTprint(): todo! case: A_IFSTMT \n");
+    break;
+  case A_COMPOUND:
+    printf("ASTprint(): todo! case: A_COMPOUND \n");
+    break;
+  case A_STMT_LIST:
+    printf("ASTprint(): todo! case: A_STMT_LIST \n");
     break;
   default:
     printf("unknown type in ASTprint %d\n", p->nodetype);

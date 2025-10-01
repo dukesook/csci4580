@@ -86,7 +86,6 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Var_List Func_Declaration Compound_Stmt Param Local_Declarations
 %type <node> Statement Statement_List
 %type <datatype> Type_Specifier
-%type <string> T_BEGIN
 
 %left '|'					/* lowest precedence */
 %left '&'
