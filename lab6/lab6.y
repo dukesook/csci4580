@@ -81,7 +81,8 @@ void yyerror (s)  /* Called by yyparse on error */
 %token T_BEGIN T_END T_IF T_THEN T_ENDIF T_WHILE T_DO T_ELSE
 %token T_CONTINUE T_BREAK
 
-%type <node> Declaration Declaration_List
+%type <node> Declaration Declaration_List Var_Declaration
+%type <node> Var_List
 
 %left '|'					/* lowest precedence */
 %left '&'
@@ -109,20 +110,24 @@ Declaration_List: Declaration {
 								;
 
 /* Rule #3 */
-Declaration: Var_Declaration { $$ = NULL; }
+Declaration: Var_Declaration { $$ = $1; }
 					 | Func_Declaration { $$ = NULL; }
 					 | Func_Prototype { $$ = NULL; }
 					 ;
 
 
 /* Rule #4 */
-Var_Declaration: Type_Specifier Var_List ';';
+Var_Declaration: Type_Specifier Var_List ';' {
+	$$ = $2;
+};
 
 /* Rule 4a */
-Var_List: T_ID 															{ log_id("4a", $1); }
-        | T_ID '[' T_NUM ']'								{ log_id("4a", $1); }
-				| T_ID ',' Var_List									{ log_id("4a", $1); }
-				| T_ID '[' T_NUM ']' ',' Var_List		{ log_id("4a", $1); };
+Var_List: T_ID 															{ log_id("4a", $1); 
+					                                    $$ = ASTCreateNode(A_VARDEC);
+																							$$->name = $1; }
+        | T_ID '[' T_NUM ']'								{ $$ = NULL; /* TODO! */ }
+				| T_ID ',' Var_List									{ $$ = NULL; /* TODO! */ }
+				| T_ID '[' T_NUM ']' ',' Var_List		{ $$ = NULL; /* TODO! */ };
 
 /* Rule #5 */
 Type_Specifier: T_INT
