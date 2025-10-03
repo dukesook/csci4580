@@ -70,6 +70,7 @@ void yyerror (s)  /* Called by yyparse on error */
 	char* string; // for T_ID and T_STRING
 	ASTnode* node; // for AST nodes
 	enum DataTypes datatype; // for data types
+	enum OPERATORS operator; // for operators
 }
 
 /* The Expected Tokens From Lex */
@@ -84,9 +85,10 @@ void yyerror (s)  /* Called by yyparse on error */
 
 %type <node> Declaration Declaration_List Var_Declaration
 %type <node> Var_List Func_Declaration Compound_Stmt Param Local_Declarations
-%type <node> Statement Statement_List
-%type <node> Write_Stmt
+%type <node> Statement Statement_List Assignment_Stmt Variable
+%type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
 %type <datatype> Type_Specifier
+%type <operator> Add_Op // Relop Mult_Op
 
 %left '|'					/* lowest precedence */
 %left '&'
@@ -235,24 +237,25 @@ Read_Stmt: T_READ Variable ';';
 
 /* Rule #19 */
 Write_Stmt: T_WRITE Expression ';' { $$ = ASTCreateNode(A_WRITE);
-																		 $$->s1 = NULL; // TODO: assign s1 to not null
+																		 $$->s1 = $2; // TODO: assign s1 to not null
 																		}
 					| T_WRITE T_STRING ';' { $$ = ASTCreateNode(A_WRITE);
 																	 $$->name = $2; };
 
 /* Rule #20 */
-Assignment_Stmt: Variable '=' Simple_Expression ';';
+Assignment_Stmt: Variable '=' Simple_Expression ';' { $$ = $1;};
 
 /* Rule #21 */
-Expression: Simple_Expression;
+Expression: Simple_Expression { $$ = $1;};
 
 /* Rule #22 */
 Variable: T_ID 										  { log_id("22", $1);}
         | T_ID '[' Expression ']' 	{ log_id("22", $1);}
 
 /* Rule #23 */
-Simple_Expression: Additive_Expression
-                 | Simple_Expression Relop Additive_Expression;
+Simple_Expression: Additive_Expression { $$ = $1;}
+                 | Simple_Expression Relop Additive_Expression
+								 			{ $$ = NULL; /* TODO */};
 
 /* Rule #22 */
 Relop: T_LE
@@ -263,16 +266,19 @@ Relop: T_LE
 		 | T_NE;
 
 /* Rule #23 */
-Additive_Expression: Term
-                   | Additive_Expression Add_Op Term;
+Additive_Expression: Term { $$ = $1;}
+                   | Additive_Expression Add_Op Term { $$ = ASTCreateNode(A_EXPR);
+									 																		 $$->s1 = $1;
+																											 $$->s2 = $3;
+																											 $$->operator = $2; /*WARNING: assigning string to enum*/};
 
 /* Rule #24 */
-Add_Op: '+'
-		  | '-';
+Add_Op: '+'  { $$ = A_PLUS; }
+		  | '-' { $$ = A_MINUS; };
 
 /* Rule #25 */
-Term: Factor
-		| Term Mult_Op Factor;
+Term: Factor { $$ = $1;}
+		| Term Mult_Op Factor { $$ = NULL; /* TODO */};
 
 /* Rule #26 */
 Mult_Op: '*'
@@ -281,13 +287,14 @@ Mult_Op: '*'
 		   | T_OR;
 
 /* Rule #27 */
-Factor: '(' Expression ')'
-      | T_NUM  { log_t_num("27", $1); }
-			| Variable
-			| Call
-			| T_TRUE 	{ log_token("27", "T_TRUE", "true"); }
-			| T_FALSE { log_token("27", "T_FALSE", "false"); }
-			| T_NOT Factor;
+Factor: '(' Expression ')' { $$ = $2;}
+      | T_NUM   { $$ = ASTCreateNode(A_NUMBER);
+								  $$->value = $1;}
+			| Variable { $$ = NULL; /* TODO */}
+			| Call { $$ = NULL; /* TODO */}
+			| T_TRUE 	 { $$ = NULL; /* TODO */}
+			| T_FALSE  { $$ = NULL; /* TODO */}
+			| T_NOT Factor { $$ = NULL; /* TODO */};
 
 /* Rule #28 */
 Call: T_ID '(' Args ')' 
