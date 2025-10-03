@@ -39,7 +39,13 @@ enum DataTypes {
 enum OPERATORS {
    A_PLUS,
    A_MINUS,
-   A_TIMES
+   A_TIMES,
+   A_LT,
+   A_GT,
+   A_LE,
+   A_GE,
+   A_EQ,
+   A_NE,
 };
 
 /* define a type AST node which will hold pointers to AST structs that will
@@ -67,5 +73,7 @@ extern ASTnode *program; // pointer to the tree
 
 /*  Print out the abstract syntax tree */
 void ASTprint(int level,ASTnode *p);
+
+const char* operator_to_string(enum OPERATORS op);
 
 #endif // of AST_H

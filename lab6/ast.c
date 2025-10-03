@@ -93,10 +93,14 @@ void ASTprint(int level, ASTnode *p) {
     printf("ASTprint(): todo! case: A_FUNCTIONDEC\n");
     break;
   case A_NUMBER:
-    printf("ASTprint(): todo! case: A_NUMBER \n");
+    printf("Number: %d\n", p->value);
     break;
   case A_EXPR:
-    printf("ASTprint(): todo! case: A_EXPR \n");
+    const char* operator = operator_to_string(p->operator);
+    printf("%s ", DataTypeToString(p->datatype));
+    printf("Expression Operator: %s\n", operator);
+    ASTprint(level+1, p->s1);
+    ASTprint(level+1, p->s2);
     break;
   case A_IFSTMT:
     printf("ASTprint(): todo! case: A_IFSTMT \n");
@@ -115,6 +119,7 @@ void ASTprint(int level, ASTnode *p) {
     if (p->name) {
       printf("%s \n", p->name);
     } else {
+      printf("\n");
       ASTprint(level+1, p->s1);
     }
     break;
@@ -125,6 +130,32 @@ void ASTprint(int level, ASTnode *p) {
 
   } // of switch
 } // of ASTprint
+
+const char* operator_to_string(enum OPERATORS operator) {
+  switch (operator) {
+    case A_PLUS:
+      return "+";
+    case A_MINUS:
+      return "-";
+    case A_TIMES:
+      return "*";
+    case A_LT:
+      return "<";
+    case A_GT:
+      return ">";
+    case A_LE:
+      return "<=";
+    case A_GE:
+      return ">=";
+    case A_EQ:
+      return "==";
+    case A_NE:
+      return "!=";
+    default:
+      printf("ERROR! unknown operator in printExpression %d\n", operator);
+      exit (-1);
+  }
+}
 
 /* dummy main program so I can compile for syntax error independently
 main()
