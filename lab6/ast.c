@@ -90,7 +90,6 @@ void ASTprint(int level, ASTnode *p) {
     printf("\n");
     ASTprint(level+1, p->s1); // parameters
     ASTprint(level+1, p->s2); // compound
-    printf("ASTprint(): todo! case: A_FUNCTIONDEC\n");
     break;
   case A_NUMBER:
     printf("Number: %d\n", p->value);

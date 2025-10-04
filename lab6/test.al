@@ -1,4 +1,7 @@
+int A[100], z, y;
+boolean A[100], z, y;
+void  y;
 int main(void)
 begin
-  write 3 - 4 + 5 + 6;
+
 end
