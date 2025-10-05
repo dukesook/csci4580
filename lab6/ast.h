@@ -28,6 +28,7 @@ enum ASTtype {
    A_COMPOUND,
    A_STMT_LIST,
    A_WRITE,
+   A_PARAMS,
 };
 
 enum DataTypes {

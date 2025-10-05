@@ -114,14 +114,19 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level, p->s2); // Statement List
     break;
   case A_WRITE:
-    printf("WRITE ");
+    printf("WRITE\n");
+    PT(level+1);
     if (p->name) {
-      printf("%s \n", p->name);
+      printf("STRING: %s \n", p->name);
     } else {
       printf("\n");
       ASTprint(level+1, p->s1);
     }
     break;
+    case A_PARAMS:
+      printf("Parameters: %s\n", DataTypeToString(p->datatype));
+      ASTprint(level+1, p->s1); // next parameter
+      break;
   default:
     printf("unknown type in ASTprint %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");
