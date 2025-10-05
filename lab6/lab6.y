@@ -106,16 +106,12 @@ Program: Declaration_List
 			};
 
 /* Rule #2 */
-Declaration_List: Declaration { 
-	$$ = ASTCreateNode(A_DEC_LIST);
-	$$->s1 = $1;
-}
-								| Declaration_List Declaration { 
-	$$ = ASTCreateNode(A_DEC_LIST);
-	$$->s1 = $1;
-	$$->s2 = $2;
-}
-								;
+Declaration_List: Declaration { $$ = ASTCreateNode(A_DEC_LIST);
+																$$->s1 = $1; }
+								| Declaration_List Declaration {  $$ = ASTCreateNode(A_DEC_LIST);
+																									$$->s1 = $1;
+																									$$->s2 = $2; }
+;
 
 /* Rule #3 */
 Declaration: Var_Declaration { $$ = $1; }
@@ -125,15 +121,14 @@ Declaration: Var_Declaration { $$ = $1; }
 
 
 /* Rule #4 */
-Var_Declaration: Type_Specifier Var_List ';' {
-	$$ = $2;
-	ASTnode* p;
-	p = $2;
-	while (p != NULL) {
-		p->datatype = $1;
-		p = p->s1;
-	}
-};
+Var_Declaration: Type_Specifier Var_List ';' {$$ = $2;
+																							ASTnode* p;
+																							p = $2;
+																							while (p != NULL) {
+																								p->datatype = $1;
+																								p = p->s1;
+																							}
+																						};
 
 /* Rule 4a */
 Var_List: T_ID 															{ $$ = ASTCreateNode(A_VARDEC);
@@ -237,7 +232,7 @@ Read_Stmt: T_READ Variable ';';
 
 /* Rule #19 */
 Write_Stmt: T_WRITE Expression ';' { $$ = ASTCreateNode(A_WRITE);
-																		 $$->s1 = $2; // TODO: assign s1 to not null
+																		 $$->s1 = $2;
 																		}
 					| T_WRITE T_STRING ';' { $$ = ASTCreateNode(A_WRITE);
 																	 $$->name = $2; };
@@ -249,7 +244,7 @@ Assignment_Stmt: Variable '=' Simple_Expression ';' { $$ = $1;};
 Expression: Simple_Expression { $$ = $1;};
 
 /* Rule #22 */
-Variable: T_ID 										  { log_id("22", $1);}
+Variable: T_ID 										  { $$ = ASTCreateNode(A_VAR);}
         | T_ID '[' Expression ']' 	{ log_id("22", $1);}
 
 /* Rule #23 */
