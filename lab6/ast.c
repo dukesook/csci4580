@@ -48,7 +48,7 @@ void PT(int howmany) {
 char *DataTypeToString(enum DataTypes mydatatype) {
   switch (mydatatype) {
   case A_VOIDTYPE:
-    return ("void");
+    return ("VOID");
   case A_INTTYPE:
     return ("int");
   case A_BOOLEANTYPE:
@@ -68,13 +68,14 @@ void ASTprint(int level, ASTnode *p) {
     return;
 
   // when here p is not NULL
-  PT(level);
   switch (p->nodetype) {
-  case A_DEC_LIST:
+    case A_DEC_LIST:
+    PT(level);
     ASTprint(level, p->s1);
     ASTprint(level, p->s2);
     break;
-  case A_VARDEC:
+    case A_VARDEC:
+    PT(level);
     printf("Variable ");
     printf("%s ", DataTypeToString(p->datatype));
     printf(" %s", p->name);
@@ -84,17 +85,22 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level, p->s1);
     break;
   case A_FUNCTIONDEC:
+    PT(level);
     printf("Function ");
-    printf("%s ", DataTypeToString(p->datatype));
-    printf(" %s", p->name);
-    printf("\n");
+    printf("%s ", DataTypeToString(p->datatype)); // return type
+    printf("%s", p->name); // function name
+    printf("(");
     ASTprint(level+1, p->s1); // parameters
+    printf(")");
+    printf("\n");
     ASTprint(level+1, p->s2); // compound
     break;
   case A_NUMBER:
+    PT(level);
     printf("Number: %d\n", p->value);
     break;
   case A_EXPR:
+    PT(level);
     const char* operator = operator_to_string(p->operator);
     printf("%s ", DataTypeToString(p->datatype));
     printf("Expression Operator: %s\n", operator);
@@ -102,11 +108,16 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level+1, p->s2);
     break;
   case A_IFSTMT:
+    PT(level);
     printf("ASTprint(): todo! case: A_IFSTMT \n");
     break;
   case A_COMPOUND:
-    ASTprint(level, p->s1); // Local Declarations
-    ASTprint(level, p->s2); // Statement List
+    PT(level);
+    printf("BEGIN\n");
+    ASTprint(level+1, p->s1); // Local Declarations
+    ASTprint(level+1, p->s2); // Statement List
+    // PT(level);
+    printf("END\n");
     break;
   case A_STMT_LIST:
     PT(level);
@@ -114,6 +125,7 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level, p->s2); // Statement List
     break;
   case A_WRITE:
+    PT(level);
     printf("WRITE\n");
     PT(level+1);
     if (p->name) {
@@ -123,10 +135,10 @@ void ASTprint(int level, ASTnode *p) {
       ASTprint(level+1, p->s1);
     }
     break;
-    case A_PARAMS:
-      printf("Parameters: %s\n", DataTypeToString(p->datatype));
-      ASTprint(level+1, p->s1); // next parameter
-      break;
+  case A_PARAMS:
+    printf("%s", DataTypeToString(p->datatype));
+    ASTprint(level+1, p->s1); // next parameter
+    break;
   default:
     printf("unknown type in ASTprint %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");

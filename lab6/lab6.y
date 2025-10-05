@@ -175,7 +175,7 @@ Param: Type_Specifier T_ID 						{ log_id("9", $2); }
 /* Rule #10 */
 Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END 
 { 
-	$$ = ASTCreateNode(A_COMPOUND); /* TODO FIX!*/ 
+	$$ = ASTCreateNode(A_COMPOUND);
 	$$->s1 = $2;
 	$$->s2 = $3;
 };
