@@ -87,7 +87,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Var_List Func_Declaration Compound_Stmt Param Local_Declarations
 %type <node> Statement Statement_List Assignment_Stmt Variable
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
-%type <node> Params Param_List
+%type <node> Params Param_List Read_Stmt
 %type <datatype> Type_Specifier
 %type <operator> Add_Op // Relop Mult_Op
 
@@ -204,7 +204,7 @@ Statement: Expression_Stmt { $$ = NULL; }
 				 | Assignment_Stmt { $$ = NULL; }
 				 | Return_Stmt { $$ = NULL; }
          | Write_Stmt { $$ = $1; }
-         | Read_Stmt { $$ = NULL; }
+         | Read_Stmt { $$ = $1; }
 				 | Continue_Stmt { $$ = NULL; }
 				 | Break_Stmt { $$ = NULL; }
 				 ;
@@ -225,7 +225,9 @@ Return_Stmt: T_RETURN ';'
 					 | T_RETURN Expression ';';
 
 /* Rule #18 */
-Read_Stmt: T_READ Variable ';';
+Read_Stmt: T_READ Variable ';' { 	$$ = ASTCreateNode(A_READ);
+																	$$->s1 = $2;
+																		} ;
 
 /* Rule #19 */
 Write_Stmt: T_WRITE Expression ';' { $$ = ASTCreateNode(A_WRITE);
@@ -241,7 +243,8 @@ Assignment_Stmt: Variable '=' Simple_Expression ';' { $$ = $1;};
 Expression: Simple_Expression { $$ = $1;};
 
 /* Rule #22 */
-Variable: T_ID 										  { log_id("22", $1);}
+Variable: T_ID 										  { $$ = ASTCreateNode(A_VARIABLE);
+																			$$->name = $1; }
         | T_ID '[' Expression ']' 	{ log_id("22", $1);}
 
 /* Rule #23 */

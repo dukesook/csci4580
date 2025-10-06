@@ -69,12 +69,13 @@ void ASTprint(int level, ASTnode *p) {
 
   // when here p is not NULL
   switch (p->nodetype) {
-    case A_DEC_LIST:
+  case A_DEC_LIST:
     PT(level);
     ASTprint(level, p->s1);
     ASTprint(level, p->s2);
     break;
-    case A_VARDEC:
+  
+  case A_VARDEC:
     PT(level);
     printf("Variable ");
     printf("%s ", DataTypeToString(p->datatype));
@@ -84,6 +85,7 @@ void ASTprint(int level, ASTnode *p) {
     printf("\n");
     ASTprint(level, p->s1);
     break;
+  
   case A_FUNCTIONDEC:
     PT(level);
     printf("Function ");
@@ -92,10 +94,12 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level+1, p->s1); // parameters
     ASTprint(level+1, p->s2); // compound
     break;
+  
   case A_NUMBER:
     PT(level);
     printf("Number: %d\n", p->value);
     break;
+  
   case A_EXPR:
     PT(level);
     const char* operator = operator_to_string(p->operator);
@@ -104,10 +108,12 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level+1, p->s1);
     ASTprint(level+1, p->s2);
     break;
+  
   case A_IFSTMT:
     PT(level);
     printf("ASTprint(): todo! case: A_IFSTMT \n");
     break;
+  
   case A_COMPOUND:
     PT(level);
     printf("BEGIN\n");
@@ -116,11 +122,13 @@ void ASTprint(int level, ASTnode *p) {
     PT(level);
     printf("END\n");
     break;
+  
   case A_STMT_LIST:
     // PT(level);
     ASTprint(level, p->s1); // Statement
     ASTprint(level, p->s2); // Statement List
     break;
+  
   case A_WRITE:
     PT(level);
     printf("WRITE\n");
@@ -132,9 +140,11 @@ void ASTprint(int level, ASTnode *p) {
       ASTprint(level+1, p->s1);
     }
     break;
+ 
   case A_VOID_PARAM:
     printf("(VOID)\n");
     break;
+  
   case A_PARAM:
     printf("\n");
     PT(level);
@@ -147,8 +157,19 @@ void ASTprint(int level, ASTnode *p) {
     }
     PT(level);
     printf(")\n");
-
     break;
+
+  case A_READ:
+    PT(level);
+    printf("READ\n");
+    ASTprint(level+1, p->s1); // Variable
+    break;
+
+  case A_VARIABLE:
+    PT(level);
+    printf("VAR with name %s\n", p->name);
+    break;
+
   default:
     printf("unknown type in ASTprint %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");

@@ -23,11 +23,13 @@ enum ASTtype {
    A_DEC_LIST,
    A_FUNCTIONDEC,
    A_NUMBER,
+   A_VARIABLE,
    A_EXPR,
    A_IFSTMT,
    A_COMPOUND,
    A_STMT_LIST,
    A_WRITE,
+   A_READ,
    A_PARAM, // Function Parameter
    A_VOID_PARAM, // Empty Parameter List
 };
