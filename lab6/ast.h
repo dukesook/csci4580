@@ -24,7 +24,7 @@ enum ASTtype {
    A_FUNCTIONDEC,
    A_NUMBER,
    A_VARIABLE,
-   A_EXPR,
+   A_EXPRESSION,
    A_IFSTMT,
    A_COMPOUND,
    A_STMT_LIST,

@@ -97,14 +97,13 @@ void ASTprint(int level, ASTnode *p) {
   
   case A_NUMBER:
     PT(level);
-    printf("Number: %d\n", p->value);
+    printf("Num with value %d\n", p->value);
     break;
   
-  case A_EXPR:
+  case A_EXPRESSION:
     PT(level);
     const char* operator = operator_to_string(p->operator);
-    printf("%s ", DataTypeToString(p->datatype));
-    printf("Expression Operator: %s\n", operator);
+    printf("EXPR %s\n", operator);
     ASTprint(level+1, p->s1);
     ASTprint(level+1, p->s2);
     break;
@@ -132,11 +131,10 @@ void ASTprint(int level, ASTnode *p) {
   case A_WRITE:
     PT(level);
     printf("WRITE\n");
-    PT(level+1);
     if (p->name) {
+      PT(level+1);
       printf("STRING: %s \n", p->name);
     } else {
-      printf("\n");
       ASTprint(level+1, p->s1);
     }
     break;

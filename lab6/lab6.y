@@ -79,7 +79,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %token T_INT T_VOID T_BOOLEAN
 %token T_WRITE T_READ T_RETURN
 %token T_TRUE T_FALSE T_NOT T_AND T_OR
-%token T_GE T_LE T_NE T_EQ T_LT T_GT
+%token <operator> T_GE T_LE T_NE T_EQ T_LT T_GT
 %token T_BEGIN T_END T_IF T_THEN T_ENDIF T_WHILE T_DO T_ELSE
 %token T_CONTINUE T_BREAK
 
@@ -89,7 +89,8 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
 %type <node> Params Param_List Read_Stmt
 %type <datatype> Type_Specifier
-%type <operator> Add_Op // Relop Mult_Op
+%type <operator> Add_Op Relop   // Mult_Op
+
 
 %left '|'					/* lowest precedence */
 %left '&'
@@ -249,23 +250,26 @@ Variable: T_ID 										  { $$ = ASTCreateNode(A_VARIABLE);
 
 /* Rule #23 */
 Simple_Expression: Additive_Expression { $$ = $1;}
-                 | Simple_Expression Relop Additive_Expression
-								 			{ $$ = NULL; /* TODO */};
+                 | Simple_Expression Relop Additive_Expression {	$$ = ASTCreateNode(A_EXPRESSION);
+								 																									$$->s1 = $1;
+																									 								$$->s2 = $3;
+																									 								$$->operator = $2; };
 
 /* Rule #22 */
-Relop: T_LE
-     | T_LT
-		 | T_GT
-		 | T_GE
-		 | T_EQ
-		 | T_NE;
+Relop: T_LE { $$ = A_LE;}
+     | T_LT { $$ = A_LT;}
+		 | T_GT { $$ = A_GT;}
+		 | T_GE { $$ = A_GE;}
+		 | T_EQ { $$ = A_EQ;}
+		 | T_NE { $$ = A_NE;}
+		 ;
 
 /* Rule #23 */
 Additive_Expression: Term { $$ = $1;}
-                   | Additive_Expression Add_Op Term { $$ = ASTCreateNode(A_EXPR);
+                   | Additive_Expression Add_Op Term { $$ = ASTCreateNode(A_EXPRESSION);
 									 																		 $$->s1 = $1;
 																											 $$->s2 = $3;
-																											 $$->operator = $2; /*WARNING: assigning string to enum*/};
+																											 $$->operator = $2; };
 
 /* Rule #24 */
 Add_Op: '+'  { $$ = A_PLUS; }
