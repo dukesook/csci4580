@@ -87,7 +87,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Var_List Func_Declaration Compound_Stmt Param Local_Declarations
 %type <node> Statement Statement_List Assignment_Stmt Variable
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
-%type <node> Params
+%type <node> Params Param_List
 %type <datatype> Type_Specifier
 %type <operator> Add_Op // Relop Mult_Op
 
@@ -159,17 +159,20 @@ Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
 	 };
 
 /* Rule #7 */
-Params: T_VOID { $$ = ASTCreateNode(A_PARAMS);
-								 $$->datatype = A_VOIDTYPE; }
-      | Param_List { $$ = NULL;}
+Params: T_VOID { $$ = ASTCreateNode(A_VOID_PARAM);}
+      | Param_List	{ $$ = $1;}
 			;
 
 /* Rule #8 */
-Param_List: Param
-				  | Param ',' Param_List;
+Param_List: Param { $$ = $1; }
+				  | Param ',' Param_List	{	$$ = $1;
+															 			$$->s1 = $3; }
+					;
 
 /* Rule #9 */
-Param: Type_Specifier T_ID 						{ log_id("9", $2); }
+Param: Type_Specifier T_ID 	{	$$ = ASTCreateNode(A_PARAM);
+															$$->datatype = $1;
+															$$->name = $2; }
 			| Type_Specifier T_ID '[' ']' 	{ log_id("9", $2); };
 
 /* Rule #10 */

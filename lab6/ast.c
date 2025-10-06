@@ -88,11 +88,8 @@ void ASTprint(int level, ASTnode *p) {
     PT(level);
     printf("Function ");
     printf("%s ", DataTypeToString(p->datatype)); // return type
-    printf("%s", p->name); // function name
-    printf("(");
+    printf("%s ", p->name); // function name
     ASTprint(level+1, p->s1); // parameters
-    printf(")");
-    printf("\n");
     ASTprint(level+1, p->s2); // compound
     break;
   case A_NUMBER:
@@ -135,7 +132,10 @@ void ASTprint(int level, ASTnode *p) {
       ASTprint(level+1, p->s1);
     }
     break;
-  case A_PARAMS:
+  case A_VOID_PARAM:
+    printf("(VOID)\n");
+    break;
+  case A_PARAM:
     printf("%s", DataTypeToString(p->datatype));
     ASTprint(level+1, p->s1); // next parameter
     break;

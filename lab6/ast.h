@@ -28,7 +28,8 @@ enum ASTtype {
    A_COMPOUND,
    A_STMT_LIST,
    A_WRITE,
-   A_PARAMS,
+   A_PARAM, // Function Parameter
+   A_VOID_PARAM, // Empty Parameter List
 };
 
 enum DataTypes {
