@@ -48,7 +48,7 @@ void PT(int howmany) {
 char *DataTypeToString(enum DataTypes mydatatype) {
   switch (mydatatype) {
   case A_VOIDTYPE:
-    return ("VOID");
+    return ("void");
   case A_INTTYPE:
     return ("int");
   case A_BOOLEANTYPE:
@@ -88,7 +88,7 @@ void ASTprint(int level, ASTnode *p) {
     PT(level);
     printf("Function ");
     printf("%s ", DataTypeToString(p->datatype)); // return type
-    printf("%s ", p->name); // function name
+    printf("%s", p->name); // function name
     ASTprint(level+1, p->s1); // parameters
     ASTprint(level+1, p->s2); // compound
     break;
@@ -136,8 +136,18 @@ void ASTprint(int level, ASTnode *p) {
     printf("(VOID)\n");
     break;
   case A_PARAM:
-    printf("%s", DataTypeToString(p->datatype));
-    ASTprint(level+1, p->s1); // next parameter
+    printf("\n");
+    PT(level);
+    printf("(\n");
+    ASTnode* param = p;
+    while (param != NULL) {
+      PT(level+1);
+      printf("parameter %s %s\n", DataTypeToString(param->datatype), param->name);
+      param = param->s1; // next parameter
+    }
+    PT(level);
+    printf(")\n");
+
     break;
   default:
     printf("unknown type in ASTprint %d\n", p->nodetype);
