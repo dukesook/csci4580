@@ -123,8 +123,8 @@ Declaration: Var_Declaration { $$ = $1; }
 
 /* Rule #4 */
 Var_Declaration: Type_Specifier Var_List ';' {$$ = $2;
-																							ASTnode* p;
-																							p = $2;
+																							ASTnode* p = $2;
+																							// Why is this done here and not in Var_List?
 																							while (p != NULL) {
 																								p->datatype = $1;
 																								p = p->s1;
@@ -179,23 +179,21 @@ Param: Type_Specifier T_ID 	{	$$ = ASTCreateNode(A_PARAM);
 Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END 
 { 
 	$$ = ASTCreateNode(A_COMPOUND);
-	$$->s1 = $2;
-	$$->s2 = $3;
+	$$->s1 = $2; // Local Declarations
+	$$->s2 = $3; // Statement List
 };
 
 /* Rule #11 */
-Local_Declarations: Var_Declaration Local_Declarations
-{
-	$$ = $1;
-	$$->s2 = $2;
-}
+Local_Declarations: Var_Declaration Local_Declarations	{	$$ = $1;
+																													$$->s2 = $2;	}
                   |  /* empty */ { $$ = NULL; }
 									;
 
 /* Rule #12 */
 Statement_List: Statement Statement_List	{ $$ = ASTCreateNode(A_STMT_LIST);
-																						$$->s1 = $1;
-																						$$->s2 = $2; }
+																						$$->s1 = $1; // Statement
+																						$$->s2 = $2; // The next Statement
+																						}
               | /* empty */ { $$ = ASTCreateNode(A_STMT_LIST); } ;
 
 /* Rule #13 */

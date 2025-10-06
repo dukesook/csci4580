@@ -117,7 +117,7 @@ void ASTprint(int level, ASTnode *p) {
     printf("END\n");
     break;
   case A_STMT_LIST:
-    PT(level);
+    // PT(level);
     ASTprint(level, p->s1); // Statement
     ASTprint(level, p->s2); // Statement List
     break;
