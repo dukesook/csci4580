@@ -116,12 +116,12 @@ void ASTprint(int level, ASTnode *p) {
     printf("BEGIN\n");
     ASTprint(level+1, p->s1); // Local Declarations
     ASTprint(level+1, p->s2); // Statement List
-    // PT(level);
+    PT(level);
     printf("END\n");
     break;
   case A_STMT_LIST:
     PT(level);
-    ASTprint(level, p->s1); // Local Declarations
+    ASTprint(level, p->s1); // Statement
     ASTprint(level, p->s2); // Statement List
     break;
   case A_WRITE:

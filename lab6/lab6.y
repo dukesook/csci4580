@@ -190,17 +190,10 @@ Local_Declarations: Var_Declaration Local_Declarations
 									;
 
 /* Rule #12 */
-Statement_List: Statement Statement_List
-{
-	$$ = ASTCreateNode(A_STMT_LIST);
-	$$->s1 = $1;
-	$$->s2 = $2;
-}
-              | /* empty */
-{
-	$$ = ASTCreateNode(A_STMT_LIST);
-}
-		;
+Statement_List: Statement Statement_List	{ $$ = ASTCreateNode(A_STMT_LIST);
+																						$$->s1 = $1;
+																						$$->s2 = $2; }
+              | /* empty */ { $$ = ASTCreateNode(A_STMT_LIST); } ;
 
 /* Rule #13 */
 Statement: Expression_Stmt { $$ = NULL; }
