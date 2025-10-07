@@ -134,16 +134,24 @@ Var_Declaration: Type_Specifier Var_List ';' {$$ = $2;
 
 /* Rule 4a */
 Var_List: T_ID 															{ $$ = ASTCreateNode(A_VARDEC);
-																							$$->name = $1; }
+																							$$->name = $1;
+																							$$->value = 0; // single variable (not array)
+																						}
         | T_ID '[' T_NUM ']'								{ $$ = ASTCreateNode(A_VARDEC);
-																							$$->name = $1; 
-																							}
+																							$$->name = $1;
+																							$$->value = $3; // array size
+
+																						}
 				| T_ID ',' Var_List									{ $$ = ASTCreateNode(A_VARDEC);
 																							$$->name = $1; 
-																							$$->s1 = $3;}
+																							$$->value = 0; // single variable (not array)
+																							$$->s1 = $3;
+																						}
 				| T_ID '[' T_NUM ']' ',' Var_List		{ $$ = ASTCreateNode(A_VARDEC);
 																							$$->name = $1;
-																							$$->s1 = $6; };
+																							$$->value = $3; // array size
+																							$$->s1 = $6; 
+																						};
 
 /* Rule #5 */
 Type_Specifier: T_INT { $$ = A_INTTYPE; }
@@ -246,7 +254,9 @@ Expression: Simple_Expression { $$ = $1;};
 /* Rule #22 */
 Variable: T_ID 										  { $$ = ASTCreateNode(A_VARIABLE);
 																			$$->name = $1; }
-        | T_ID '[' Expression ']' 	{ log_id("22", $1);}
+        | T_ID '[' Expression ']' 	{ $$ = ASTCreateNode(A_VARIABLE);
+																			$$->name = $1;
+																			$$->s1 = $3; };
 
 /* Rule #23 */
 Simple_Expression: Additive_Expression { $$ = $1;}
@@ -276,7 +286,7 @@ Add_Op: '+'  { $$ = A_PLUS; }
 		  | '-' { $$ = A_MINUS; };
 
 /* Rule #25 */
-Term: Factor { $$ = $1;}
+Term: Factor { $$ = $1; printf("hit rule 25-1\n"); }
 		| Term Mult_Op Factor { $$ = NULL; /* TODO */};
 
 /* Rule #26 */
@@ -286,13 +296,14 @@ Mult_Op: '*'
 		   | T_OR;
 
 /* Rule #27 */
-Factor: '(' Expression ')' { $$ = $2;}
+Factor: '(' Expression ')' { $$ = $2; printf("hit rule 27 ()\n"); }
       | T_NUM   { $$ = ASTCreateNode(A_NUMBER);
-								  $$->value = $1;}
-			| Variable { $$ = NULL; /* TODO */}
-			| Call { $$ = NULL; /* TODO */}
-			| T_TRUE 	 { $$ = NULL; /* TODO */}
-			| T_FALSE  { $$ = NULL; /* TODO */}
+								  $$->value = $1;
+									printf("hit rule 27 T_NUM\n");}
+			| Variable { $$ = NULL; printf("TODO!: rule 27 Variable\n"); }
+			| Call { $$ = NULL; printf("TODO!: rule 27 Call\n"); }
+			| T_TRUE 	 { $$ = NULL; printf("TODO!: rule 27 T_TRUE\n"); }
+			| T_FALSE  { $$ = NULL; printf("TODO!: rule 27 T_FALSE\n"); }
 			| T_NOT Factor	{ $$ = ASTCreateNode(A_EXPRESSION);
 												$$->operator = A_NOT;
 												$$->s1 = $2; };

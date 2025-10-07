@@ -169,7 +169,7 @@ void ASTprint(int level, ASTnode *p) {
     break;
 
   default:
-    printf("unknown type in ASTprint %d\n", p->nodetype);
+    printf("Error! ASTprint() - unknown type: %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");
     exit(1);
 
