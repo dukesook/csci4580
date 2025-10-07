@@ -168,6 +168,12 @@ void ASTprint(int level, ASTnode *p) {
     printf("VAR with name %s\n", p->name);
     break;
 
+  case A_FUNCTION_CALL:
+    PT(level);
+    printf("CALL %s\n", p->name);
+    ASTprint(level+1, p->s1); // Arguments
+    break;
+
   default:
     printf("Error! ASTprint() - unknown type: %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");

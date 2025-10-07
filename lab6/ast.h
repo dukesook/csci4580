@@ -22,6 +22,7 @@ enum ASTtype {
    A_VARDEC,
    A_DEC_LIST,
    A_FUNCTIONDEC,
+   A_FUNCTION_CALL, // Function Call Argument
    A_NUMBER,
    A_VARIABLE,
    A_EXPRESSION,
@@ -30,7 +31,7 @@ enum ASTtype {
    A_STMT_LIST,
    A_WRITE,
    A_READ,
-   A_PARAM, // Function Parameter
+   A_PARAM, // Function Declaration Parameter
    A_VOID_PARAM, // Empty Parameter List
 };
 

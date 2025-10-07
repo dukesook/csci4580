@@ -1,3 +1,5 @@
-int A[100], z, y;
-boolean A[100], z, y;
-void  y;
+int main(void)
+begin
+  foo(a);
+  // foo(a,b, c[4], d);
+end

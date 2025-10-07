@@ -87,7 +87,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Var_List Func_Declaration Compound_Stmt Param Local_Declarations
 %type <node> Statement Statement_List Assignment_Stmt Variable
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
-%type <node> Params Param_List Read_Stmt
+%type <node> Params Param_List Read_Stmt Call Args Arg_List Expression_Stmt
 %type <datatype> Type_Specifier
 %type <operator> Add_Op Relop   // Mult_Op
 
@@ -206,7 +206,7 @@ Statement_List: Statement Statement_List	{ $$ = ASTCreateNode(A_STMT_LIST);
               | /* empty */ { $$ = ASTCreateNode(A_STMT_LIST); } ;
 
 /* Rule #13 */
-Statement: Expression_Stmt { $$ = NULL; }
+Statement: Expression_Stmt { $$ = $1; }
 				 | Compound_Stmt		{ $$ = NULL; }
 				 | Selection_Stmt { $$ = NULL; }
 				 | Iteration_Stmt { $$ = NULL; }
@@ -219,8 +219,8 @@ Statement: Expression_Stmt { $$ = NULL; }
 				 ;
 
 /* Rule #14 */
-Expression_Stmt: Expression ';'
- 							 | ';';
+Expression_Stmt: Expression ';' { $$ = $1; }
+ 							 | ';' { $$ = NULL;} ;
 
 /* Rule #15 */
 Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF
@@ -249,7 +249,7 @@ Write_Stmt: T_WRITE Expression ';' { $$ = ASTCreateNode(A_WRITE);
 Assignment_Stmt: Variable '=' Simple_Expression ';' { $$ = $1;};
 
 /* Rule #21 */
-Expression: Simple_Expression { $$ = $1;};
+Expression: Simple_Expression { $$ = $1; };
 
 /* Rule #22 */
 Variable: T_ID 										  { $$ = ASTCreateNode(A_VARIABLE);
@@ -275,7 +275,7 @@ Relop: T_LE { $$ = A_LE;}
 		 ;
 
 /* Rule #23 */
-Additive_Expression: Term { $$ = $1;}
+Additive_Expression: Term { $$ = $1; }
                    | Additive_Expression Add_Op Term { $$ = ASTCreateNode(A_EXPRESSION);
 									 																		 $$->s1 = $1;
 																											 $$->s2 = $3;
@@ -286,8 +286,8 @@ Add_Op: '+'  { $$ = A_PLUS; }
 		  | '-' { $$ = A_MINUS; };
 
 /* Rule #25 */
-Term: Factor { $$ = $1; printf("hit rule 25-1\n"); }
-		| Term Mult_Op Factor { $$ = NULL; /* TODO */};
+Term: Factor { $$ = $1; }
+		| Term Mult_Op Factor { $$ = NULL; } ;
 
 /* Rule #26 */
 Mult_Op: '*'
@@ -296,29 +296,30 @@ Mult_Op: '*'
 		   | T_OR;
 
 /* Rule #27 */
-Factor: '(' Expression ')' { $$ = $2; printf("hit rule 27 ()\n"); }
+Factor: '(' Expression ')' { $$ = $2; }
       | T_NUM   { $$ = ASTCreateNode(A_NUMBER);
-								  $$->value = $1;
-									printf("hit rule 27 T_NUM\n");}
-			| Variable { $$ = NULL; printf("TODO!: rule 27 Variable\n"); }
-			| Call { $$ = NULL; printf("TODO!: rule 27 Call\n"); }
-			| T_TRUE 	 { $$ = NULL; printf("TODO!: rule 27 T_TRUE\n"); }
-			| T_FALSE  { $$ = NULL; printf("TODO!: rule 27 T_FALSE\n"); }
+								  $$->value = $1; }
+			| Variable { $$ = $1; }
+			| Call { $$ = $1; }
+			| T_TRUE 	 { $$ = NULL; }
+			| T_FALSE  { $$ = NULL; }
 			| T_NOT Factor	{ $$ = ASTCreateNode(A_EXPRESSION);
 												$$->operator = A_NOT;
 												$$->s1 = $2; };
 
 /* Rule #28 */
-Call: T_ID '(' Args ')' 
-			{ log_id("28", $1); };
+Call: T_ID '(' Args ')'	{	$$ = ASTCreateNode(A_FUNCTION_CALL);
+													$$->name = $1;
+													$$->s1 = $3; 
+													} ;
 
 /* Rule #29 */
-Args: Arg_List
-    | /* empty */;
+Args: Arg_List { $$ = $1; }
+    | /* empty */ { $$ = NULL; } ;
 
 /* Rule #30 */
-Arg_List: Expression
-				| Expression ',' Arg_List;
+Arg_List: Expression { $$ = $1; }
+				| Expression ',' Arg_List { $$ = NULL;};
 
 /* Graduate Student Required Rule */
 Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' {log_id("Func_Prototype", $2);};
