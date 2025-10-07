@@ -196,8 +196,10 @@ const char* operator_to_string(enum OPERATORS operator) {
       return "==";
     case A_NE:
       return "!=";
+    case A_NOT:
+      return "NOT";
     default:
-      printf("ERROR! unknown operator in printExpression %d\n", operator);
+      printf("ERROR! operator_to_string() - unknown operator: %d\n", operator);
       exit (-1);
   }
 }

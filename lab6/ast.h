@@ -50,6 +50,7 @@ enum OPERATORS {
    A_GE,
    A_EQ,
    A_NE,
+   A_NOT,
 };
 
 /* define a type AST node which will hold pointers to AST structs that will

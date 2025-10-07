@@ -293,7 +293,9 @@ Factor: '(' Expression ')' { $$ = $2;}
 			| Call { $$ = NULL; /* TODO */}
 			| T_TRUE 	 { $$ = NULL; /* TODO */}
 			| T_FALSE  { $$ = NULL; /* TODO */}
-			| T_NOT Factor { $$ = NULL; /* TODO */};
+			| T_NOT Factor	{ $$ = ASTCreateNode(A_EXPRESSION);
+												$$->operator = A_NOT;
+												$$->s1 = $2; };
 
 /* Rule #28 */
 Call: T_ID '(' Args ')' 
