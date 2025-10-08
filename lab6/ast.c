@@ -166,6 +166,15 @@ void ASTprint(int level, ASTnode *p) {
   case A_VARIABLE:
     PT(level);
     printf("VAR with name %s\n", p->name);
+    
+    // If variable is an array
+    if (p->s1) {
+      PT(level+1);
+      printf("[\n"); // print opening bracket for array
+      ASTprint(level+2, p->s1); // Expression for array index
+      PT(level+1);
+      printf("]\n"); // print closing bracket for array
+    }
     break;
 
   case A_FUNCTION_CALL:
