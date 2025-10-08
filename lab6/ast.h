@@ -23,6 +23,8 @@ enum ASTtype {
    A_DEC_LIST,
    A_FUNCTIONDEC,
    A_FUNCTION_CALL, // Function Call Argument
+   A_ARG_LIST, // The list of arguments in a function call
+   A_Argument, // A single argument in a function call
    A_NUMBER,
    A_VARIABLE,
    A_EXPRESSION,

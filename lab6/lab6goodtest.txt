@@ -8,25 +8,25 @@ Variable void  y
 Function int  main(VOID)
  BEGIN
   Variable int  x[100]
-  ASSIGNMENT
-   LEFT HAND SIDE
+  ASSIGNMENT 
+   LEFT HAND SIDE 
     VAR with name x
    RIGHT HAND SIDE
     NUM with value 10
-  WHILE
-   CONDITION
+  WHILE 
+   CONDITION 
     EXPR  <=
      VAR with name i
      NUM with value 10
-   WHILE BODY
+   WHILE BODY 
     BEGIN
-     ASSIGNMENT
-      LEFT HAND SIDE
+     ASSIGNMENT 
+      LEFT HAND SIDE 
        VAR with name x
       RIGHT HAND SIDE
        VAR with name i
-     ASSIGNMENT
-      LEFT HAND SIDE
+     ASSIGNMENT 
+      LEFT HAND SIDE 
        VAR with name i
         [
          EXPR  <=
@@ -39,8 +39,8 @@ Function int  main(VOID)
        EXPR  +
         VAR with name i
         NUM with value 1
-     ASSIGNMENT
-      LEFT HAND SIDE
+     ASSIGNMENT 
+      LEFT HAND SIDE 
        VAR with name i
       RIGHT HAND SIDE
        EXPR  OR
@@ -49,8 +49,8 @@ Function int  main(VOID)
          VAR with name y
         VAR with name z
     END
-  Expression Statement
-   CALL foo
+  Expression Statement 
+   CALL foo 
     (
      CALL ARGUMENT
       VAR with name a
@@ -64,31 +64,35 @@ Function int  main(VOID)
      CALL ARGUMENT
       VAR with name d
     )
-  IF Statement
-   CONDITION
+  Expression Statement 
+   CALL foo2 
+    (
+    )
+  IF Statement 
+   CONDITION 
     EXPR  AND
      VAR with name a
      VAR with name b
-   IF BODY
-    ASSIGNMENT
-     LEFT HAND SIDE
+   IF BODY 
+    ASSIGNMENT 
+     LEFT HAND SIDE 
       VAR with name x
      RIGHT HAND SIDE
       NUM with value 1
-   ELSE
-    ASSIGNMENT
-     LEFT HAND SIDE
+   ELSE 
+    ASSIGNMENT 
+     LEFT HAND SIDE 
       VAR with name z
      RIGHT HAND SIDE
       NUM with value 10
-  IF Statement
-   CONDITION
+  IF Statement 
+   CONDITION 
     EXPR  AND
      VAR with name a
      VAR with name b
-   IF BODY
-    ASSIGNMENT
-     LEFT HAND SIDE
+   IF BODY 
+    ASSIGNMENT 
+     LEFT HAND SIDE 
       VAR with name x
      RIGHT HAND SIDE
       NUM with value 1
@@ -133,9 +137,9 @@ Function void  foo
   WRITE
    EXPR  NOT
     NUM with value 2
-  READ
+  READ 
    VAR with name X
-  READ
+  READ 
    VAR with name X
     [
      EXPR  <

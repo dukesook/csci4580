@@ -314,11 +314,13 @@ Call: T_ID '(' Args ')'	{	$$ = ASTCreateNode(A_FUNCTION_CALL);
 													} ;
 
 /* Rule #29 */
-Args: Arg_List { $$ = $1; }
+Args: Arg_List { 	$$ = ASTCreateNode(A_ARG_LIST);
+									$$->s1 = $1; }
     | /* empty */ { $$ = NULL; } ;
 
 /* Rule #30 */
-Arg_List: Expression { $$ = $1; }
+Arg_List: Expression { 	$$ = ASTCreateNode(A_Argument);
+												$$->s1 = $1; }
 				| Expression ',' Arg_List { $$ = NULL;};
 
 /* Graduate Student Required Rule */

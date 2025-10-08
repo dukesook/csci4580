@@ -10,6 +10,7 @@ begin int x[100];
        i = x and y or  z;
     end
    foo(a,b, c[4], d);
+   foo2();
    if a and b then
        x = 1;
    else

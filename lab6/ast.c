@@ -174,6 +174,20 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level+1, p->s1); // Arguments
     break;
 
+  case A_ARG_LIST:
+    PT(level);
+    printf("(\n");
+    ASTprint(level+1, p->s1); // First Argument
+    PT(level);
+    printf(")\n");
+  break;
+
+  case A_Argument:
+    PT(level);
+    printf("CALL ARGUMENT\n");
+    ASTprint(level+1, p->s1); // Next Argument (if any)
+  break;
+
   default:
     printf("Error! ASTprint() - unknown type: %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");
