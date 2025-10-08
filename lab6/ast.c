@@ -242,6 +242,16 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level+2, p->s2); // Then branch
     break;
 
+  case A_SELECTION_BODY:
+    ASTprint(level+1, p->s1); // Body of if statement
+
+    if (p->s2) {
+      PT(level);
+      printf("ELSE\n");
+    }
+    ASTprint(level, p->s2); // Else branch
+    break;
+
   default:
     printf("Error! ASTprint() - unknown type: %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");

@@ -227,9 +227,17 @@ Expression_Stmt: Expression ';' { $$ = $1; }
 Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF 
 										{ $$ = ASTCreateNode(A_SELECTION_STATEMENT);
 											$$->s1 = $2; // Condition
-											$$->s2 = $4; // Then branch
+											$$->s2 = ASTCreateNode(A_SELECTION_BODY); // Then branch
+											$$->s2->s1 = $4; // Then branch statement
 										}
-              | T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF { }
+              | T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF 
+										{ $$ = ASTCreateNode(A_SELECTION_STATEMENT);
+											$$->s1 = $2; // Condition
+											$$->s2 = ASTCreateNode(A_SELECTION_BODY); // Then branch
+											$$->s2->s1 = $4; // Then branch statement
+											$$->s2->s2 = ASTCreateNode(A_SELECTION_BODY); // Else branch
+											$$->s2->s2->s1 = $6; // Else branch statement
+										}
 							;
 
 /* Rule #16 */

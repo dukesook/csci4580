@@ -38,6 +38,7 @@ enum ASTtype {
    A_ASSIGNMENT_STATEMENT, // Example: x = 5;
    A_ITERATION_STATEMENT, // Example: while x < 10 do being .. end
    A_SELECTION_STATEMENT, // Example: if x < 10 then ... else ... endif
+   A_SELECTION_BODY, // The body of an if statement
 };
 
 enum DataTypes {
