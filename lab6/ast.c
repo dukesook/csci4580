@@ -227,6 +227,12 @@ const char* operator_to_string(enum OPERATORS operator) {
       return "-";
     case A_TIMES:
       return "*";
+    case A_DIVIDE:
+      return "/";
+    case A_AND:
+      return "AND";
+    case A_OR:
+      return "OR";
     case A_LT:
       return "<";
     case A_GT:

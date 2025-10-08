@@ -78,8 +78,8 @@ void yyerror (s)  /* Called by yyparse on error */
 %token <string> T_ID T_STRING // identifier and string
 %token T_INT T_VOID T_BOOLEAN
 %token T_WRITE T_READ T_RETURN
-%token T_TRUE T_FALSE T_NOT T_AND T_OR
-%token <operator> T_GE T_LE T_NE T_EQ T_LT T_GT
+%token T_TRUE T_FALSE T_NOT
+%token <operator> T_GE T_LE T_NE T_EQ T_LT T_GT T_AND T_OR
 %token T_BEGIN T_END T_IF T_THEN T_ENDIF T_WHILE T_DO T_ELSE
 %token T_CONTINUE T_BREAK
 
@@ -89,7 +89,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
 %type <node> Params Param_List Read_Stmt Call Args Arg_List Expression_Stmt
 %type <datatype> Type_Specifier
-%type <operator> Add_Op Relop   // Mult_Op
+%type <operator> Add_Op Relop Mult_Op
 
 
 %left '|'					/* lowest precedence */
@@ -285,18 +285,22 @@ Additive_Expression: Term { $$ = $1; }
 																											 $$->operator = $2; };
 
 /* Rule #24 */
-Add_Op: '+'  { $$ = A_PLUS; }
-		  | '-' { $$ = A_MINUS; };
+Add_Op: '+'  	{ $$ = A_PLUS; }
+		  | '-' 	{ $$ = A_MINUS; };
 
 /* Rule #25 */
 Term: Factor { $$ = $1; }
-		| Term Mult_Op Factor { $$ = NULL; } ;
+		| Term Mult_Op Factor { $$ = ASTCreateNode(A_EXPRESSION); 
+														$$->s1 = $1;
+														$$->s2 = $3;
+														$$->operator = $2; };
+		;
 
 /* Rule #26 */
-Mult_Op: '*'
-		   | '/'
-		   | T_AND
-		   | T_OR;
+Mult_Op: '*' 		{ $$ = A_TIMES; }
+		   | '/' 		{ $$ = A_DIVIDE; }
+		   | T_AND 	{ $$ = A_AND; }
+		   | T_OR 	{ $$ = A_OR; };
 
 /* Rule #27 */
 Factor: '(' Expression ')' { $$ = $2; }
