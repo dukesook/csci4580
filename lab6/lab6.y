@@ -210,7 +210,7 @@ Statement: Expression_Stmt { $$ = $1; }
 				 | Compound_Stmt		{ $$ = NULL; }
 				 | Selection_Stmt { $$ = NULL; }
 				 | Iteration_Stmt { $$ = NULL; }
-				 | Assignment_Stmt { $$ = NULL; }
+				 | Assignment_Stmt { $$ = $1; }
 				 | Return_Stmt { $$ = NULL; }
          | Write_Stmt { $$ = $1; }
          | Read_Stmt { $$ = $1; }
@@ -246,7 +246,10 @@ Write_Stmt: T_WRITE Expression ';' { $$ = ASTCreateNode(A_WRITE);
 																	 $$->name = $2; };
 
 /* Rule #20 */
-Assignment_Stmt: Variable '=' Simple_Expression ';' { $$ = $1;};
+Assignment_Stmt: Variable '=' Simple_Expression ';' { $$ = ASTCreateNode(A_ASSIGNMENT_STATEMENT);
+																											$$->s1 = $1; // Variable
+																											$$->s2 = $3; // Expression
+																											} ;
 
 /* Rule #21 */
 Expression: Simple_Expression { $$ = $1; };

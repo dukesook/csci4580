@@ -198,6 +198,19 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level, p->s2); // Print Next Argument
   break;
 
+  case A_ASSIGNMENT_STATEMENT:
+    PT(level);
+    printf("ASSIGNMENT\n");
+    
+    PT(level+1);
+    printf("LEFT HAND SIDE\n");
+    ASTprint(level+2, p->s1); // Variable to be assigned
+
+    PT(level+1);
+    printf("RIGHT HAND SIDE\n");
+    ASTprint(level+2, p->s2); // Expression
+    break;
+
   default:
     printf("Error! ASTprint() - unknown type: %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");

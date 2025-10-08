@@ -35,6 +35,7 @@ enum ASTtype {
    A_READ,
    A_PARAM, // Function Declaration Parameter
    A_VOID_PARAM, // Empty Parameter List
+   A_ASSIGNMENT_STATEMENT, // Example: x = 5;
 };
 
 enum DataTypes {
