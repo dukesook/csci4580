@@ -87,7 +87,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Var_List Func_Declaration Compound_Stmt Param Local_Declarations
 %type <node> Statement Statement_List Assignment_Stmt Variable
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
-%type <node> Params Param_List Read_Stmt Call Args Arg_List Expression_Stmt
+%type <node> Params Param_List Read_Stmt Call Args Arg_List Expression_Stmt Iteration_Stmt
 %type <datatype> Type_Specifier
 %type <operator> Add_Op Relop Mult_Op
 
@@ -209,7 +209,7 @@ Statement_List: Statement Statement_List	{ $$ = ASTCreateNode(A_STMT_LIST);
 Statement: Expression_Stmt { $$ = $1; }
 				 | Compound_Stmt		{ $$ = NULL; }
 				 | Selection_Stmt { $$ = NULL; }
-				 | Iteration_Stmt { $$ = NULL; }
+				 | Iteration_Stmt { $$ = $1; }
 				 | Assignment_Stmt { $$ = $1; }
 				 | Return_Stmt { $$ = NULL; }
          | Write_Stmt { $$ = $1; }
@@ -227,7 +227,11 @@ Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF
               | T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF;
 
 /* Rule #16 */
-Iteration_Stmt: T_WHILE Expression T_DO Statement;
+Iteration_Stmt: T_WHILE Expression T_DO Statement
+								{ $$ = ASTCreateNode(A_ITERATION_STATEMENT); 
+									$$->s1 = $2; // Condition
+									$$->s2 = $4; // Body
+								};
 
 /* Rule #17 */
 Return_Stmt: T_RETURN ';'

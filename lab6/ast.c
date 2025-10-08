@@ -211,6 +211,24 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level+2, p->s2); // Expression
     break;
 
+  case A_ITERATION_STATEMENT:
+    PT(level);
+    printf("WHILE BODY\n");
+
+    PT(level+1);
+    printf("CONDITION\n");
+    ASTprint(level+2, p->s1); // Condition
+
+
+    PT(level+1);
+    printf("BEGIN\n");
+    
+    ASTprint(level+2, p->s2); // Body
+
+    PT(level+1);
+    printf("END\n");
+    break;
+
   default:
     printf("Error! ASTprint() - unknown type: %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");

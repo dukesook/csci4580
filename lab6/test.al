@@ -1,6 +1,12 @@
 int main(void)
 begin
-  i = x and y or  z;
+
+  while  i <= 10  do
+    begin
+      x=i;
+
+    end
+
 
 
 end
