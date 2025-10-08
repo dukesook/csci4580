@@ -185,7 +185,8 @@ void ASTprint(int level, ASTnode *p) {
   case A_Argument:
     PT(level);
     printf("CALL ARGUMENT\n");
-    ASTprint(level+1, p->s1); // Next Argument (if any)
+    ASTprint(level+1, p->s1); // Print Current Argument
+    ASTprint(level, p->s2); // Print Next Argument
   break;
 
   default:

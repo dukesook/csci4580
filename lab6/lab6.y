@@ -316,12 +316,16 @@ Call: T_ID '(' Args ')'	{	$$ = ASTCreateNode(A_FUNCTION_CALL);
 /* Rule #29 */
 Args: Arg_List { 	$$ = ASTCreateNode(A_ARG_LIST);
 									$$->s1 = $1; }
-    | /* empty */ { $$ = NULL; } ;
+    				| { $$ = ASTCreateNode(A_ARG_LIST); } // No arguments
+						;
 
 /* Rule #30 */
 Arg_List: Expression { 	$$ = ASTCreateNode(A_Argument);
 												$$->s1 = $1; }
-				| Expression ',' Arg_List { $$ = NULL;};
+				| Expression ',' Arg_List { $$ = ASTCreateNode(A_Argument);
+												            $$->s1 = $1;
+												            $$->s2 = $3; }
+				;
 
 /* Graduate Student Required Rule */
 Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' {log_id("Func_Prototype", $2);};
