@@ -1,11 +1,11 @@
 int main(void)
 begin
 
-  while  i <= 10  do
-    begin
-      x=i;
-
-    end
+   if a and b then
+       x = 1;
+//   else
+//       z = 10;
+   endif
 
 
 

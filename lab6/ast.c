@@ -103,7 +103,7 @@ void ASTprint(int level, ASTnode *p) {
   case A_EXPRESSION:
     PT(level);
     const char* operator = operator_to_string(p->operator);
-    printf("EXPR %s\n", operator);
+    printf("EXPR  %s\n", operator);
     ASTprint(level+1, p->s1);
     ASTprint(level+1, p->s2);
     break;
@@ -227,6 +227,19 @@ void ASTprint(int level, ASTnode *p) {
 
     PT(level+1);
     printf("END\n");
+    break;
+
+  case A_SELECTION_STATEMENT:
+    PT(level);
+    printf("IF STATEMENT\n");
+
+    PT(level+1);
+    printf("CONDITION\n");
+    ASTprint(level+2, p->s1); // Condition
+
+    PT(level+1);
+    printf("IF BODY\n");
+    ASTprint(level+2, p->s2); // Then branch
     break;
 
   default:

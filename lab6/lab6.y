@@ -88,6 +88,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Statement Statement_List Assignment_Stmt Variable
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
 %type <node> Params Param_List Read_Stmt Call Args Arg_List Expression_Stmt Iteration_Stmt
+%type <node> Selection_Stmt
 %type <datatype> Type_Specifier
 %type <operator> Add_Op Relop Mult_Op
 
@@ -207,8 +208,8 @@ Statement_List: Statement Statement_List	{ $$ = ASTCreateNode(A_STMT_LIST);
 
 /* Rule #13 */
 Statement: Expression_Stmt { $$ = $1; }
-				 | Compound_Stmt		{ $$ = NULL; }
-				 | Selection_Stmt { $$ = NULL; }
+				 | Compound_Stmt		{ $$ = $1; }
+				 | Selection_Stmt { $$ = $1; }
 				 | Iteration_Stmt { $$ = $1; }
 				 | Assignment_Stmt { $$ = $1; }
 				 | Return_Stmt { $$ = NULL; }
@@ -223,8 +224,13 @@ Expression_Stmt: Expression ';' { $$ = $1; }
  							 | ';' { $$ = NULL;} ;
 
 /* Rule #15 */
-Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF
-              | T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF;
+Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF 
+										{ $$ = ASTCreateNode(A_SELECTION_STATEMENT);
+											$$->s1 = $2; // Condition
+											$$->s2 = $4; // Then branch
+										}
+              | T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF { }
+							;
 
 /* Rule #16 */
 Iteration_Stmt: T_WHILE Expression T_DO Statement
