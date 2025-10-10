@@ -28,13 +28,13 @@ enum ASTtype {
    A_NUMBER,
    A_VARIABLE,
    A_EXPRESSION,
-   A_IFSTMT,
    A_COMPOUND,
    A_STMT_LIST,
    A_WRITE,
    A_READ,
    A_PARAM, // Function Declaration Parameter
    A_VOID_PARAM, // Empty Parameter List
+   A_EXPRESSION_STATEMENT, // Example: x + 5;
    A_ASSIGNMENT_STATEMENT, // Example: x = 5;
    A_ITERATION_STATEMENT, // Example: while x < 10 do being .. end
    A_SELECTION_STATEMENT, // Example: if x < 10 then ... else ... endif

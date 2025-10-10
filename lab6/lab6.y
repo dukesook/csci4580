@@ -220,7 +220,8 @@ Statement: Expression_Stmt { $$ = $1; }
 				 ;
 
 /* Rule #14 */
-Expression_Stmt: Expression ';' { $$ = $1; }
+Expression_Stmt: Expression ';' { $$ = ASTCreateNode(A_EXPRESSION_STATEMENT);
+																	$$->s1 = $1; }
  							 | ';' { $$ = NULL;} ;
 
 /* Rule #15 */
