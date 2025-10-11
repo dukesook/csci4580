@@ -88,7 +88,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Statement Statement_List Assignment_Stmt Variable
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
 %type <node> Params Param_List Read_Stmt Call Args Arg_List Expression_Stmt Iteration_Stmt
-%type <node> Selection_Stmt
+%type <node> Selection_Stmt Func_Prototype
 %type <datatype> Type_Specifier
 %type <operator> Add_Op Relop Mult_Op
 
@@ -119,7 +119,7 @@ Declaration_List: Declaration { $$ = ASTCreateNode(A_DEC_LIST);
 /* Rule #3 */
 Declaration: Var_Declaration { $$ = $1; }
 					 | Func_Declaration { $$ = $1; }
-					 | Func_Prototype { $$ = NULL; }
+					 | Func_Prototype { $$ = $1; }
 					 ;
 
 
@@ -346,15 +346,19 @@ Args: Arg_List { 	$$ = ASTCreateNode(A_ARG_LIST);
 						;
 
 /* Rule #30 */
-Arg_List: Expression { 	$$ = ASTCreateNode(A_Argument);
+Arg_List: Expression { 	$$ = ASTCreateNode(A_ARGUMENT);
 												$$->s1 = $1; }
-				| Expression ',' Arg_List { $$ = ASTCreateNode(A_Argument);
+				| Expression ',' Arg_List { $$ = ASTCreateNode(A_ARGUMENT);
 												            $$->s1 = $1;
 												            $$->s2 = $3; }
 				;
 
 /* Graduate Student Required Rule */
-Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' {log_id("Func_Prototype", $2);};
+Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' 	{ $$ = ASTCreateNode(A_FUNCTION_PROTOTYPE);
+																								         	$$->datatype = $1; // Return Type
+																								         	$$->name = $2;		 // Function Name
+																								         	$$->s1 = $4; 		   // Parameters
+																												};
 
 /* Graduate Student Required Rule */
 Continue_Stmt: T_CONTINUE ';' { log_token("Continue_Stmt", "T_CONTINUE", "continue"); } ;

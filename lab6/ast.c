@@ -186,7 +186,7 @@ void ASTprint(int level, ASTnode *p) {
     printf(")\n");
   break;
 
-  case A_Argument:
+  case A_ARGUMENT:
     PT(level);
     printf("CALL ARGUMENT\n");
     ASTprint(level+1, p->s1); // Print Current Argument
@@ -250,6 +250,15 @@ void ASTprint(int level, ASTnode *p) {
     PT(level);
     printf("Expression Statement \n");
     ASTprint(level+1, p->s1); // Expression
+    break;
+
+  case A_FUNCTION_PROTOTYPE:
+    PT(level);
+    char* type = DataTypeToString(p->datatype);
+    printf("Function PROTOTYPE %s  %s", type, p->name);
+
+    ASTprint(level+1, p->s1); // parameters
+
     break;
 
   default:
