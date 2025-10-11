@@ -88,7 +88,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Statement Statement_List Assignment_Stmt Variable
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
 %type <node> Params Param_List Read_Stmt Call Args Arg_List Expression_Stmt Iteration_Stmt
-%type <node> Selection_Stmt Func_Prototype
+%type <node> Selection_Stmt Func_Prototype Continue_Stmt Break_Stmt // Return_Stmt
 %type <datatype> Type_Specifier
 %type <operator> Add_Op Relop Mult_Op
 
@@ -215,8 +215,8 @@ Statement: Expression_Stmt { $$ = $1; }
 				 | Return_Stmt { $$ = NULL; }
          | Write_Stmt { $$ = $1; }
          | Read_Stmt { $$ = $1; }
-				 | Continue_Stmt { $$ = NULL; }
-				 | Break_Stmt { $$ = NULL; }
+				 | Continue_Stmt { $$ = $1; }
+				 | Break_Stmt { $$ = $1; }
 				 ;
 
 /* Rule #14 */
@@ -361,10 +361,10 @@ Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' 	{ $$ = ASTCreateNode(A_F
 																												};
 
 /* Graduate Student Required Rule */
-Continue_Stmt: T_CONTINUE ';' { log_token("Continue_Stmt", "T_CONTINUE", "continue"); } ;
+Continue_Stmt: T_CONTINUE ';' { $$ = ASTCreateNode(A_CONTINUE); } ;
 
 /* Graduate Student Required Rule */
-Break_Stmt: T_BREAK ';' { log_token("Break_Stmt", "T_BREAK", "break"); } ;
+Break_Stmt: T_BREAK ';' { $$ = ASTCreateNode(A_BREAK); } ;
 
 %%	/* end of rules, start of program */
 

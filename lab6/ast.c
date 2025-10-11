@@ -256,9 +256,17 @@ void ASTprint(int level, ASTnode *p) {
     PT(level);
     char* type = DataTypeToString(p->datatype);
     printf("Function PROTOTYPE %s  %s", type, p->name);
-
     ASTprint(level+1, p->s1); // parameters
+    break;
 
+  case A_CONTINUE:
+    PT(level);
+    printf("CONTINUE\n");
+    break;
+
+  case A_BREAK:
+    PT(level);
+    printf("BREAK\n");
     break;
 
   default:
