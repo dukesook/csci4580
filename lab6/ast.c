@@ -154,7 +154,7 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_READ:
     PT(level);
-    printf("READ \n");
+    printf("READ\n");
     ASTprint(level+1, p->s1); // Variable
     break;
 
@@ -174,7 +174,7 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_FUNCTION_CALL:
     PT(level);
-    printf("CALL %s \n", p->name);
+    printf("CALL %s\n", p->name);
     ASTprint(level+1, p->s1); // Arguments
     break;
 
@@ -195,10 +195,10 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_ASSIGNMENT_STATEMENT:
     PT(level);
-    printf("ASSIGNMENT \n");
+    printf("ASSIGNMENT\n");
     
     PT(level+1);
-    printf("LEFT HAND SIDE \n");
+    printf("LEFT HAND SIDE\n");
     ASTprint(level+2, p->s1); // Variable to be assigned
 
     PT(level+1);
@@ -208,15 +208,15 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_ITERATION_STATEMENT:
     PT(level);
-    printf("WHILE \n");
+    printf("WHILE\n");
 
     PT(level+1);
-    printf("CONDITION \n");
+    printf("CONDITION\n");
     ASTprint(level+2, p->s1); // Condition
 
 
     PT(level+1);
-    printf("WHILE BODY \n");
+    printf("WHILE BODY\n");
     
     ASTprint(level+2, p->s2); // Body
 
@@ -225,14 +225,14 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_SELECTION_STATEMENT:
     PT(level);
-    printf("IF Statement \n");
+    printf("IF Statement\n");
 
     PT(level+1);
-    printf("CONDITION \n");
+    printf("CONDITION\n");
     ASTprint(level+2, p->s1); // Condition
 
     PT(level+1);
-    printf("IF BODY \n");
+    printf("IF BODY\n");
     ASTprint(level+2, p->s2); // Then branch
     break;
 
@@ -248,7 +248,7 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_EXPRESSION_STATEMENT:
     PT(level);
-    printf("Expression Statement \n");
+    printf("Expression Statement\n");
     ASTprint(level+1, p->s1); // Expression
     break;
 
