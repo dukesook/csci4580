@@ -113,6 +113,14 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level + 1, p->s2); // right side of the expression
     break;
 
+  case A_BOOLEAN:
+    PT(level);
+    if (p->value == 1) {
+      printf("BOOLEAN with value TRUE\n");
+    } else {
+      printf("BOOLEAN with value FALSE\n");
+    }
+
   case A_COMPOUND:
     PT(level);
     printf("BEGIN\n");
@@ -150,7 +158,11 @@ void ASTprint(int level, ASTnode *p) {
     ASTnode *param = p; // start of parameter list
     while (param != NULL) { // iterate through parameters
       PT(level + 1);
-      printf("parameter %s  %s\n", DataTypeToString(param->datatype), param->name);
+      printf("parameter %s  %s", DataTypeToString(param->datatype), param->name);
+      if (param->value == 1) {
+        printf("[]"); // array parameter
+      }
+      printf("\n");
       param = param->s1; // next parameter
     }
     PT(level);

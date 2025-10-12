@@ -36,6 +36,7 @@ enum ASTtype {
   A_ARGUMENT,             // A single argument in a function call
   A_NUMBER,               // Numeric Literal
   A_VARIABLE,             // Variable
+  A_BOOLEAN,              // Boolean Literal
   A_EXPRESSION,           // Expression: + - * / etc.
   A_COMPOUND,             // Compound Statement: begin ... end
   A_STMT_LIST,            // List of Statements

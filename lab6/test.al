@@ -28,7 +28,7 @@ end
 
 boolean A[100], z, y;
 void  y;
-void foo(int A, int B)
+void foo2(int A[], int B)
 begin
 
    write "hello";
