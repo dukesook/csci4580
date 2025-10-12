@@ -1,10 +1,11 @@
   /*
-    Devon Sookhoo
-    October 13th, 2025
-    Lab 6 Abstract Syntax Tree
-    Enhancements:
-      - Removed comments from previous labs
-      - #include "ast.h"
+Devon Sookhoo
+October 13th, 2025
+Lab 6 Abstract Syntax Tree
+Enhancements:
+  - Removed comments from previous labs
+  - #include "ast.h"  
+  - All Tokens start with T_
   */
 
 
