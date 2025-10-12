@@ -1,6 +1,3 @@
-Rule Func_Prototype: 	 line: 4 	 T_ID: main
-Rule Continue_Stmt: 	 line: 13 	 T_CONTINUE: continue
-Rule Break_Stmt: 	 line: 14 	 T_BREAK: break
 ============= Successful Parse! =============
 Variable int  A[100]
 Variable int  z
@@ -9,6 +6,7 @@ Variable boolean  A[100]
 Variable boolean  z
 Variable boolean  y
 Variable void  y
+Function PROTOTYPE int  main(VOID)
 Function int  main(VOID)
  BEGIN
   Variable int  x[100]
@@ -53,7 +51,9 @@ Function int  main(VOID)
          VAR with name y
         VAR with name z
     END
-     Expression Statement 
+     CONTINUE
+  BREAK
+  Expression Statement 
    CALL foo 
     (
      CALL ARGUMENT

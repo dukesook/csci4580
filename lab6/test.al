@@ -1,12 +1,9 @@
 int A[100], z, y;
 boolean A[100], z, y;
 void  y;
-
 int main(void);
 int main(void)
 begin int x[100];
-    continue;
-    break;
    x=10;
   while  i <= 10  do
     begin  x=i;
@@ -21,13 +18,6 @@ begin int x[100];
    else
        z = 10;
    endif
-
-  return;
-  return;
-  return;
-  return x+y-2;
-  return;
-  return;
 
    if a and b then
        x = 1;
