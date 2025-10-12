@@ -175,7 +175,7 @@ void ASTprint(int level, ASTnode *p) {
   case A_FUNCTION_CALL:
     PT(level);
     printf("CALL %s\n", p->name);
-    ASTprint(level+1, p->s1); // Arguments
+    ASTprint(level+1, p->s1); // Arguments (A_ARG_LIST)
     break;
 
   case A_ARG_LIST:
@@ -220,7 +220,6 @@ void ASTprint(int level, ASTnode *p) {
     
     ASTprint(level+2, p->s2); // Body
 
-    PT(level+1);
     break;
 
   case A_SELECTION_STATEMENT:
@@ -233,7 +232,7 @@ void ASTprint(int level, ASTnode *p) {
 
     PT(level+1);
     printf("IF BODY\n");
-    ASTprint(level+2, p->s2); // Then branch
+    ASTprint(level+1, p->s2); // Then branch
     break;
 
   case A_SELECTION_BODY:

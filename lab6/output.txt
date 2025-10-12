@@ -51,7 +51,7 @@ Function int  main(VOID)
          VAR with name y
         VAR with name z
     END
-     CONTINUE
+  CONTINUE
   BREAK
   Expression Statement
    CALL foo
@@ -74,28 +74,28 @@ Function int  main(VOID)
      VAR with name a
      VAR with name b
    IF BODY
-     ASSIGNMENT
-      LEFT HAND SIDE
-       VAR with name x
-      RIGHT HAND SIDE
-       NUM with value 1
-    ELSE
-     ASSIGNMENT
-      LEFT HAND SIDE
-       VAR with name z
-      RIGHT HAND SIDE
-       NUM with value 10
+    ASSIGNMENT
+     LEFT HAND SIDE
+      VAR with name x
+     RIGHT HAND SIDE
+      NUM with value 1
+   ELSE
+    ASSIGNMENT
+     LEFT HAND SIDE
+      VAR with name z
+     RIGHT HAND SIDE
+      NUM with value 10
   IF Statement
    CONDITION
     EXPR  AND
      VAR with name a
      VAR with name b
    IF BODY
-     ASSIGNMENT
-      LEFT HAND SIDE
-       VAR with name x
-      RIGHT HAND SIDE
-       NUM with value 1
+    ASSIGNMENT
+     LEFT HAND SIDE
+      VAR with name x
+     RIGHT HAND SIDE
+      NUM with value 1
  END
 Variable boolean  A[100]
 Variable boolean  z
