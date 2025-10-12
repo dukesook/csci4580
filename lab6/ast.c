@@ -269,6 +269,12 @@ void ASTprint(int level, ASTnode *p) {
     printf("BREAK\n");
     break;
 
+  case A_RETURN:
+    PT(level);
+    printf("RETURN\n");
+    ASTprint(level+1, p->s1); // Return Expression
+    break;
+
   default:
     printf("Error! ASTprint() - unknown type: %d\n", p->nodetype);
     printf("Exiting ASTprint immediately\n");

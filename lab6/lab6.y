@@ -88,7 +88,7 @@ void yyerror (s)  /* Called by yyparse on error */
 %type <node> Statement Statement_List Assignment_Stmt Variable
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
 %type <node> Params Param_List Read_Stmt Call Args Arg_List Expression_Stmt Iteration_Stmt
-%type <node> Selection_Stmt Func_Prototype Continue_Stmt Break_Stmt // Return_Stmt
+%type <node> Selection_Stmt Func_Prototype Continue_Stmt Break_Stmt Return_Stmt
 %type <datatype> Type_Specifier
 %type <operator> Add_Op Relop Mult_Op
 
@@ -212,7 +212,7 @@ Statement: Expression_Stmt { $$ = $1; }
 				 | Selection_Stmt { $$ = $1; }
 				 | Iteration_Stmt { $$ = $1; }
 				 | Assignment_Stmt { $$ = $1; }
-				 | Return_Stmt { $$ = NULL; }
+				 | Return_Stmt { $$ = $1; }
          | Write_Stmt { $$ = $1; }
          | Read_Stmt { $$ = $1; }
 				 | Continue_Stmt { $$ = $1; }
@@ -249,8 +249,9 @@ Iteration_Stmt: T_WHILE Expression T_DO Statement
 								};
 
 /* Rule #17 */
-Return_Stmt: T_RETURN ';'
-					 | T_RETURN Expression ';';
+Return_Stmt: T_RETURN ';' 						{ $$ = ASTCreateNode(A_RETURN); }
+					 | T_RETURN Expression ';' 	{	$$ = ASTCreateNode(A_RETURN);
+																				$$->s1 = $2; } ;
 
 /* Rule #18 */
 Read_Stmt: T_READ Variable ';' { 	$$ = ASTCreateNode(A_READ);

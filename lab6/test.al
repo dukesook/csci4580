@@ -22,6 +22,13 @@ begin int x[100];
        z = 10;
    endif
 
+  return;
+  return;
+  return;
+  return x+y-2;
+  return;
+  return;
+
    if a and b then
        x = 1;
    endif
