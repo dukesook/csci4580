@@ -4,4 +4,4 @@ if [ -t 1 ]; then
 fi
 
 # ./lab6 < test.al
-./lab6 < test.al > output.txt
+./lab6 < test.al > lab6.output

@@ -101,9 +101,9 @@ Variable boolean  A[100]
 Variable boolean  z
 Variable boolean  y
 Variable void  y
-Function void  foo2
+Function void  foo
  (
-  parameter int  A[]
+  parameter int  A
   parameter int  B
  )
  BEGIN
