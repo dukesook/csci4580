@@ -1,6 +1,6 @@
 /*
 Devon Sookhoo
-October 13th, 2025
+October 12th, 2025
 Lab 6 Abstract Syntax Tree
 Enhancements:
   - Moved ASTnode *program to ast.c to avoid multiple definition errors
@@ -37,7 +37,7 @@ ASTnode *ASTCreateNode(enum ASTtype mytype) {
   p->s2 = NULL;                           // Child node #2
   p->value = 0;                           // used for number values and also for array size
   return (p);
-}
+} // end of ASTCreateNode()
 
 /*  Helper function to print tabbing */
 // PRE: Given a positive integer
@@ -46,46 +46,47 @@ void PT(int howmany) {
   for (int i = 0; i < howmany; i++) {
     printf(" ");
   }
-}
+} // end of PT()
 
 // PRE: a Data Type
 // POST: a character string for that type to print nicely -- caller does final output
 char *DataTypeToString(enum DataTypes mydatatype) {
-  switch (mydatatype) {
+  switch (mydatatype) { // switch on the type
   case A_VOIDTYPE:
-    return ("void");
+    return ("void");  // return string "void"
   case A_INTTYPE:
-    return ("int");
+    return ("int"); // return string "int"
   case A_BOOLEANTYPE:
-    return ("boolean");
+    return ("boolean"); // return string "boolean"
   default:
-    printf("Unknown type in DataTypeToString\n");
-    exit(1);
-  } // of switch
-} // of DataTypeToString()
+    printf("Unknown type in DataTypeToString\n"); // error
+    exit(1); // barf
+  } // end of switch
+} // end of DataTypeToString()
 
 /*  Print out the abstract syntax tree */
 // PRE: Pointer to an AST Tree
 // POST: Print formatted tree output
 void ASTprint(int level, ASTnode *p) {
+  // Check for NULL pointer
   if (p == NULL)
-    return;
+    return; // nothing to print
 
   // when here p is not NULL
   switch (p->nodetype) {
   case A_DEC_LIST:
     PT(level);
-    ASTprint(level, p->s1);
-    ASTprint(level, p->s2);
+    ASTprint(level, p->s1); // Declaration (list)
+    ASTprint(level, p->s2); // Declaration (if additional)
     break;
 
   case A_VARDEC:
     PT(level);
     printf("Variable ");
     printf("%s ", DataTypeToString(p->datatype));
-    printf(" %s", p->name);
-    if (p->value > 0)
-      printf("[%d]", p->value);
+    printf(" %s", p->name); // variable name
+    if (p->value > 0) // if variable is an array
+      printf("[%d]", p->value); // print array size
     printf("\n");
     ASTprint(level, p->s1);
     break;
@@ -107,9 +108,9 @@ void ASTprint(int level, ASTnode *p) {
   case A_EXPRESSION:
     PT(level);
     const char *operator= operator_to_string(p->operator);
-    printf("EXPR  %s\n", operator);
-    ASTprint(level + 1, p->s1);
-    ASTprint(level + 1, p->s2);
+    printf("EXPR  %s\n", operator); // The operator being applied
+    ASTprint(level + 1, p->s1); // left side of the expression
+    ASTprint(level + 1, p->s2); // right side of the expression
     break;
 
   case A_COMPOUND:
@@ -130,11 +131,11 @@ void ASTprint(int level, ASTnode *p) {
   case A_WRITE:
     PT(level);
     printf("WRITE\n");
-    if (p->name) {
+    if (p->name) { // p->name is a string literal
       PT(level + 1);
       printf("STRING: %s\n", p->name);
     } else {
-      ASTprint(level + 1, p->s1);
+      ASTprint(level + 1, p->s1); // Writing an expression
     }
     break;
 
@@ -146,8 +147,8 @@ void ASTprint(int level, ASTnode *p) {
     printf("\n");
     PT(level);
     printf("(\n");
-    ASTnode *param = p;
-    while (param != NULL) {
+    ASTnode *param = p; // start of parameter list
+    while (param != NULL) { // iterate through parameters
       PT(level + 1);
       printf("parameter %s  %s\n", DataTypeToString(param->datatype), param->name);
       param = param->s1; // next parameter
@@ -178,7 +179,7 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_FUNCTION_CALL:
     PT(level);
-    printf("CALL %s\n", p->name);
+    printf("CALL %s\n", p->name); // function name
     ASTprint(level + 1, p->s1); // Arguments (A_ARG_LIST)
     break;
 
@@ -186,7 +187,7 @@ void ASTprint(int level, ASTnode *p) {
     PT(level);
     printf("(\n");
     ASTprint(level + 1, p->s1); // First Argument
-    PT(level);
+    PT(level); // Print tab for closing parenthesis
     printf(")\n");
     break;
 
@@ -212,7 +213,7 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_ITERATION_STATEMENT:
     PT(level);
-    printf("WHILE\n");
+    printf("WHILE\n"); // While loop
 
     PT(level + 1);
     printf("CONDITION\n");
@@ -227,7 +228,7 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_SELECTION_STATEMENT:
     PT(level);
-    printf("IF Statement\n");
+    printf("IF Statement\n"); // If statement
 
     PT(level + 1);
     printf("CONDITION\n");
@@ -241,7 +242,7 @@ void ASTprint(int level, ASTnode *p) {
   case A_SELECTION_BODY:
     ASTprint(level + 1, p->s1); // Body of if statement
 
-    if (p->s2) {
+    if (p->s2) { // If there is an else branch
       PT(level);
       printf("ELSE\n");
     }
@@ -256,25 +257,25 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_FUNCTION_PROTOTYPE:
     PT(level);
-    char *type = DataTypeToString(p->datatype);
+    char *type = DataTypeToString(p->datatype); // return type
     printf("Function PROTOTYPE %s  %s", type, p->name);
     ASTprint(level + 1, p->s1); // parameters
     break;
 
   case A_CONTINUE:
     PT(level);
-    printf("CONTINUE\n");
+    printf("CONTINUE\n"); // required for graduate students
     break;
 
   case A_BREAK:
     PT(level);
-    printf("BREAK\n");
+    printf("BREAK\n");  // required for graduate students
     break;
 
   case A_RETURN:
     PT(level);
-    printf("RETURN\n");
-    ASTprint(level + 1, p->s1); // Return Expression
+    printf("RETURN\n");  // required for graduate students
+    ASTprint(level + 1, p->s1); // The Return Expression
     break;
 
   default:
@@ -282,13 +283,13 @@ void ASTprint(int level, ASTnode *p) {
     printf("Exiting ASTprint immediately\n");
     exit(1);
 
-  } // of switch
-} // of ASTprint
+  } // end of switch
+} // end of ASTprint
 
 // PRE: an operator enum
 // POST: a character string for that operator to print nicely -- caller does final output
 const char *operator_to_string(enum OPERATORS operator) {
-  switch (operator) {
+  switch (operator) { // switch on the operator
   case A_PLUS:
     return "+";
   case A_MINUS:
@@ -318,8 +319,8 @@ const char *operator_to_string(enum OPERATORS operator) {
   default:
     printf("ERROR! operator_to_string() - unknown operator: %d\n", operator);
     exit(-1);
-  }
-}
+  } // end of switch
+} // end of operator_to_string()
 
 /* dummy main program so I can compile for syntax error independently
 main()
