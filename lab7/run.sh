@@ -1,0 +1,1 @@
+make && echo "running lab7: " && ./lab7
