@@ -1,3 +1,12 @@
+/*
+Devon Sookhoo
+October 27th, 2025
+Lab 7 Add Symbol Table and Type Checking
+Enhancements:
+  - 
+
+*/
+
 /*  Symbol Table --linked list  headers
     Used for Compilers class
 
@@ -21,6 +30,7 @@
 #define _SYMTAB
 
 #include "ast.h"
+#include <stdbool.h>
 
 enum  SYMBOL_SUBTYPE
 {

@@ -37,6 +37,13 @@ void yyerror (s)  /* Called by yyparse on error */
   printf ("%s on line number %d\n", s, line_num);
 }
 
+void assert_doesnt_exist(char name[], int level, bool recur) {
+  if (Search(name, level, recur)) {
+    yyerror(name);
+    yyerror("already defined");
+    exit(1);
+  }
+}
 
 %}
 
@@ -117,38 +124,43 @@ Var_Declaration: Type_Specifier Var_List ';' {$$ = $2; // Pass up the Var_List n
 																						};
 
 /* Rule 4a */
-Var_List: T_ID 															{ 
-																							if (!Search($1, LEVEL, 0)) {
-																								// Symbol not found, insert it
+Var_List: T_ID 	{ 
+									assert_doesnt_exist($1, LEVEL, 0); // Check if symbol already exists in the current scope
 
-																							$$ = ASTCreateNode(A_VARDEC);
-																							$$->name = $1;
-																							$$->value = 0; // single variable (not array)
-																							OFFSET += 1; // Increment offset for each variable
-																							int size = 1; // size of scalar variable
-																							Insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, size, OFFSET);
-																							} else {
-																								yyerror($1);
-																								yyerror("already defined");
-																								exit(1);
-																							}
+									// Symbol not found, insert it
+									int size = 1; // size of scalar variable
+									OFFSET += size; // Increment offset for each variable
+									Insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, size, OFFSET);
 
-																						}
-        | T_ID '[' T_NUM ']'								{ $$ = ASTCreateNode(A_VARDEC);
-																							$$->name = $1;
-																							$$->value = $3; // array size
+									$$ = ASTCreateNode(A_VARDEC);
+									$$->name = $1;
+									$$->value = 0; // single variable (not array)
 
-																						}
-				| T_ID ',' Var_List									{ $$ = ASTCreateNode(A_VARDEC);
-																							$$->name = $1; 
-																							$$->value = 0; // single variable (not array)
-																							$$->s1 = $3;
-																						}
-				| T_ID '[' T_NUM ']' ',' Var_List		{ $$ = ASTCreateNode(A_VARDEC);
-																							$$->name = $1;
-																							$$->value = $3; // array size
-																							$$->s1 = $6; 
-																						};
+
+								}
+
+	| T_ID '[' T_NUM ']'	{ 
+													assert_doesnt_exist($1, LEVEL, 0); // Check if symbol already exists in the current scope
+													
+													// Symbol not found, insert it
+													int size = $3; // size of scalar variable
+													OFFSET += size; // Increment offset for each variable
+													Insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, size, OFFSET);
+
+													$$ = ASTCreateNode(A_VARDEC);
+													$$->name = $1;
+													$$->value = $3; // array size
+												}
+	| T_ID ',' Var_List									{ $$ = ASTCreateNode(A_VARDEC);
+																				$$->name = $1; 
+																				$$->value = 0; // single variable (not array)
+																				$$->s1 = $3;
+																			}
+	| T_ID '[' T_NUM ']' ',' Var_List		{ $$ = ASTCreateNode(A_VARDEC);
+																				$$->name = $1;
+																				$$->value = $3; // array size
+																				$$->s1 = $6; 
+																			};
 
 /* Rule #5 */
 Type_Specifier: T_INT 		{ $$ = A_INTTYPE; } // Pass up the datatype

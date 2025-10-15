@@ -12,3 +12,4 @@ lex.yy.c
 sandbox/
 
 /lab6/y.output
+y.output

@@ -17,4 +17,4 @@ lab7: lab7.y lab7.l ast.c ast.h symtable.c symtable.h
 	gcc $(CFLAGS) -o lab7 lex.yy.c y.tab.c ast.c symtable.c
 
 clean:
-	rm -f lab7 y.tab.c y.tab.h
+	rm -f lab7 y.tab.c y.tab.h y.output lex.yy.c
