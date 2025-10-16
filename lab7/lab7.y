@@ -5,6 +5,8 @@ Lab 7 Add Symbol Table and Type Checking
 Enhancements:
 		- Removed comments from previous labs
 		- #include "symtable.h"
+		- Created function assert_doesnt_exist()
+		- Created function yy_insert()
 
 */
 
@@ -37,7 +39,8 @@ void yyerror (s)  /* Called by yyparse on error */
   printf ("%s on line number %d\n", s, line_num);
 }
 
-void assert_doesnt_exist(char name[], int level, bool recur) {
+// TODO
+static void assert_doesnt_exist(char name[], int level, bool recur) {
   if (Search(name, level, recur)) {
     yyerror(name);
     yyerror("already defined");
@@ -45,6 +48,11 @@ void assert_doesnt_exist(char name[], int level, bool recur) {
   }
 }
 
+// TODO
+static void yy_insert(char *name, enum DataTypes my_assigned_type, enum SYMBOL_SUBTYPE sub_type, int level, int mysize) {
+	OFFSET += mysize; // Increment offset for each variable
+	Insert(name, my_assigned_type, sub_type, level, mysize, OFFSET);
+}
 %}
 
 /* defines the start symbol, what values come back from LEX and how the operators are associated  */
@@ -129,14 +137,11 @@ Var_List: T_ID 	{
 
 									// Symbol not found, insert it
 									int size = 1; // size of scalar variable
-									OFFSET += size; // Increment offset for each variable
-									Insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, size, OFFSET);
+									yy_insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, size);
 
 									$$ = ASTCreateNode(A_VARDEC);
 									$$->name = $1;
 									$$->value = 0; // single variable (not array)
-
-
 								}
 
 	| T_ID '[' T_NUM ']'	{ 
@@ -144,8 +149,7 @@ Var_List: T_ID 	{
 													
 													// Symbol not found, insert it
 													int size = $3; // size of scalar variable
-													OFFSET += size; // Increment offset for each variable
-													Insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, size, OFFSET);
+													yy_insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, size);
 
 													$$ = ASTCreateNode(A_VARDEC);
 													$$->name = $1;
