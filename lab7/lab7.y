@@ -50,6 +50,8 @@ static void assert_doesnt_exist(char name[], int level, bool recur) {
 
 // TODO
 static void yy_insert(char *name, enum DataTypes my_assigned_type, enum SYMBOL_SUBTYPE sub_type, int level, int mysize) {
+	bool recursive = false; // Only check current scope
+	assert_doesnt_exist(name, LEVEL, recursive); // Check if symbol already exists in the current scope
 	OFFSET += mysize; // Increment offset for each variable
 	Insert(name, my_assigned_type, sub_type, level, mysize, OFFSET);
 }
@@ -123,19 +125,19 @@ Declaration: Var_Declaration 	{ $$ = $1; } // Pass up the AST node
 
 
 /* Rule #4 */
-Var_Declaration: Type_Specifier Var_List ';' {$$ = $2; // Pass up the Var_List node
-																							ASTnode* p = $2;
-																							while (p != NULL) { // Iterate through the Var_List
-																								p->datatype = $1; // Set the datatype for each variable
-																								p = p->s1; // Move to the next variable in the list
-																							}
-																						};
+Var_Declaration: Type_Specifier Var_List ';' 
+	{
+		$$ = $2; // Pass up the Var_List node
+		ASTnode* p = $2;
+		while (p != NULL) { // Iterate through the Var_List
+			p->datatype = $1; // Set the datatype for each variable
+			p->symbol->Declared_Type = $1;
+			p = p->s1; // Move to the next variable in the list
+		}
+	};
 
 /* Rule 4a */
 Var_List: T_ID 	{ 
-									assert_doesnt_exist($1, LEVEL, 0); // Check if symbol already exists in the current scope
-
-									// Symbol not found, insert it
 									int size = 1; // size of scalar variable
 									yy_insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, size);
 
@@ -145,9 +147,6 @@ Var_List: T_ID 	{
 								}
 
 	| T_ID '[' T_NUM ']'	{ 
-													assert_doesnt_exist($1, LEVEL, 0); // Check if symbol already exists in the current scope
-													
-													// Symbol not found, insert it
 													int size = $3; // size of scalar variable
 													yy_insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, size);
 

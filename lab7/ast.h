@@ -78,6 +78,7 @@ typedef struct ASTnodetype {
   char *name;              // Name (T_ID) of variable or function
   int value;               // used for number values and also for array size
   struct ASTnodetype *s1, *s2; /* used for holding IF and WHILE components -- not very descriptive */
+  struct SymbTab *symbol;
 } ASTnode;
 
 /* uses malloc to create an ASTnode and passes back the heap address of the newley created node */
