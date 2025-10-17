@@ -3,7 +3,7 @@ Devon Sookhoo
 October 27th, 2025
 Lab 7 Add Symbol Table and Type Checking
 Enhancements:
-  - 
+  - Make struct SymbTab a typedef for easier usage
 
 */
 
@@ -46,7 +46,7 @@ void Display();
 int Delete();
 
 
-struct SymbTab
+typedef struct SymbTab
 {
      char *name;
      int offset; /* from activation record boundary */
@@ -57,15 +57,15 @@ struct SymbTab
      ASTnode * fparms; /* pointer to parameters of the function in the AST */
 
      struct SymbTab *next;
-};
+} SymbTab;
 
 
-struct SymbTab * Insert(char *name, enum DataTypes my_assigned_type, enum SYMBOL_SUBTYPE sub_type, int  level, int mysize, int offset);
+SymbTab * Insert(char *name, enum DataTypes, enum SYMBOL_SUBTYPE, int level, int size, int offset);
 
-struct SymbTab * Search(char name[], int level, int recur );
+SymbTab * Search(char name[], int level, int recur );
 
 
-static struct SymbTab *first=NULL;   /* global pointers into the symbol table */
+static SymbTab *first=NULL;   /* global pointers into the symbol table */
 
 char * CreateTemp();
 

@@ -1,1 +1,1 @@
-make && echo "running lab7: " && ./lab7
+make && echo "running lab7: " && ./lab7 < test.txt

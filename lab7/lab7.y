@@ -38,7 +38,7 @@ void yyerror (s)  /* Called by yyparse on error */
   printf ("%s on line number %d\n", s, line_num);
 }
 
-// TODO
+// TODO - comments
 static void assert_doesnt_exist(char name[], int level, bool recur) {
   if (Search(name, level, recur)) {
     yyerror(name);
@@ -46,6 +46,14 @@ static void assert_doesnt_exist(char name[], int level, bool recur) {
     exit(1);
   }
 }
+
+static SymbTab* yy_insert(char *name, enum DataTypes my_assigned_type, enum SYMBOL_SUBTYPE sub_type, int level, int size) {
+	SymbTab* symbol;
+	symbol = Insert(name, my_assigned_type, sub_type, level, size, OFFSET);
+	OFFSET += size;
+	return symbol;
+}
+
 
 %}
 
@@ -135,8 +143,7 @@ Var_List: T_ID 	{
 									$$->name = $1;
 									$$->value = 0; // single variable (not array)
 									int size = 1; // size of scalar variable
-									$$->symbol = Insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, size, OFFSET);
-									OFFSET += size;
+									$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, size);
 								}
 
 	| T_ID '[' T_NUM ']'	{ 
@@ -145,8 +152,7 @@ Var_List: T_ID 	{
 													$$->name = $1;
 													$$->value = $3; // array size
 													int size = $3; // size of scalar variable
-													$$->symbol = Insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, size, OFFSET);
-													OFFSET += size;
+													$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, size);
 												}
 	| T_ID ',' Var_List									{ $$ = ASTCreateNode(A_VARDEC);
 																				$$->name = $1; 
