@@ -23,6 +23,7 @@ Enhancements:
 #define MAX_VARIABLES 4 // max number of variables
 #define ERROR -1 // error code
 #define SCALAR_SIZE 1 // size of scalar variable
+#define UNKNOWN 0 // unknown size
 
 /* declare function prototype to resolve warning */
 int yylex(void); // prototype for the lexing function
@@ -178,13 +179,29 @@ Type_Specifier: T_INT 		{ $$ = A_INTTYPE; } // Pass up the datatype
 							| T_BOOLEAN { $$ = A_BOOLEANTYPE; }; // Pass up the datatype
 
 /* Rule #6 */
-Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
+Func_Declaration: Type_Specifier T_ID '('
+	{ 
+	 	// Check to see if function name already exists
+	 	assert_doesnt_exist($2, LEVEL, false);
+		// manage offset value
+		Insert($2, $1, SYM_FUNCTION, LEVEL, UNKNOWN, UNKNOWN);
+		/* yy_insert($2, $1, SYM_FUNCTION, LEVEL, 0); */
+	}
+
+	Params ')' 
+	{
+		Search($2, LEVEL, false)->fparms = $5;
+		// udpate symtable with parameter
+		// allow us to have recursive functions
+	}
+	
+	Compound_Stmt
 	{ $$ = ASTCreateNode(A_FUNCTIONDEC);
 		$$->datatype = $1; // Return Type
 		$$->name = $2;		 // Function Name
-		$$->s1 = $4; 		   // Parameters
-		$$->s2 = $6;	 		 // Function Body
-	 };
+		$$->s1 = $5; 		   // Parameters
+		$$->s2 = $8;	 		 // Function Body
+	};
 
 /* Rule #7 */
 Params: T_VOID { $$ = ASTCreateNode(A_VOID_PARAM);} // No parameters
@@ -405,6 +422,8 @@ Break_Stmt: T_BREAK ';' { $$ = ASTCreateNode(A_BREAK); } ;
 /* The main function which calls yyparse() */
 int main() { 
 	yyparse();
+
+	Display();
 
 	// Sets the program variable to an AST.
 
