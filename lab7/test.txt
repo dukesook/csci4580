@@ -1,14 +1,14 @@
-int x,y;
-void bar, bar1;
-void baz[100], baz1;
-
-int main(int x, void y);
 int main(int x, void y)
   begin
-    x(3-4, not 5);
-    if 3 < 5 then
-      x = 15;
-    else
-      read x[r(2,3)];
-    endif
+
+    int c[100];
+
+    begin
+      int c;
+    end
+    begin
+      int g;
+    end
+
+
   end

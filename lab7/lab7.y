@@ -49,10 +49,10 @@ static void assert_doesnt_exist(char name[], int level, bool recur) {
 }
 
 // TODO - comments
-static SymbTab* yy_insert(char *name, enum DataTypes my_assigned_type, enum SYMBOL_SUBTYPE sub_type, int size) {
-	assert_doesnt_exist(name, LEVEL, false);
+static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTYPE subtype, int level, int size) {
+	assert_doesnt_exist(name, level, false);
 	SymbTab* symbol;
-	symbol = Insert(name, my_assigned_type, sub_type, LEVEL, size, OFFSET);
+	symbol = Insert(name, datatype, subtype, level, size, OFFSET);
 	OFFSET += size;
 	return symbol;
 }
@@ -145,7 +145,7 @@ Var_List: T_ID
 			$$ = ASTCreateNode(A_VARDEC);
 			$$->name = $1;
 			$$->value = 0; // single variable (not array)
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, SCALAR_SIZE);
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 		}
 
 	| T_ID '[' T_NUM ']'
@@ -153,7 +153,7 @@ Var_List: T_ID
 			$$ = ASTCreateNode(A_VARDEC);
 			$$->name = $1;
 			$$->value = $3; // array size
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, $3);
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, $3);
 		}
 	| T_ID ',' Var_List	
 		{ 
@@ -161,7 +161,7 @@ Var_List: T_ID
 			$$->name = $1; 
 			$$->value = 0; // single variable (not array)
 			$$->s1 = $3;
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, SCALAR_SIZE);
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 		}
 	| T_ID '[' T_NUM ']' ',' Var_List
 		{ 
@@ -169,7 +169,7 @@ Var_List: T_ID
 			$$->name = $1;
 			$$->value = $3; // array size
 			$$->s1 = $6;
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, $3);
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, $3);
 		};
 
 /* Rule #5 */
@@ -203,23 +203,26 @@ Param: Type_Specifier T_ID 	{
 															$$->datatype = $1;
 															$$->name = $2; // Parameter name
 															$$->value = 0; // indicates non-array parameter
-															$$->symbol = yy_insert($2, $1, SYM_SCALAR, SCALAR_SIZE);
+															$$->symbol = yy_insert($2, $1, SYM_SCALAR, LEVEL+1, SCALAR_SIZE);
 														}
 			| Type_Specifier T_ID '[' ']' 	{ $$ = ASTCreateNode(A_PARAM);
 															$$->datatype = $1;
 															$$->name = $2; // Parameter name
 															$$->value = 1; // indicates array parameter
 															int size = 1;
-															$$->symbol = yy_insert($2, $1, SYM_ARRAY, size);
+															$$->symbol = yy_insert($2, $1, SYM_ARRAY, LEVEL+1, size);
 															};
 
 /* Rule #10 */
-Compound_Stmt: T_BEGIN  Local_Declarations  Statement_List  T_END 
-{ 
-	$$ = ASTCreateNode(A_COMPOUND);
-	$$->s1 = $2; // Local Declarations
-	$$->s2 = $3; // Statement List
-};
+Compound_Stmt: 	T_BEGIN  { LEVEL++; }
+								Local_Declarations  Statement_List  T_END 
+									{ 
+										$$ = ASTCreateNode(A_COMPOUND);
+										$$->s1 = $3; // Local Declarations
+										$$->s2 = $4; // Statement List
+										OFFSET = OFFSET - Delete(LEVEL);
+										LEVEL--;
+									};
 
 /* Rule #11 */
 Local_Declarations: Var_Declaration Local_Declarations	{	$$ = $1;
