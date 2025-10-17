@@ -60,7 +60,7 @@ struct SymbTab
 };
 
 
-struct SymbTab * Insert(char *name, enum DataTypes my_assigned_type , enum  SYMBOL_SUBTYPE sub_type, int  level, int mysize, int offset);
+struct SymbTab * Insert(char *name, enum DataTypes my_assigned_type, enum SYMBOL_SUBTYPE sub_type, int  level, int mysize, int offset);
 
 struct SymbTab * Search(char name[], int level, int recur );
 
