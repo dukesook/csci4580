@@ -22,6 +22,7 @@ Enhancements:
 
 #define MAX_VARIABLES 4 // max number of variables
 #define ERROR -1 // error code
+#define SCALAR_SIZE 1 // size of scalar variable
 
 /* declare function prototype to resolve warning */
 int yylex(void); // prototype for the lexing function
@@ -144,8 +145,7 @@ Var_List: T_ID
 			$$ = ASTCreateNode(A_VARDEC);
 			$$->name = $1;
 			$$->value = 0; // single variable (not array)
-			int size = 1; // size of scalar variable
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, size);
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, SCALAR_SIZE);
 		}
 
 	| T_ID '[' T_NUM ']'
@@ -153,8 +153,7 @@ Var_List: T_ID
 			$$ = ASTCreateNode(A_VARDEC);
 			$$->name = $1;
 			$$->value = $3; // array size
-			int size = $3; // size of scalar variable
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, size);
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, $3);
 		}
 	| T_ID ',' Var_List	
 		{ 
@@ -162,8 +161,7 @@ Var_List: T_ID
 			$$->name = $1; 
 			$$->value = 0; // single variable (not array)
 			$$->s1 = $3;
-			int size = 1; // size of scalar variable
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, size);
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, SCALAR_SIZE);
 		}
 	| T_ID '[' T_NUM ']' ',' Var_List
 		{ 
@@ -171,8 +169,7 @@ Var_List: T_ID
 			$$->name = $1;
 			$$->value = $3; // array size
 			$$->s1 = $6;
-			int size = $3; // size of scalar variable
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, size);
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, $3);
 		};
 
 /* Rule #5 */
@@ -201,15 +198,19 @@ Param_List: Param { $$ = $1; } // Pass up the Param node
 					;
 
 /* Rule #9 */
-Param: Type_Specifier T_ID 	{	$$ = ASTCreateNode(A_PARAM);
+Param: Type_Specifier T_ID 	{	
+															$$ = ASTCreateNode(A_PARAM);
 															$$->datatype = $1;
 															$$->name = $2; // Parameter name
 															$$->value = 0; // indicates non-array parameter
-															}
+															$$->symbol = yy_insert($2, $1, SYM_SCALAR, SCALAR_SIZE);
+														}
 			| Type_Specifier T_ID '[' ']' 	{ $$ = ASTCreateNode(A_PARAM);
 															$$->datatype = $1;
 															$$->name = $2; // Parameter name
 															$$->value = 1; // indicates array parameter
+															int size = 1;
+															$$->symbol = yy_insert($2, $1, SYM_ARRAY, size);
 															};
 
 /* Rule #10 */

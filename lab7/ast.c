@@ -163,6 +163,7 @@ void ASTprint(int level, ASTnode *p) {
       if (param->value == 1) {
         printf("[]"); // array parameter
       }
+      printf(" with offset %d\n", param->symbol->offset);
       printf("\n");
       param = param->s1; // next parameter
     }
