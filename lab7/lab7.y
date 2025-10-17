@@ -49,6 +49,7 @@ static void assert_doesnt_exist(char name[], int level, bool recur) {
 
 // TODO - comments
 static SymbTab* yy_insert(char *name, enum DataTypes my_assigned_type, enum SYMBOL_SUBTYPE sub_type, int size) {
+	assert_doesnt_exist(name, LEVEL, false);
 	SymbTab* symbol;
 	symbol = Insert(name, my_assigned_type, sub_type, LEVEL, size, OFFSET);
 	OFFSET += size;
@@ -138,37 +139,41 @@ Var_Declaration: Type_Specifier Var_List ';'
 	};
 
 /* Rule 4a */
-Var_List: T_ID 	{ 
-									assert_doesnt_exist($1, LEVEL, true);
-									$$ = ASTCreateNode(A_VARDEC);
-									$$->name = $1;
-									$$->value = 0; // single variable (not array)
-									int size = 1; // size of scalar variable
-									$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, size);
-								}
+Var_List: T_ID 
+		{ 
+			$$ = ASTCreateNode(A_VARDEC);
+			$$->name = $1;
+			$$->value = 0; // single variable (not array)
+			int size = 1; // size of scalar variable
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, size);
+		}
 
-	| T_ID '[' T_NUM ']'	{ 
-													assert_doesnt_exist($1, LEVEL, true);
-													$$ = ASTCreateNode(A_VARDEC);
-													$$->name = $1;
-													$$->value = $3; // array size
-													int size = $3; // size of scalar variable
-													$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, size);
-												}
-	| T_ID ',' Var_List									{ $$ = ASTCreateNode(A_VARDEC);
-																				$$->name = $1; 
-																				$$->value = 0; // single variable (not array)
-																				$$->s1 = $3;
-																				int size = 1; // size of scalar variable
-																				$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, size);
-																			}
-	| T_ID '[' T_NUM ']' ',' Var_List		{ $$ = ASTCreateNode(A_VARDEC);
-																				$$->name = $1;
-																				$$->value = $3; // array size
-																				$$->s1 = $6;
-																				int size = $3; // size of scalar variable
-																				$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, size);
-																			};
+	| T_ID '[' T_NUM ']'
+		{ 
+			$$ = ASTCreateNode(A_VARDEC);
+			$$->name = $1;
+			$$->value = $3; // array size
+			int size = $3; // size of scalar variable
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, size);
+		}
+	| T_ID ',' Var_List	
+		{ 
+			$$ = ASTCreateNode(A_VARDEC);
+			$$->name = $1; 
+			$$->value = 0; // single variable (not array)
+			$$->s1 = $3;
+			int size = 1; // size of scalar variable
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, size);
+		}
+	| T_ID '[' T_NUM ']' ',' Var_List
+		{ 
+			$$ = ASTCreateNode(A_VARDEC);
+			$$->name = $1;
+			$$->value = $3; // array size
+			$$->s1 = $6;
+			int size = $3; // size of scalar variable
+			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, size);
+		};
 
 /* Rule #5 */
 Type_Specifier: T_INT 		{ $$ = A_INTTYPE; } // Pass up the datatype
