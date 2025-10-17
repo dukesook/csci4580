@@ -4,11 +4,13 @@ October 27th, 2025
 Lab 7 Add Symbol Table and Type Checking
 Enhancements:
   - Removed comments from previous labs
+  - #include "symtable.h" to access symbol table structures
 
 */
 
 #include <malloc.h>
 #include <stdio.h>
+#include "symtable.h"
 
 #ifndef AST_H
 #define AST_H

@@ -87,6 +87,7 @@ void ASTprint(int level, ASTnode *p) {
     printf(" %s", p->name); // variable name
     if (p->value > 0) // if variable is an array
       printf("[%d]", p->value); // print array size
+    printf(" with offset %d ", p->symbol->offset);
     printf("\n");
     ASTprint(level, p->s1);
     break;
