@@ -213,7 +213,7 @@ Fun_Tail: ';' { $$ = ASTCreateNode(A_FUNCTIONDEC); }
 			| Compound_Stmt // Function Definition (with body)
 				{ 
 					$$ = ASTCreateNode(A_FUNCTIONDEC);
-					$$->s1 = $1; // Function Body
+					$$->s2 = $1; // Function Body
 				}
 			;
 
