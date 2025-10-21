@@ -101,14 +101,14 @@ void Display()
    int i;
    struct SymbTab *p;
    p=first;
-   printf("\n\n\tSymbol Table Contents\n");
+   printf("==============Symbol Table Contents==============\n");
    printf("\n\tLABEL\t\tOffset \t\tLEVEL \ttype\n");
       while (p!=NULL)
       {
          PrintSym(p);
          p=p->next;
       }
-    printf("======================================\n\n");
+    printf("==============================================================\n\n");
 }
 
 /*  Search for a symbol name at level or below.  We have to do multiple passes into the symbol table because we have to find

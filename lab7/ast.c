@@ -97,6 +97,7 @@ void ASTprint(int level, ASTnode *p) {
     printf("Function ");
     printf("%s  ", DataTypeToString(p->datatype)); // return type
     printf("%s", p->name);                         // function name
+    printf(" offset %d\n", p->symbol->offset);
     ASTprint(level + 1, p->s1);                    // parameters
     ASTprint(level + 1, p->s2);                    // compound
     break;

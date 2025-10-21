@@ -31,6 +31,7 @@ int debugsw=0; 		// debug switch
 int LEVEL = 0; 		// how many compoound statements deep are we in
 int OFFSET = 0; 	// how many words have we seen at GLOBAL, or inside a function
 int GOFFSET = 0; 	// holder for global offset when entering a function
+int maxoffset = 0; // total number of words a function needs
 
 // Error Handling Function
 void yyerror (s)  /* Called by yyparse on error */
@@ -184,6 +185,9 @@ Func_Declaration:
 			assert_doesnt_exist($2, LEVEL, false);
 			/* yy_insert($2, $1, SYM_FUNCTION, LEVEL, 0, 0); */
 			Insert($2, $1, SYM_FUNCTION, LEVEL, 0, 0);
+			GOFFSET = OFFSET; // Save global offset
+			OFFSET = 2; // we need two memory locations for Stack Pointer and Return Address
+			maxoffset;
 		}
 
 
@@ -201,6 +205,7 @@ Func_Declaration:
 			$$->name = $2;		 // Function Name
 			$$->s1 = $5; 		   // Parameters
 			$$->symbol = Search($2, LEVEL, false);
+			$$->symbol->offset = maxoffset;
 		};
 
 /* NEW: Rule #6a */
@@ -246,6 +251,9 @@ Compound_Stmt: 	T_BEGIN  { LEVEL++; }
 										$$ = ASTCreateNode(A_COMPOUND);
 										$$->s1 = $3; // Local Declarations
 										$$->s2 = $4; // Statement List
+										if (OFFSET > maxoffset) {
+											maxoffset = OFFSET;
+										}
 										OFFSET = OFFSET - Delete(LEVEL);
 										LEVEL--;
 									};
