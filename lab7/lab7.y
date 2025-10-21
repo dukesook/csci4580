@@ -92,7 +92,8 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 %type <node> Statement Statement_List Assignment_Stmt Variable
 %type <node> Write_Stmt Factor Term Additive_Expression Simple_Expression Expression
 %type <node> Params Param_List Read_Stmt Call Args Arg_List Expression_Stmt Iteration_Stmt
-%type <node> Selection_Stmt Func_Prototype Continue_Stmt Break_Stmt Return_Stmt
+%type <node> Selection_Stmt Continue_Stmt Break_Stmt Return_Stmt
+%type <node> Fun_Tail
 %type <datatype> Type_Specifier
 %type <operator> Add_Op Relop Mult_Op
 
@@ -123,7 +124,6 @@ Declaration_List: Declaration { $$ = ASTCreateNode(A_DEC_LIST);
 /* Rule #3 */
 Declaration: Var_Declaration 	{ $$ = $1; } // Pass up the AST node
 					 | Func_Declaration { $$ = $1; } // Pass up the AST node
-					 | Func_Prototype 	{ $$ = $1; } // Pass up the AST node
 					 ;
 
 
@@ -178,13 +178,22 @@ Type_Specifier: T_INT 		{ $$ = A_INTTYPE; } // Pass up the datatype
 							| T_BOOLEAN { $$ = A_BOOLEANTYPE; }; // Pass up the datatype
 
 /* Rule #6 */
-Func_Declaration: Type_Specifier T_ID '(' Params ')' Compound_Stmt
-	{ $$ = ASTCreateNode(A_FUNCTIONDEC);
+Func_Declaration: Type_Specifier T_ID '(' Params ')' Fun_Tail
+	{ 
+		$$ = $6; 					 // Pass up the Fun_Tail node
 		$$->datatype = $1; // Return Type
 		$$->name = $2;		 // Function Name
 		$$->s1 = $4; 		   // Parameters
-		$$->s2 = $6;	 		 // Function Body
 	 };
+
+/* NEW: Rule #6a */
+Fun_Tail: ';' { $$ = ASTCreateNode(A_FUNCTIONDEC); }
+			| Compound_Stmt // Function Definition (with body)
+				{ 
+					$$ = ASTCreateNode(A_FUNCTIONDEC);
+					$$->s1 = $1; // Function Body
+				}
+			;
 
 /* Rule #7 */
 Params: T_VOID { $$ = ASTCreateNode(A_VOID_PARAM);} // No parameters
@@ -388,11 +397,12 @@ Arg_List: Expression { 	$$ = ASTCreateNode(A_ARGUMENT); // Create argument node
 																	};
 
 /* Graduate Student Required Rule */
-Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' 	{ $$ = ASTCreateNode(A_FUNCTION_PROTOTYPE);
-																								         	$$->datatype = $1; // Return Type
-																								         	$$->name = $2;		 // Function Name
-																								         	$$->s1 = $4; 		   // Parameters
-																												};
+/* Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' 	
+	{ $$ = ASTCreateNode(A_FUNCTION_PROTOTYPE);
+		$$->datatype = $1; // Return Type
+		$$->name = $2;		 // Function Name
+		$$->s1 = $4; 		   // Parameters
+	}; */
 
 /* Graduate Student Required Rule */
 Continue_Stmt: T_CONTINUE ';' { $$ = ASTCreateNode(A_CONTINUE); } ;
