@@ -178,13 +178,30 @@ Type_Specifier: T_INT 		{ $$ = A_INTTYPE; } // Pass up the datatype
 							| T_BOOLEAN { $$ = A_BOOLEANTYPE; }; // Pass up the datatype
 
 /* Rule #6 */
-Func_Declaration: Type_Specifier T_ID '(' Params ')' Fun_Tail
-	{ 
-		$$ = $6; 					 // Pass up the Fun_Tail node
-		$$->datatype = $1; // Return Type
-		$$->name = $2;		 // Function Name
-		$$->s1 = $4; 		   // Parameters
-	 };
+Func_Declaration:
+	Type_Specifier T_ID '(' 
+		{
+			assert_doesnt_exist($2, LEVEL, false);
+			/* yy_insert($2, $1, SYM_FUNCTION, LEVEL, 0, 0); */
+			Insert($2, $1, SYM_FUNCTION, LEVEL, 0, 0);
+		}
+
+
+	Params ')'
+		{
+			// Update Symbol Table with parameter
+			// allows us to have recursive functions
+			Search($2, LEVEL, false)->fparms = $5;
+		}
+
+	Fun_Tail
+		{ 
+			$$ = $8; 					 // Pass up the Fun_Tail node
+			$$->datatype = $1; // Return Type
+			$$->name = $2;		 // Function Name
+			$$->s1 = $5; 		   // Parameters
+			$$->symbol = Search($2, LEVEL, false);
+		};
 
 /* NEW: Rule #6a */
 Fun_Tail: ';' { $$ = ASTCreateNode(A_FUNCTIONDEC); }
@@ -415,6 +432,8 @@ Break_Stmt: T_BREAK ';' { $$ = ASTCreateNode(A_BREAK); } ;
 /* The main function which calls yyparse() */
 int main() { 
 	yyparse();
+
+	Display();
 
 	// Sets the program variable to an AST.
 
