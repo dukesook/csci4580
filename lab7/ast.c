@@ -337,8 +337,60 @@ const char *operator_to_string(enum OPERATORS operator) {
   } // end of switch
 } // end of operator_to_string()
 
-/* dummy main program so I can compile for syntax error independently
-main()
-{
+
+char *ASTtype_to_string(enum ASTtype type) {
+  switch (type) { // switch on the type
+  case A_VARDEC:
+    return "A_VARDEC";
+  case A_DEC_LIST:
+    return "A_DEC_LIST";
+  case A_FUNCTIONDEC:
+    return "A_FUNCTIONDEC";
+  case A_FUNCTION_CALL:
+    return "A_FUNCTION_CALL";
+  case A_ARG_LIST:
+    return "A_ARG_LIST";
+  case A_ARGUMENT:
+    return "A_ARGUMENT";
+  case A_NUMBER:
+    return "A_NUMBER";
+  case A_VARIABLE:
+    return "A_VARIABLE";
+  case A_BOOLEAN:
+    return "A_BOOLEAN";
+  case A_EXPRESSION:
+    return "A_EXPRESSION";
+  case A_COMPOUND:
+    return "A_COMPOUND";
+  case A_STMT_LIST:
+    return "A_STMT_LIST";
+  case A_WRITE:
+    return "A_WRITE";
+  case A_READ:
+    return "A_READ";
+  case A_PARAM:
+    return "A_PARAM";
+  case A_VOID_PARAM:
+    return "A_VOID_PARAM";
+  case A_EXPRESSION_STATEMENT:
+    return "A_EXPRESSION_STATEMENT";
+  case A_ASSIGNMENT_STATEMENT:
+    return "A_ASSIGNMENT_STATEMENT";
+  case A_ITERATION_STATEMENT:
+    return "A_ITERATION_STATEMENT";
+  case A_SELECTION_STATEMENT:
+    return "A_SELECTION_STATEMENT";
+  case A_SELECTION_BODY:
+    return "A_SELECTION_BODY";
+  case A_FUNCTION_PROTOTYPE:
+    return "A_FUNCTION_PROTOTYPE";
+  case A_CONTINUE:
+    return "A_CONTINUE";
+  case A_BREAK:
+    return "A_BREAK";
+  case A_RETURN:
+    return "A_RETURN";
+  default:
+    return "UNKNOWN_ASTTYPE";
+  } // end of switch
 }
-/* */

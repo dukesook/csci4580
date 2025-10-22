@@ -74,13 +74,13 @@ enum OPERATORS {
    allow us to represent the parsed code
 */
 typedef struct ASTnodetype {
-  enum ASTtype nodetype;    // Indicates which kind of node this is
-  enum OPERATORS operator;  // Indicates which operator (if any) will be applied to the child nodes
-  enum DataTypes datatype; // Indicates datatype of variable or function
-  char *name;              // Name (T_ID) of variable or function
-  int value;               // used for number values and also for array size
-  struct ASTnodetype *s1, *s2; /* used for holding IF and WHILE components -- not very descriptive */
-  struct SymbTab *symbol;
+  enum ASTtype nodetype;        // Indicates which kind of node this is
+  enum OPERATORS operator;      // Indicates which operator (if any) will be applied to the child nodes
+  enum DataTypes datatype;      // Indicates datatype of variable or function
+  char *name;                   // Name (T_ID) of variable or function
+  int value;                    // used for number values and also for array size
+  struct ASTnodetype *s1, *s2;  // used for holding IF and WHILE components -- not very descriptive
+  struct SymbTab *symbol;       // Pointer to symbol table entry for this node
 } ASTnode;
 
 /* uses malloc to create an ASTnode and passes back the heap address of the newley created node */
@@ -96,6 +96,8 @@ extern ASTnode *program; // pointer to the tree
 void ASTprint(int level, ASTnode *p);
 
 // Convert DataType enum to string for printing
-const char *operator_to_string(enum OPERATORS op);
+const char *operator_to_string(enum OPERATORS);
+
+char *ASTtype_to_string(enum ASTtype);
 
 #endif // of AST_H

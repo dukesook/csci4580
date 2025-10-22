@@ -6,6 +6,7 @@ Enhancements:
 		- Removed comments from previous labs
 		- #include "symtable.h"
 		- Created function assert_doesnt_exist()
+		- #include <assert.h>
 
 */
 
@@ -19,6 +20,7 @@ Enhancements:
 #include <stdlib.h> // exit()
 #include "ast.h" // include the AST header file
 #include "symtable.h" // include the Symbol Table header file
+#include <assert.h> // for assert()
 
 #define MAX_VARIABLES 4 // max number of variables
 #define ERROR -1 // error code
@@ -81,11 +83,24 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 	return symbol;
 }
 
+
 // TODO - comments
 // PRE: Two lists that represent FORMALS and ACTUALS
 // POST: returns 1 if they match (length and type), 0 if they don't.
-static bool check_params(struct ASTnodetype formals, struct ASTnodetype actuals) {
-	// TODO
+static bool check_params(ASTnode *params1, ASTnode *params2) {
+	
+	assert(params1); // Make sure params1 is not NULL
+	assert(params2); // Make sure params2 is not NULL
+
+	char* type1 = ASTtype_to_string(params1->datatype);
+	char* type2 = ASTtype_to_string(params2->datatype);
+
+	printf("Checking param types: %s vs %s\n", type1, type2);
+
+
+
+
+
 	return 0; // placeholder
 }
 
@@ -452,6 +467,12 @@ Call: T_ID '(' Args ')'	{
 	assert_subtype(p, SYM_FUNCTION); // Ensure symbol is of subtype SYM_FUNCTION
 
 	// check to see if formals and actuals match in length and type
+	bool match = check_params(p->fparms, $3);
+	if (!match) {
+		yyerror($1);
+		yyerror("function parameters do not match");
+		exit(1);
+	}
 
 	$$ = ASTCreateNode(A_FUNCTION_CALL); // Create function call node
 	$$->name = $1; // Function name

@@ -1,5 +1,5 @@
 
-int x(void)
+int x(int x)
 begin
 
 end
