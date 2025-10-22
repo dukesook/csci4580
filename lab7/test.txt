@@ -1,14 +1,8 @@
 int main(int x, void y)
-  begin
+begin
 
-    int c[100];
+  int a[2];
 
-    begin
-      int c;
-    end
-    begin
-      int g;
-    end
+  a[4] = 5;
 
-
-  end
+end
