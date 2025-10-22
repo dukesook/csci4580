@@ -4,6 +4,8 @@ October 27th, 2025
 Lab 7 Add Symbol Table and Type Checking
 Enhancements:
   - Make struct SymbTab a typedef for easier usage
+  - Added subtype_to_string() function
+  - Added the PrintSym() prototype
 
 */
 
@@ -64,11 +66,13 @@ SymbTab * Insert(char *name, enum DataTypes, enum SYMBOL_SUBTYPE, int level, int
 
 SymbTab * Search(char name[], int level, int recur );
 
-
 static SymbTab *first=NULL;   /* global pointers into the symbol table */
 
 char * CreateTemp();
 
+const char* subtype_to_string(enum SYMBOL_SUBTYPE);
+
+void PrintSym(struct SymbTab*);
 
 int Has_Proto();
 

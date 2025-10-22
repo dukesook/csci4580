@@ -65,7 +65,10 @@ static struct SymbTab* assert_exists(char name[], int level) {
 static void assert_subtype(struct SymbTab* symbol, enum SYMBOL_SUBTYPE subtype) {
 	if (symbol->SubType != subtype) {
 		yyerror(symbol->name);
-		yyerror("is not of correct subtype.");
+		const char* correct_subtype = subtype_to_string(subtype);
+		const char* actual_subtype = subtype_to_string(symbol->SubType);
+		printf("expected subtype: %s, but got subtype: %s\n", correct_subtype, actual_subtype);
+		PrintSym(symbol);
 		exit(1);
 	}
 }
@@ -436,10 +439,18 @@ Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
 												$$->s1 = $2; };
 
 /* Rule #28 */
-Call: T_ID '(' Args ')'	{	$$ = ASTCreateNode(A_FUNCTION_CALL); // Create function call node
-													$$->name = $1; // Function name
-													$$->s1 = $3;  // Arguments
-													} ;
+Call: T_ID '(' Args ')'	{	
+	int level = 0; // Functions are always at global level
+	struct SymbTab* p = assert_exists($1, level); // Ensure function exists
+	assert_subtype(p, SYM_FUNCTION); // Ensure symbol is of subtype SYM_FUNCTION
+
+	// check to see if formals and actuals match in length and type
+
+	$$ = ASTCreateNode(A_FUNCTION_CALL); // Create function call node
+	$$->name = $1; // Function name
+	$$->s1 = $3;  // Arguments
+	$$->symbol = p; // Link to symbol table entry
+};
 
 /* Rule #29 */
 Args: Arg_List { 	$$ = ASTCreateNode(A_ARG_LIST); // Create argument list node

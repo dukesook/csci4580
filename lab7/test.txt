@@ -1,8 +1,9 @@
+
+int x;
+
 int main(int x, void y)
 begin
 
-  int a[2];
-
-  a[4] = 5;
+  x();
 
 end

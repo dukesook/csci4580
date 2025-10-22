@@ -188,6 +188,26 @@ int Delete(int level)
     return(SIZE);
 }
 
+// TODO - comments
+const char* subtype_to_string(enum SYMBOL_SUBTYPE subtype)
+{
+   switch(subtype)
+   {
+      case SYM_SCALAR:
+         return "SCALAR";
+      case SYM_FUNCTION:
+         return "FUNCTION";
+      case SYM_FUNCTION_PROTO:
+         return "FUNCTION_PROTO";
+      case SYM_FUNCTION_PRE:
+         return "FUNCTION_PRE";
+      case SYM_ARRAY:
+         return "ARRAY";
+      default:
+         return "UNKNOWN_SUBTYPE";
+   }
+}
+
 // PRE:  No input
 // POST:  boolen if table has a PROTOTYPE in it
 int Has_Proto()
