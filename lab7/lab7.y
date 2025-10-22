@@ -68,7 +68,6 @@ static void assert_subtype(struct SymbTab* symbol, enum SYMBOL_SUBTYPE subtype) 
 		const char* correct_subtype = subtype_to_string(subtype);
 		const char* actual_subtype = subtype_to_string(symbol->SubType);
 		printf("expected subtype: %s, but got subtype: %s\n", correct_subtype, actual_subtype);
-		PrintSym(symbol);
 		exit(1);
 	}
 }
@@ -80,6 +79,14 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 	symbol = Insert(name, datatype, subtype, level, size, OFFSET);
 	OFFSET += size;
 	return symbol;
+}
+
+// TODO - comments
+// PRE: Two lists that represent FORMALS and ACTUALS
+// POST: returns 1 if they match (length and type), 0 if they don't.
+static bool check_params(struct ASTnodetype formals, struct ASTnodetype actuals) {
+	// TODO
+	return 0; // placeholder
 }
 
 

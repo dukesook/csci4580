@@ -1,5 +1,8 @@
 
-int x;
+int x(void)
+begin
+
+end
 
 int main(int x, void y)
 begin
