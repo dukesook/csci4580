@@ -49,6 +49,17 @@ static void assert_doesnt_exist(char name[], int level, bool recur) {
   }
 }
 
+static struct SymbTab* assert_exists(char name[], int level) {
+	bool recursive = true;
+	struct SymbTab* p = Search(name, level, recursive);
+	if (!p) {
+		yyerror(name);
+		yyerror("not defined");
+		exit(1);
+	}
+	return p;
+}
+
 // TODO - comments
 static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTYPE subtype, int level, int size) {
 	assert_doesnt_exist(name, level, false);
@@ -340,11 +351,20 @@ Assignment_Stmt: Variable '=' Simple_Expression ';' { $$ = ASTCreateNode(A_ASSIG
 Expression: Simple_Expression { $$ = $1; }; // Pass up the AST node
 
 /* Rule #22 */
-Variable: T_ID 										  { $$ = ASTCreateNode(A_VARIABLE); // Create variable node
-																			$$->name = $1; }
-        | T_ID '[' Expression ']' 	{ $$ = ASTCreateNode(A_VARIABLE); // Create array variable node
-																			$$->name = $1; // Variable name
-																			$$->s1 = $3; }; // Expression for the index
+Variable: T_ID 	{ 
+									struct SymbTab* p = assert_exists($1, LEVEL); // Ensure variable exists
+									if (p->SubType != SYM_SCALAR) {
+										yyerror($1);
+										yyerror("variable is not subtype scalar.");
+										exit(1);
+									}
+									$$ = ASTCreateNode(A_VARIABLE); // Create variable node
+								 	$$->name = $1;
+									$$->symbol = p; // Link to symbol table entry
+								}
+	| T_ID '[' Expression ']' 	{ $$ = ASTCreateNode(A_VARIABLE); // Create array variable node
+																$$->name = $1; // Variable name
+																$$->s1 = $3; }; // Expression for the index
 
 /* Rule #23 */
 Simple_Expression: Additive_Expression { $$ = $1;}
