@@ -20,7 +20,6 @@ Enhancements:
 #include <stdlib.h> // exit()
 #include "ast.h" // include the AST header file
 #include "symtable.h" // include the Symbol Table header file
-#include <assert.h> // for assert()
 
 #define MAX_VARIABLES 4 // max number of variables
 #define ERROR -1 // error code
@@ -75,6 +74,9 @@ static void assert_subtype(struct SymbTab* symbol, enum SYMBOL_SUBTYPE subtype) 
 }
 
 // TODO - comments
+
+
+// TODO - comments
 static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTYPE subtype, int level, int size) {
 	assert_doesnt_exist(name, level, false);
 	SymbTab* symbol;
@@ -88,20 +90,36 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 // PRE: Two lists that represent FORMALS and ACTUALS
 // POST: returns 1 if they match (length and type), 0 if they don't.
 static bool check_params(ASTnode *params1, ASTnode *params2) {
-	
-	assert(params1); // Make sure params1 is not NULL
-	assert(params2); // Make sure params2 is not NULL
+
+	printf("check_params called\n");
+	ASTprint(0, params1);
+	ASTprint(0, params2);
+
+	if (params1 == NULL && params2 == NULL) {
+		return true; // both NULL
+	} else if (params1 == NULL || params2 == NULL) {
+		return false; // one is NULL, the other is not
+	}
+
+	// Assertion: both params1 and params2 are not NULL
 
 	char* type1 = ASTtype_to_string(params1->datatype);
 	char* type2 = ASTtype_to_string(params2->datatype);
 
 	printf("Checking param types: %s vs %s\n", type1, type2);
+	// compare type1 & type2
+	if (params1->datatype != params2->datatype) {
+		return false; // types do not match
+	}
+
+	if (params1->value != params2->value) {
+		return false; // one is array, the other is not
+	}
 
 
 
-
-
-	return 0; // placeholder
+	bool children_match = check_params(params1->s1, params2->s1);
+	return children_match;
 }
 
 

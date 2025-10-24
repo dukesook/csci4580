@@ -394,3 +394,30 @@ char *ASTtype_to_string(enum ASTtype type) {
     return "UNKNOWN_ASTTYPE";
   } // end of switch
 }
+
+void ASTnode_debug(ASTnode *p) {
+  printf("\n========ASTnode_debug()========\n");
+  if (p == NULL) {
+    printf("ASTnode is NULL\n");
+    printf("========ASTnode_debug()========\n");
+    return;
+  }
+
+  printf("Node Type: %s\n", ASTtype_to_string(p->nodetype));
+  printf("Operator: %s\n", operator_to_string(p->operator));
+  printf("Data Type: %s\n", DataTypeToString(p->datatype));
+  printf("Name: %s\n", p->name ? p->name : "NULL");
+  printf("Value: %d\n", p->value);
+  if (p->s1) {
+    printf("s1: ASTnode at %p\n", (void *)p->s1);
+  } else {
+    printf("s1: NULL\n");
+  }
+
+  if (p->s2) {
+    printf("s2: ASTnode at %p\n", (void *)p->s2);
+  } else {
+    printf("s2: NULL\n");
+  }
+  printf("========ASTnode_debug()========\n");
+}

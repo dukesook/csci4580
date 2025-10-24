@@ -1,5 +1,5 @@
 
-int x(int x)
+int foo(int x)
 begin
 
 end
@@ -7,6 +7,6 @@ end
 int main(int x, void y)
 begin
 
-  x();
+  foo(x);
 
 end

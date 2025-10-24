@@ -100,4 +100,6 @@ const char *operator_to_string(enum OPERATORS);
 
 char *ASTtype_to_string(enum ASTtype);
 
+void ASTnode_debug(ASTnode *);
+
 #endif // of AST_H
