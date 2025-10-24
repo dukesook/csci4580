@@ -90,10 +90,8 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 // PRE: Two lists that represent FORMALS and ACTUALS
 // POST: returns 1 if they match (length and type), 0 if they don't.
 static bool check_params(ASTnode *params1, ASTnode *params2) {
-
-	printf("check_params called\n");
-	ASTprint(0, params1);
-	ASTprint(0, params2);
+	// param1 = Function Definition Parameters
+	// param2 = Function call Arguments
 
 	if (params1 == NULL && params2 == NULL) {
 		return true; // both NULL
@@ -103,8 +101,8 @@ static bool check_params(ASTnode *params1, ASTnode *params2) {
 
 	// Assertion: both params1 and params2 are not NULL
 
-	char* type1 = ASTtype_to_string(params1->datatype);
-	char* type2 = ASTtype_to_string(params2->datatype);
+	char* type1 = DataTypes_to_string(params1->datatype);
+	char* type2 = DataTypes_to_string(params2->datatype);
 
 	printf("Checking param types: %s vs %s\n", type1, type2);
 	// compare type1 & type2

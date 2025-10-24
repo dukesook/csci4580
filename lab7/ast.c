@@ -395,6 +395,21 @@ char *ASTtype_to_string(enum ASTtype type) {
   } // end of switch
 }
 
+char* DataTypes_to_string(enum DataTypes datatype) {
+  switch (datatype) { // switch on the type
+  case A_INTTYPE:
+    return "A_INTTYPE";
+  case A_VOIDTYPE:
+    return "A_VOIDTYPE";
+  case A_BOOLEANTYPE:
+    return "A_BOOLEANTYPE";
+  case A_UNKNOWN:
+    return "A_UNKNOWN";
+  default:
+    return "UNKNOWN_DATATYPE";
+  } // end of switch
+}
+
 void ASTnode_debug(ASTnode *p) {
   printf("\n========ASTnode_debug()========\n");
   if (p == NULL) {
