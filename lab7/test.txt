@@ -5,7 +5,7 @@ end
 int main(int x[], void y)
 begin
 
-  int foo;
-  x[y ];
+  boolean z;
+  z = true;
 
 end

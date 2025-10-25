@@ -494,10 +494,12 @@ Write_Stmt: T_WRITE Expression ';' { $$ = ASTCreateNode(A_WRITE); // Write expre
 																	 $$->name = $2; };
 
 /* Rule #20 */
-Assignment_Stmt: Variable '=' Simple_Expression ';' { $$ = ASTCreateNode(A_ASSIGNMENT_STATEMENT);
-																											$$->s1 = $1; // Variable
-																											$$->s2 = $3; // Expression
-																											} ;
+Assignment_Stmt: Variable '=' Simple_Expression ';' { 
+	$$ = ASTCreateNode(A_ASSIGNMENT_STATEMENT);
+	assert_same_datatype($1, $3); // Ensure variable and expression have the same datatype
+	$$->s1 = $1; // Variable
+	$$->s2 = $3; // Expression
+};
 
 /* Rule #21 */
 Expression: Simple_Expression { $$ = $1; }; // Pass up the AST node
