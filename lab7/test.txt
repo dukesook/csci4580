@@ -7,6 +7,6 @@ end
 int main(int x, void y)
 begin
 
-  foo(x, x, x);
+  foo(x);
 
 end

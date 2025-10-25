@@ -127,6 +127,25 @@ static int count_params(ASTnode *params) {
 }
 
 
+static int count_args(ASTnode *arg) {
+	// s1 is the argument (expression)
+	// s2 is the next A_ARGUMENT
+	if (!arg) {
+		return 0;
+	}
+
+	assert_nodetype(arg, A_ARGUMENT);
+
+	if (!arg->s1) {
+		printf("ERROR! Argument node with no expression (s1)\n");
+		exit(1);
+	}
+
+	return 1 + count_args(arg->s2);
+
+
+}
+
 // TODO - comments
 // PRE: Two lists that represent FORMALS and ACTUALS
 // POST: returns 1 if they match (length and type), 0 if they don't.
@@ -134,17 +153,31 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 	// param1 = Function Definition Parameters
 	// param2 = Function call Arguments
 
-	if (params == NULL && args == NULL) {
-		return true; // both NULL
-	} else if (params == NULL || args == NULL) {
-		return false; // one is NULL, the other is not
+	if (!params) {
+		printf("ERROR: params is NULL instead of A_VOID_PARAM\n");
+		exit(1);
 	}
 
-	// Assertion: both params and args are not NULL
 
 	// assert_nodetype(params, A_PARAM); // ensure datatype is valid
 	int params_count = count_params(params);
 	printf("Param count: %d\n", params_count);
+
+	int args_count = count_args(args);
+	printf("Arg count: %d\n", args_count);
+
+	if (params_count != args_count) {
+		return false; // lengths do not match
+	}
+
+	if (params_count == 0 && args_count == 0) {
+		return true; // both are empty
+	}
+
+	if (!args) {
+		printf("Warning! args is NULL\n");
+		// TODO
+	}
 
 	// compare type1 & type2
 	if (params->datatype != args->datatype) {
@@ -524,7 +557,9 @@ Call: T_ID '(' Args ')'	{
 	assert_subtype(p, SYM_FUNCTION); // Ensure symbol is of subtype SYM_FUNCTION
 
 	// check to see if formals and actuals match in length and type
-	bool match = check_params(p->fparms, $3);
+	// $3 = A_ARG_LIST
+	// $3->s1 = first A_ARGUMENT
+	bool match = check_params(p->fparms, $3->s1);
 	if (!match) {
 		yyerror($1);
 		yyerror("function parameters do not match");
