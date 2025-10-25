@@ -41,6 +41,13 @@ void yyerror (s)  /* Called by yyparse on error */
   printf ("%s on line number %d\n", s, line_num);
 }
 
+static void assert_not_null(void *p) {
+	if (!p) {
+		printf("ERROR: NULL POINTER ENCOUNTERED\n");
+		exit(1);
+	}
+}
+
 // TODO - comments
 static void assert_doesnt_exist(char name[], int level, bool recur) {
   if (Search(name, level, recur)) {
@@ -64,6 +71,7 @@ static struct SymbTab* assert_exists(char name[], int level) {
 
 // TODO - comments
 static void assert_subtype(struct SymbTab* symbol, enum SYMBOL_SUBTYPE subtype) {
+	assert_not_null(symbol);
 	if (symbol->SubType != subtype) {
 		yyerror(symbol->name);
 		const char* correct_subtype = subtype_to_string(subtype);
@@ -76,6 +84,7 @@ static void assert_subtype(struct SymbTab* symbol, enum SYMBOL_SUBTYPE subtype) 
 // TODO - comments
 // int, void, or boolean
 static void assert_datatype(ASTnode* p, enum DataTypes datatype) {
+	assert_not_null(p);
 	if (p->datatype != datatype) {
 		yyerror(p->name);
 		const char* correct_datatype = DataTypes_to_string(datatype);
@@ -87,6 +96,7 @@ static void assert_datatype(ASTnode* p, enum DataTypes datatype) {
 }
 
 static void assert_nodetype(ASTnode* p, enum ASTtype nodetype) {
+	assert_not_null(p);
 	if (p->nodetype != nodetype) {
 		yyerror(p->name);
 		const char* correct_nodetype = ASTtype_to_string(nodetype);
@@ -354,7 +364,10 @@ Fun_Tail: ';' { $$ = ASTCreateNode(A_FUNCTIONDEC); }
 			;
 
 /* Rule #7 */
-Params: T_VOID { $$ = ASTCreateNode(A_VOID_PARAM);} // No parameters
+Params: T_VOID 	{
+									$$ = ASTCreateNode(A_VOID_PARAM); // No parameters
+									$$->datatype = A_VOIDTYPE;
+								}
       | Param_List	{ $$ = $1; } // Pass up the Param_List node
 			;
 
@@ -483,6 +496,7 @@ Variable: T_ID 	{
 		$$ = ASTCreateNode(A_VARIABLE); // Create variable node
 		$$->name = $1; // Variable name
 		$$->symbol = p; // Link to symbol table entry
+		$$->datatype = p->Declared_Type; // Set datatype to the declared type of the variable
 	}
 
 	| T_ID '[' Expression ']'	{ 
@@ -493,6 +507,7 @@ Variable: T_ID 	{
 		$$->name = $1; // Variable name
 		$$->s1 = $3; // Index expression
 		$$->symbol = p; // Link to symbol table entry
+		$$->datatype = p->Declared_Type; // Set datatype to the declared type of the array
 	}; // Expression for the index
 
 /* Rule #23 */
@@ -538,17 +553,34 @@ Mult_Op: '*' 		{ $$ = A_TIMES; } // Pass up the operator
 
 /* Rule #27 */
 Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
-      | T_NUM   			{ $$ = ASTCreateNode(A_NUMBER);
-								 			 	$$->value = $1; }
-			| Variable 			{ $$ = $1; }
-			| Call 					{ $$ = $1; }
-			| T_TRUE 	 			{ $$ = ASTCreateNode(A_BOOLEAN); 
-												$$->value = 1; } // true is represented as 1
-			| T_FALSE  			{ $$ = ASTCreateNode(A_BOOLEAN);
-												$$->value = 0; } // false is represented as 0
-			| T_NOT Factor	{ $$ = ASTCreateNode(A_EXPRESSION);
-												$$->operator = A_NOT;
-												$$->s1 = $2; };
+	| T_NUM   			{ 
+										$$ = ASTCreateNode(A_NUMBER);
+										$$->value = $1;
+										$$->datatype = A_INTTYPE;
+									}
+	| Variable 			{
+										$$ = $1;
+									}
+	| Call 					{
+										$$ = $1;
+									}
+	| T_TRUE 	 			{
+										$$ = ASTCreateNode(A_BOOLEAN); 
+										$$->value = 1; // true is represented as 1
+										$$->datatype = A_BOOLEANTYPE;
+									} 
+	| T_FALSE  			{
+										$$ = ASTCreateNode(A_BOOLEAN);
+										$$->value = 0; // false is represented as 0
+										$$->datatype = A_BOOLEANTYPE;
+									}
+	| T_NOT Factor	{ 
+										assert_datatype($2, A_BOOLEANTYPE); // Ensure the factor is boolean
+										$$ = ASTCreateNode(A_EXPRESSION);
+										$$->operator = A_NOT;
+										$$->s1 = $2;
+										$$->datatype = A_BOOLEANTYPE;
+									};
 
 /* Rule #28 */
 Call: T_ID '(' Args ')'	{	
@@ -570,6 +602,7 @@ Call: T_ID '(' Args ')'	{
 	$$->name = $1; // Function name
 	$$->s1 = $3;  // Arguments
 	$$->symbol = p; // Link to symbol table entry
+	$$->datatype = $$->symbol->Declared_Type; // Function return type
 };
 
 /* Rule #29 */
@@ -579,12 +612,16 @@ Args: Arg_List { 	$$ = ASTCreateNode(A_ARG_LIST); // Create argument list node
 						;
 
 /* Rule #30 */
-Arg_List: Expression { 	$$ = ASTCreateNode(A_ARGUMENT); // Create argument node
-												$$->s1 = $1; } // Single argument
-				| Expression ',' Arg_List { $$ = ASTCreateNode(A_ARGUMENT); // Create argument node
-												            $$->s1 = $1; // First argument
-												            $$->s2 = $3; // Remaining arguments
-																	};
+Arg_List: Expression	{ 	
+												$$ = ASTCreateNode(A_ARGUMENT); // Create argument node
+												$$->s1 = $1;
+												$$->datatype = $1->datatype;
+											} // Single argument
+	| Expression ',' Arg_List { $$ = ASTCreateNode(A_ARGUMENT); // Create argument node
+															$$->s1 = $1; // First argument
+															$$->s2 = $3; // Remaining arguments
+															$$->datatype = $1->datatype;
+														};
 
 /* Graduate Student Required Rule */
 /* Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' 	

@@ -1,12 +1,15 @@
 
-int foo(int x[])
+int foo(int x, boolean y, void z)
 begin
 
 end
 
-int main(int x[], void y)
+int main(void)
 begin
 
-  foo(x[2]);
+  int x;
+  boolean y;
+  void z;
+  foo(x, y, z);
 
 end
