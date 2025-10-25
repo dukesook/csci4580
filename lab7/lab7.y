@@ -531,12 +531,13 @@ Variable: T_ID 	{
 /* Rule #23 */
 Simple_Expression: Additive_Expression { $$ = $1;}
 	| Simple_Expression Relop Additive_Expression {	
-		$$ = ASTCreateNode(A_EXPRESSION);
 		assert_same_datatype($1, $3); // Only compare operands of the same datatype
+		$$ = ASTCreateNode(A_EXPRESSION);
 		$$->s1 = $1;
 		$$->s2 = $3;
 		$$->operator = $2;
 		$$->datatype = A_BOOLEANTYPE; // Result of relational operation is boolean
+		yy_insert(CreateTemp(), A_BOOLEANTYPE, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 	};
 
 /* Rule #22 */

@@ -26,12 +26,12 @@ int GTEMP=0;  /* Global Temp counter */
 // USAGE:   creates a variable name that is used to hold temporary, intermediate
 //         values in the runtime enviroment
 
-char * CreateTemp()
-{    char hold[100];
-     char *s;
-     sprintf(hold,"_t%d",GTEMP++);
-     s=strdup(hold);
-     return (s);
+char * CreateTemp() {    
+   char hold[100];
+   char *s;
+   sprintf(hold,"_t%d",GTEMP++);
+   s=strdup(hold);
+   return (s);
 }
 
 
