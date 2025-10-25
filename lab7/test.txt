@@ -1,12 +1,12 @@
 
-int foo(void)
+int foo(int x[])
 begin
 
 end
 
-int main(int x, void y)
+int main(int x[], void y)
 begin
 
-  foo(x);
+  foo(x[2]);
 
 end
