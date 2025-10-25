@@ -51,10 +51,11 @@ enum DataTypes {
   A_INTTYPE,      // "int"
   A_VOIDTYPE,     // "void"
   A_BOOLEANTYPE,  // "boolean"
-  A_UNKNOWN,      // used for undeclared variables
+  A_DATATYPE_UNKNOWN,      // used for undeclared variables
 };
 
 enum OPERATORS {
+  A_OPERATOR_UNKNOWN, // unknown operator
   A_PLUS,   // +
   A_MINUS,  // -
   A_TIMES,  // *

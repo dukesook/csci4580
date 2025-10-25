@@ -86,6 +86,16 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 }
 
 
+static int param_count(ASTnode *params) {
+	if (!params) {
+		return 0;
+	}
+
+
+
+}
+
+
 // TODO - comments
 // PRE: Two lists that represent FORMALS and ACTUALS
 // POST: returns 1 if they match (length and type), 0 if they don't.
@@ -204,7 +214,7 @@ Var_List: T_ID
 			$$ = ASTCreateNode(A_VARDEC);
 			$$->name = $1;
 			$$->value = 0; // single variable (not array)
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 		}
 
 	| T_ID '[' T_NUM ']'
@@ -212,7 +222,7 @@ Var_List: T_ID
 			$$ = ASTCreateNode(A_VARDEC);
 			$$->name = $1;
 			$$->value = $3; // array size
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, $3);
+			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3);
 		}
 	| T_ID ',' Var_List	
 		{ 
@@ -220,7 +230,7 @@ Var_List: T_ID
 			$$->name = $1; 
 			$$->value = 0; // single variable (not array)
 			$$->s1 = $3;
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 		}
 	| T_ID '[' T_NUM ']' ',' Var_List
 		{ 
@@ -228,7 +238,7 @@ Var_List: T_ID
 			$$->name = $1;
 			$$->value = $3; // array size
 			$$->s1 = $6;
-			$$->symbol = yy_insert($1, A_UNKNOWN, SYM_ARRAY, LEVEL, $3);
+			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3);
 		};
 
 /* Rule #5 */

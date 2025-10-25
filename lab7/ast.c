@@ -33,9 +33,13 @@ ASTnode *ASTCreateNode(enum ASTtype mytype) {
     fprintf(stderr, "Creating AST Node \n");
   p = (ASTnode *)malloc(sizeof(ASTnode)); // allocate memory
   p->nodetype = mytype;                   // Indicates which kind of node this is
+  p->operator = A_OPERATOR_UNKNOWN;       // Indicates which operator (if any) will be applied to the child nodes
+  p->datatype = A_DATATYPE_UNKNOWN;       // Indicates datatype of variable or function
+  p->name = NULL;                         // Name (T_ID) of variable or function
   p->s1 = NULL;                           // Child node #1
   p->s2 = NULL;                           // Child node #2
-  p->value = 0;                           // used for number values and also for array size
+  p->value = -1;                          // used for number values and also for array size
+  p->symbol = NULL;                       // Pointer to symbol table entry for this node
   return (p);
 } // end of ASTCreateNode()
 
@@ -305,6 +309,8 @@ void ASTprint(int level, ASTnode *p) {
 // POST: a character string for that operator to print nicely -- caller does final output
 const char *operator_to_string(enum OPERATORS operator) {
   switch (operator) { // switch on the operator
+  case A_OPERATOR_UNKNOWN:
+    return "UNKNOWN!";
   case A_PLUS:
     return "+";
   case A_MINUS:
@@ -403,8 +409,8 @@ char* DataTypes_to_string(enum DataTypes datatype) {
     return "A_VOIDTYPE";
   case A_BOOLEANTYPE:
     return "A_BOOLEANTYPE";
-  case A_UNKNOWN:
-    return "A_UNKNOWN";
+  case A_DATATYPE_UNKNOWN:
+    return "A_DATATYPE_UNKNOWN";
   default:
     return "UNKNOWN_DATATYPE";
   } // end of switch
