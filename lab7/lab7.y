@@ -95,6 +95,20 @@ static void assert_datatype(ASTnode* p, enum DataTypes datatype) {
 	}
 }
 
+static void assert_same_datatype(ASTnode* p1, ASTnode* p2) {
+	assert_not_null(p1);
+	assert_not_null(p2);
+	if (p1->datatype != p2->datatype) {
+		yyerror(p1->name);
+		yyerror(p2->name);
+		const char* datatype1 = DataTypes_to_string(p1->datatype);
+		const char* datatype2 = DataTypes_to_string(p2->datatype);
+		printf("datatype mismatch: %s vs %s\n", datatype1, datatype2);
+		
+		exit(1);
+	}
+}
+
 static void assert_nodetype(ASTnode* p, enum ASTtype nodetype) {
 	assert_not_null(p);
 	if (p->nodetype != nodetype) {
@@ -539,10 +553,15 @@ Add_Op: '+'  	{ $$ = A_PLUS; } // Pass up the operator
 
 /* Rule #25 */
 Term: Factor { $$ = $1; }
-		| Term Mult_Op Factor { $$ = ASTCreateNode(A_EXPRESSION);  // Create expression node
+		| Term Mult_Op Factor { 
+														// Only multiply operands of the same datatype
+														assert_same_datatype($1, $3);
+														$$ = ASTCreateNode(A_EXPRESSION);  // Create expression node
 														$$->s1 = $1; // Left operand
 														$$->s2 = $3; // Right operand
-														$$->operator = $2; }; // Pass up the AST node
+														$$->operator = $2;
+														$$->datatype = $1->datatype; // Set datatype
+													}; // Pass up the AST node
 		;
 
 /* Rule #26 */
