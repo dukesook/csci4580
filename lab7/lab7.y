@@ -74,7 +74,28 @@ static void assert_subtype(struct SymbTab* symbol, enum SYMBOL_SUBTYPE subtype) 
 }
 
 // TODO - comments
+// int, void, or boolean
+static void assert_datatype(ASTnode* p, enum DataTypes datatype) {
+	if (p->datatype != datatype) {
+		yyerror(p->name);
+		const char* correct_datatype = DataTypes_to_string(datatype);
+		const char* actual_datatype = DataTypes_to_string(p->datatype);
+		printf("expected datatype: %s, but got datatype: %s\n", correct_datatype, actual_datatype);
+		
+		exit(1);
+	}
+}
 
+static void assert_nodetype(ASTnode* p, enum ASTtype nodetype) {
+	if (p->nodetype != nodetype) {
+		yyerror(p->name);
+		const char* correct_nodetype = ASTtype_to_string(nodetype);
+		const char* actual_nodetype = ASTtype_to_string(p->nodetype);
+		printf("expected nodetype: %s, but got nodetype: %s\n", correct_nodetype, actual_nodetype);
+		
+		exit(1);
+	}
+}
 
 // TODO - comments
 static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTYPE subtype, int level, int size) {
@@ -86,11 +107,21 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 }
 
 
-static int param_count(ASTnode *params) {
+static int count_params(ASTnode *params) {
 	if (!params) {
+		return 0;
+	} else if (params->nodetype == A_VOID_PARAM) {
 		return 0;
 	}
 
+	assert_nodetype(params, A_PARAM); // ensure datatype is valid
+	
+	// printf("Parameter:\n");
+	// printf("  Name: %s\n", params->name);
+	// printf("  DataType: %s\n", DataTypes_to_string(params->datatype));
+	// printf("  value: %d\n", params->value); // indicates array or not
+	
+	return 1 + count_params(params->s1);
 
 
 }
@@ -110,6 +141,10 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 	}
 
 	// Assertion: both params and args are not NULL
+
+	// assert_nodetype(params, A_PARAM); // ensure datatype is valid
+	int params_count = count_params(params);
+	printf("Param count: %d\n", params_count);
 
 	// compare type1 & type2
 	if (params->datatype != args->datatype) {
@@ -287,7 +322,7 @@ Fun_Tail: ';' { $$ = ASTCreateNode(A_FUNCTIONDEC); }
 
 /* Rule #7 */
 Params: T_VOID { $$ = ASTCreateNode(A_VOID_PARAM);} // No parameters
-      | Param_List	{ $$ = $1;} // Pass up the Param_List node
+      | Param_List	{ $$ = $1; } // Pass up the Param_List node
 			;
 
 /* Rule #8 */

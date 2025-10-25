@@ -1,5 +1,5 @@
 
-int foo(int AA, int BB, int CC)
+int foo(void)
 begin
 
 end
