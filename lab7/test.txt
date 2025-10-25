@@ -5,7 +5,7 @@ end
 int main(int x[], void y)
 begin
 
-  int z;
-  y + z;
+  int foo;
+  x[y ];
 
 end

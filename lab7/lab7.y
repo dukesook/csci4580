@@ -522,14 +522,17 @@ Variable: T_ID 	{
 		$$->s1 = $3; // Index expression
 		$$->symbol = p; // Link to symbol table entry
 		$$->datatype = p->Declared_Type; // Set datatype to the declared type of the array
-	}; // Expression for the index
+
+		assert_datatype($3, A_INTTYPE); // Ensure index is of integer type
+	};
 
 /* Rule #23 */
 Simple_Expression: Additive_Expression { $$ = $1;}
 	| Simple_Expression Relop Additive_Expression {	
 		$$ = ASTCreateNode(A_EXPRESSION);
-		$$->s1 = $1; // Relational Operands can be any datatype
-		$$->s2 = $3; // Relational Operands can be any datatype
+		assert_same_datatype($1, $3); // Only compare operands of the same datatype
+		$$->s1 = $1;
+		$$->s2 = $3;
 		$$->operator = $2;
 		$$->datatype = A_BOOLEANTYPE; // Result of relational operation is boolean
 	};
