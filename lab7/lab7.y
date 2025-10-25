@@ -89,34 +89,30 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 // TODO - comments
 // PRE: Two lists that represent FORMALS and ACTUALS
 // POST: returns 1 if they match (length and type), 0 if they don't.
-static bool check_params(ASTnode *params1, ASTnode *params2) {
+static bool check_params(ASTnode *params, ASTnode *args) {
 	// param1 = Function Definition Parameters
 	// param2 = Function call Arguments
 
-	if (params1 == NULL && params2 == NULL) {
+	if (params == NULL && args == NULL) {
 		return true; // both NULL
-	} else if (params1 == NULL || params2 == NULL) {
+	} else if (params == NULL || args == NULL) {
 		return false; // one is NULL, the other is not
 	}
 
-	// Assertion: both params1 and params2 are not NULL
+	// Assertion: both params and args are not NULL
 
-	char* type1 = DataTypes_to_string(params1->datatype);
-	char* type2 = DataTypes_to_string(params2->datatype);
-
-	printf("Checking param types: %s vs %s\n", type1, type2);
 	// compare type1 & type2
-	if (params1->datatype != params2->datatype) {
+	if (params->datatype != args->datatype) {
 		return false; // types do not match
 	}
 
-	if (params1->value != params2->value) {
+	if (params->value != args->value) {
 		return false; // one is array, the other is not
 	}
 
 
 
-	bool children_match = check_params(params1->s1, params2->s1);
+	bool children_match = check_params(params->s1, args->s1);
 	return children_match;
 }
 
