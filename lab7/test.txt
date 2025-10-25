@@ -6,6 +6,6 @@ int main(int x[], void y)
 begin
 
   int z;
-  y * z;
+  y + z;
 
 end

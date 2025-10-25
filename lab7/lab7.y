@@ -295,7 +295,7 @@ Var_Declaration: Type_Specifier Var_List ';'
 		ASTnode* p = $2;
 		while (p != NULL) { // Iterate through the Var_List
 			p->datatype = $1; // Set the datatype for each variable
-			/* p->symbol->Declared_Type = $1; */
+			p->symbol->Declared_Type = $1;
 			p = p->s1; // Move to the next variable in the list
 		}
 	};
@@ -526,10 +526,13 @@ Variable: T_ID 	{
 
 /* Rule #23 */
 Simple_Expression: Additive_Expression { $$ = $1;}
-                 | Simple_Expression Relop Additive_Expression {	$$ = ASTCreateNode(A_EXPRESSION);
-								 																									$$->s1 = $1;
-																									 								$$->s2 = $3;
-																									 								$$->operator = $2; };
+	| Simple_Expression Relop Additive_Expression {	
+		$$ = ASTCreateNode(A_EXPRESSION);
+		$$->s1 = $1; // Relational Operands can be any datatype
+		$$->s2 = $3; // Relational Operands can be any datatype
+		$$->operator = $2;
+		$$->datatype = A_BOOLEANTYPE; // Result of relational operation is boolean
+	};
 
 /* Rule #22 */
 Relop: T_LE { $$ = A_LE;} // Pass up the operator
@@ -542,10 +545,14 @@ Relop: T_LE { $$ = A_LE;} // Pass up the operator
 
 /* Rule #23 */
 Additive_Expression: Term { $$ = $1; }
-                   | Additive_Expression Add_Op Term { $$ = ASTCreateNode(A_EXPRESSION);
-									 																		 $$->s1 = $1; // Left operand
-																											 $$->s2 = $3; // Right operand
-																											 $$->operator = $2; }; // Pass up the AST node
+	| Additive_Expression Add_Op Term { 
+		assert_same_datatype($1, $3); // Only add operands of the same datatype
+		$$ = ASTCreateNode(A_EXPRESSION);
+		$$->s1 = $1; // Left operand
+		$$->s2 = $3; // Right operand
+		$$->operator = $2;
+		$$->datatype = $1->datatype; // Set datatype
+	};
 
 /* Rule #24 */
 Add_Op: '+'  	{ $$ = A_PLUS; } // Pass up the operator
