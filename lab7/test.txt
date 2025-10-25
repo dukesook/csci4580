@@ -5,7 +5,6 @@ end
 int main(int x[], void y)
 begin
 
-  boolean z;
-  z = true;
+  x[2] < y;
 
 end
