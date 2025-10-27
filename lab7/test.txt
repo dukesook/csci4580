@@ -2,9 +2,11 @@ int y,Z[100];
 
 int f(int b)
 begin 
-  // int penis = 2; // TODO!!!
-  int penis;
-  f(penis);
-end
+ int y;
+ begin
+  int x[10];
+  x[2+2];
+  // x[2+3-5];
+ end
 
 end

@@ -184,6 +184,9 @@ static int get_array_size(ASTnode* p) {
 				exit(1);
 			}
 			return p->value;
+		case A_EXPRESSION:
+			printf("TODO: get_array_size() for A_EXPRESSION not implemented yet\n");
+			exit(1);
 		default:
 			printf("ERROR: get_array_size() unhandled nodetype: %s\n", ASTtype_to_string(p->nodetype));
 			exit(1);
