@@ -177,16 +177,13 @@ static int get_array_size(ASTnode* p) {
 	
 	switch (p->nodetype) {
 		case A_NUMBER:
+		case A_EXPRESSION:
 			return 0; // Scalar
 		case A_VARIABLE:
 		  if (p->value == -1) { // value is uninitialized
 				printf("ERROR: get_array_size: value not set for variable: %s\n", p->name);
 				exit(1);
 			}
-			return p->value;
-		case A_EXPRESSION:
-			printf("TODO: get_array_size() for A_EXPRESSION not implemented yet\n");
-			exit(1);
 		default:
 			printf("ERROR: get_array_size() unhandled nodetype: %s\n", ASTtype_to_string(p->nodetype));
 			exit(1);

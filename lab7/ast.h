@@ -79,8 +79,8 @@ typedef struct ASTnodetype {
   enum OPERATORS operator;      // Indicates which operator (if any) will be applied to the child nodes
   enum DataTypes datatype;      // Indicates datatype of variable or function
   char *name;                   // Name (T_ID) of variable or function
-  int value;                    // used for number values
-  int array_size;               // 0 = single variable. # = array size. -1 = not used
+  int value;                    // used for number values. varaibles: 0 = single variable. # = array size. -1 = not used
+  int array_size;               // not in use (would be better, but too much work to implement)
   struct ASTnodetype *s1, *s2;  // used for holding IF and WHILE components -- not very descriptive
   struct SymbTab *symbol;       // Pointer to symbol table entry for this node
 } ASTnode;
