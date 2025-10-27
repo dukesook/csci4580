@@ -171,15 +171,35 @@ static int count_args(ASTnode *arg) {
 }
 
 // TODO - comments
+// 0 if scalar
+static int get_array_size(ASTnode* p) {
+	assert_not_null(p);
+	
+	switch (p->nodetype) {
+		case A_NUMBER:
+			return 0; // Scalar
+		case A_VARIABLE:
+		  if (p->value == -1) { // value is uninitialized
+				printf("ERROR: get_array_size: value not set for variable: %s\n", p->name);
+				exit(1);
+			}
+			return p->value;
+		default:
+			printf("ERROR: get_array_size() unhandled nodetype: %s\n", ASTtype_to_string(p->nodetype));
+			exit(1);
+	}
+	return -1; // should never reach here
+}
+
+// TODO - comments
 // PRE: Two lists that represent FORMALS and ACTUALS
 // POST: returns 1 if they match (length and type), 0 if they don't.
 static bool check_params(ASTnode *params, ASTnode *args) {
 	// param1 = Function Definition Parameters
 	// param2 = Function call Arguments
 
-	if (!params) {
-		printf("ERROR: params is NULL instead of A_VOID_PARAM\n");
-		exit(1);
+	if (!params && !args) {
+		return true; // both are empty
 	}
 
 
@@ -214,7 +234,7 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 
 
 
-	bool children_match = check_params(params->s1, args->s1);
+	bool children_match = check_params(params->s1, args->s2);
 	return children_match;
 }
 
@@ -513,6 +533,7 @@ Variable: T_ID 	{
 		$$->name = $1; // Variable name
 		$$->symbol = p; // Link to symbol table entry
 		$$->datatype = p->Declared_Type; // Set datatype to the declared type of the variable
+		$$->value = 0; // scalar variable
 	}
 
 	| T_ID '[' Expression ']'	{ 
@@ -524,7 +545,7 @@ Variable: T_ID 	{
 		$$->s1 = $3; // Index expression
 		$$->symbol = p; // Link to symbol table entry
 		$$->datatype = p->Declared_Type; // Set datatype to the declared type of the array
-
+		$$->value = get_array_size($$->s1); // array size
 		assert_datatype($3, A_INTTYPE); // Ensure index is of integer type
 	};
 
@@ -646,11 +667,12 @@ Args: Arg_List { 	$$ = ASTCreateNode(A_ARG_LIST); // Create argument list node
 /* Rule #30 */
 Arg_List: Expression	{ 	
 												$$ = ASTCreateNode(A_ARGUMENT); // Create argument node
-												$$->s1 = $1;
+												$$->s1 = $1; // Argument Expression
 												$$->datatype = $1->datatype;
+												$$->value = get_array_size($1);
 											} // Single argument
 	| Expression ',' Arg_List { $$ = ASTCreateNode(A_ARGUMENT); // Create argument node
-															$$->s1 = $1; // First argument
+															$$->s1 = $1; // Argument Expression
 															$$->s2 = $3; // Remaining arguments
 															$$->datatype = $1->datatype;
 														};

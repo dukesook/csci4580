@@ -1,10 +1,10 @@
-int x(int z, int z1)
-begin
+int y,Z[100];
+
+int f(int b)
+begin 
+  // int penis = 2; // TODO!!!
+  int penis;
+  f(penis);
 end
-
-int main(int x[], void y)
-begin
-
-  x[2] < y;
 
 end
