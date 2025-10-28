@@ -63,8 +63,8 @@ char *DataTypeToString(enum DataTypes mydatatype) {
   case A_BOOLEANTYPE:
     return ("boolean"); // return string "boolean"
   default:
-    printf("Unknown type in DataTypeToString\n"); // error
-    exit(1); // barf
+    printf("Unknown type in DataTypeToString(): %d\n", mydatatype); // error
+    //exit(1); // barf
   } // end of switch
 } // end of DataTypeToString()
 
@@ -103,6 +103,13 @@ void ASTprint(int level, ASTnode *p) {
     printf(" offset %d\n", p->symbol->offset);
     ASTprint(level + 1, p->s1);                    // parameters
     ASTprint(level + 1, p->s2);                    // compound
+    break;
+
+  case A_PROTOTYPE:
+    PT(level);
+    char *type = DataTypeToString(p->datatype);
+    printf("Function PROTOTYPE %s  %s with size TODO", type, p->name);
+    ASTprint(level + 1, p->s1); // parameters
     break;
 
   case A_NUMBER:
@@ -275,7 +282,6 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_FUNCTION_PROTOTYPE:
     PT(level);
-    char *type = DataTypeToString(p->datatype); // return type
     printf("Function PROTOTYPE %s  %s", type, p->name);
     ASTprint(level + 1, p->s1); // parameters
     break;

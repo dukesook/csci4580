@@ -359,12 +359,32 @@ Type_Specifier: T_INT 		{ $$ = A_INTTYPE; } // Pass up the datatype
 Func_Declaration:
 	Type_Specifier T_ID '(' 
 		{
-			assert_doesnt_exist($2, LEVEL, false);
-			/* yy_insert($2, $1, SYM_FUNCTION, LEVEL, 0, 0); */
-			Insert($2, $1, SYM_FUNCTION, LEVEL, 0, 0);
-			GOFFSET = OFFSET; // Save global offset
-			OFFSET = 2; // we need two memory locations for Stack Pointer and Return Address
-			maxoffset;
+			SymbTab *p = Search($2, LEVEL, true); // Check if function already exists
+			if (p == NULL) {
+				// function/protoype not found
+				// go ahead and insert it
+				Insert($2, $1, SYM_FUNCTION_PRE, LEVEL, 0, 0);
+				GOFFSET = OFFSET; // Save global offset
+				OFFSET = 2; // we need two memory locations for Stack Pointer and Return Address
+				maxoffset;
+			} else {
+				switch (p->SubType) {
+					case SYM_FUNCTION:
+						yyerror("Function already defined");
+						printf("%s\n", $2);
+						exit(1);
+					break;
+
+					case SYM_FUNCTION_PROTO:
+						// function prototype found
+					break;
+
+					default:
+						yyerror("Function declaraction has unknown type");
+						printf("%s\n", $2);
+						exit(1);
+				}
+			}
 		}
 
 
@@ -376,17 +396,26 @@ Func_Declaration:
 		}
 
 	Fun_Tail
-		{ 
+		{
+			ASTnode *p = $8;
 			$$ = $8; 					 // Pass up the Fun_Tail node
 			$$->datatype = $1; // Return Type
 			$$->name = $2;		 // Function Name
 			$$->s1 = $5; 		   // Parameters
 			$$->symbol = Search($2, LEVEL, false);
 			$$->symbol->offset = maxoffset;
+			if (p->nodetype == A_PROTOTYPE) {
+				$$->symbol->SubType = SYM_FUNCTION_PROTO;
+			} else if (p->nodetype == A_FUNCTIONDEC) {
+				$$->symbol->SubType = SYM_FUNCTION;
+			} else {
+				yyerror("Function tail has unknown type");
+				exit(1);
+			}
 		};
 
 /* NEW: Rule #6a */
-Fun_Tail: ';' { $$ = ASTCreateNode(A_FUNCTIONDEC); }
+Fun_Tail: ';' { $$ = ASTCreateNode(A_PROTOTYPE); }
 			| Compound_Stmt // Function Definition (with body)
 				{ 
 					$$ = ASTCreateNode(A_FUNCTIONDEC);

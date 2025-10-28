@@ -23,6 +23,7 @@ enum ASTtype {
   A_VARDEC,               // Variable Declaration
   A_DEC_LIST,             // List of Declarations
   A_FUNCTIONDEC,          // Function Declaration
+  A_PROTOTYPE,            // Function Prototype Declaration
   A_FUNCTION_CALL,        // Function Call Argument
   A_ARG_LIST,             // The list of arguments in a function call
   A_ARGUMENT,             // A single argument in a function call
