@@ -100,7 +100,7 @@ void ASTprint(int level, ASTnode *p) {
     printf("Function ");
     printf("%s  ", DataTypeToString(p->datatype)); // return type
     printf("%s", p->name);                         // function name
-    printf(" with size %d\n", p->symbol->mysize);
+    printf(" with size %d", p->symbol->mysize);
     ASTprint(level + 1, p->s1);                    // parameters
     ASTprint(level + 1, p->s2);                    // compound
     break;
@@ -108,7 +108,7 @@ void ASTprint(int level, ASTnode *p) {
   case A_PROTOTYPE:
     PT(level);
     char *type = DataTypeToString(p->datatype);
-    printf("Function PROTOTYPE %s  %s with size TODO", type, p->name);
+    printf("Function PROTOTYPE %s  %s with size %d", type, p->name, p->symbol->mysize);
     ASTprint(level + 1, p->s1); // parameters
     break;
 

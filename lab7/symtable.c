@@ -45,6 +45,7 @@ char * CreateTemp() {
 
 struct SymbTab * Insert(char *name, enum DataTypes my_assigned_type, enum  SYMBOL_SUBTYPE subtype, int  level, int mysize, int offset )
 {
+   printf("inserting %s with size %d\n", name, mysize);
   struct SymbTab * n;
     n=Search(name,level, 0);
     if(n!=NULL)
