@@ -205,10 +205,7 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 
 	// assert_nodetype(params, A_PARAM); // ensure datatype is valid
 	int params_count = count_params(params);
-	printf("Param count: %d\n", params_count);
-
 	int args_count = count_args(args);
-	printf("Arg count: %d\n", args_count);
 
 	if (params_count != args_count) {
 		return false; // lengths do not match

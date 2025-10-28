@@ -91,8 +91,7 @@ void ASTprint(int level, ASTnode *p) {
     printf(" %s", p->name); // variable name
     if (p->value > 0) // if variable is an array
       printf("[%d]", p->value); // print array size
-    printf(" with offset %d ", p->symbol->offset);
-    printf("\n");
+    printf(" with offset %d and level %d\n", p->symbol->offset, p->symbol->level);
     ASTprint(level, p->s1);
     break;
 
@@ -168,8 +167,7 @@ void ASTprint(int level, ASTnode *p) {
       if (param->value == 1) {
         printf("[]"); // array parameter
       }
-      printf(" with offset %d\n", param->symbol->offset);
-      printf("\n");
+      printf("  offset %d level %d\n", param->symbol->offset, param->symbol->level);
       param = param->s1; // next parameter
     }
     PT(level);
@@ -184,7 +182,8 @@ void ASTprint(int level, ASTnode *p) {
 
   case A_VARIABLE:
     PT(level);
-    printf("VAR with name %s\n", p->name);
+    printf("VAR with name: %s offset: %d level: %d\n", p->name, p->symbol->offset,
+           p->symbol->level);
 
     // If variable is an array
     if (p->s1) {
