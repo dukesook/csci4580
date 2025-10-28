@@ -404,6 +404,7 @@ Func_Declaration:
 			$$->s1 = $5; 		   // Parameters
 			$$->symbol = Search($2, LEVEL, false);
 			$$->symbol->offset = maxoffset;
+			$$->symbol->mysize = maxoffset; // the size if maxoffset because it includes local variables
 			if (p->nodetype == A_PROTOTYPE) {
 				$$->symbol->SubType = SYM_FUNCTION_PROTO;
 			} else if (p->nodetype == A_FUNCTIONDEC) {
