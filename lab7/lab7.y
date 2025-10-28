@@ -558,7 +558,8 @@ Simple_Expression: Additive_Expression { $$ = $1;}
 		$$->s2 = $3;
 		$$->operator = $2;
 		$$->datatype = A_BOOLEANTYPE; // Result of relational operation is boolean
-		yy_insert(CreateTemp(), A_BOOLEANTYPE, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+		$$->name = CreateTemp(); // temp 1/3
+		yy_insert($$->name, A_BOOLEANTYPE, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 	};
 
 /* Rule #22 */
@@ -579,6 +580,8 @@ Additive_Expression: Term { $$ = $1; }
 		$$->s2 = $3; // Right operand
 		$$->operator = $2;
 		$$->datatype = $1->datatype; // Set datatype
+		$$->name = CreateTemp(); // temp 2/3
+		$$->symbold = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 	};
 
 /* Rule #24 */
@@ -595,6 +598,8 @@ Term: Factor { $$ = $1; }
 														$$->s2 = $3; // Right operand
 														$$->operator = $2;
 														$$->datatype = $1->datatype; // Set datatype
+														$$->name = CreateTemp(); // temp 3/3
+														$$->symbold = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 													}; // Pass up the AST node
 		;
 
