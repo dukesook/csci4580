@@ -1,6 +1,1 @@
-int f(int a);
-
-int f(int b)
-begin 
-
-end
+int y,Z[100];

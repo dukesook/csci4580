@@ -584,7 +584,7 @@ Additive_Expression: Term { $$ = $1; }
 		$$->operator = $2;
 		$$->datatype = $1->datatype; // Set datatype
 		$$->name = CreateTemp(); // temp 2/3
-		$$->symbold = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+		$$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 	};
 
 /* Rule #24 */
@@ -602,7 +602,7 @@ Term: Factor { $$ = $1; }
 														$$->operator = $2;
 														$$->datatype = $1->datatype; // Set datatype
 														$$->name = CreateTemp(); // temp 3/3
-														$$->symbold = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+														$$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 													}; // Pass up the AST node
 		;
 
