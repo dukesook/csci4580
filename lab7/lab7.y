@@ -412,20 +412,23 @@ Param_List: Param { $$ = $1; } // Pass up the Param node
 					;
 
 /* Rule #9 */
-Param: Type_Specifier T_ID 	{	
-															$$ = ASTCreateNode(A_PARAM);
-															$$->datatype = $1;
-															$$->name = $2; // Parameter name
-															$$->value = 0; // indicates non-array parameter
-															$$->symbol = yy_insert($2, $1, SYM_SCALAR, LEVEL+1, SCALAR_SIZE);
-														}
-			| Type_Specifier T_ID '[' ']' 	{ $$ = ASTCreateNode(A_PARAM);
-															$$->datatype = $1;
-															$$->name = $2; // Parameter name
-															$$->value = 1; // indicates array parameter
-															int size = 1;
-															$$->symbol = yy_insert($2, $1, SYM_ARRAY, LEVEL+1, size);
-															};
+Param: Type_Specifier T_ID 	
+		{	
+			$$ = ASTCreateNode(A_PARAM);
+			$$->datatype = $1;
+			$$->name = $2; // Parameter name
+			$$->value = 0; // indicates non-array parameter
+			$$->symbol = yy_insert($2, $1, SYM_SCALAR, LEVEL+1, SCALAR_SIZE);
+		}
+	| Type_Specifier T_ID '[' ']' 
+		{ 
+			$$ = ASTCreateNode(A_PARAM);
+			$$->datatype = $1;
+			$$->name = $2; // Parameter name
+			$$->value = 1; // indicates array parameter
+			int size = 1;
+			$$->symbol = yy_insert($2, $1, SYM_ARRAY, LEVEL+1, size);
+		};
 
 /* Rule #10 */
 Compound_Stmt: 	T_BEGIN  { LEVEL++; }
@@ -675,6 +678,10 @@ Arg_List: Expression	{
 												$$->s1 = $1; // Argument Expression
 												$$->datatype = $1->datatype;
 												$$->value = get_array_size($1);
+												
+												// Dr. Cooper did this
+												// $$->symbol = Insert(CreateTemp(), $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+
 											} // Single argument
 	| Expression ',' Arg_List { $$ = ASTCreateNode(A_ARGUMENT); // Create argument node
 															$$->s1 = $1; // Argument Expression
