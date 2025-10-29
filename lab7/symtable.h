@@ -38,8 +38,8 @@ enum  SYMBOL_SUBTYPE
 {
    SYM_SCALAR, // not array
    SYM_FUNCTION,
-   SYM_FUNCTION_PROTO,
-   SYM_FUNCTION_PRE,
+   SYM_FUNCTION_PROTO, // example: int f(void);
+   SYM_FUNCTION_PRE, // before function is fully defined
    SYM_ARRAY
    // missing for array as parameter
 };

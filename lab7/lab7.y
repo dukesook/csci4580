@@ -401,7 +401,9 @@ Func_Declaration:
 		{
 			// Update Symbol Table with parameter
 			// allows us to have recursive functions
-			Search($2, LEVEL, false)->fparms = $5;
+			SymbTab* node = Search($2, LEVEL, false);
+			node->fparms = $5; // link parameters to symbol table entry
+
 		}
 
 	Fun_Tail
@@ -422,6 +424,7 @@ Func_Declaration:
 				yyerror("Function tail has unknown type");
 				exit(1);
 			}
+			Delete(LEVEL+1); // remove parameters from symbol table
 		};
 
 /* NEW: Rule #6a */
@@ -430,7 +433,6 @@ Fun_Tail: ';' { $$ = ASTCreateNode(A_PROTOTYPE); }
 				{ 
 					$$ = ASTCreateNode(A_FUNCTIONDEC);
 					$$->s2 = $1; // Function Body
-					Display();
 				}
 			;
 
@@ -443,15 +445,21 @@ Params: T_VOID 	{
 			;
 
 /* Rule #8 */
-Param_List: Param { $$ = $1; } // Pass up the Param node
-				  | Param ',' Param_List	{	$$ = $1; // First parameter
-															 			$$->s1 = $3; }
-					;
+Param_List: Param
+		{ 
+			$$ = $1; // Pass up the Param node
+		} 
+	| Param ',' Param_List
+		{	
+			$$ = $1; // First parameter
+			$$->s1 = $3;
+		};
 
 /* Rule #9 */
 Param: Type_Specifier T_ID 	
 		{	
 			$$ = ASTCreateNode(A_PARAM);
+			ASTnode* p = $$; // for debugging
 			$$->datatype = $1;
 			$$->name = $2; // Parameter name
 			$$->value = 0; // indicates non-array parameter
