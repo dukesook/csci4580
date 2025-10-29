@@ -50,15 +50,14 @@ int Delete();
 
 typedef struct SymbTab
 {
-     char *name;
-     int offset; /* from activation record boundary */
-     int mysize;  /* number of words this item is 1 or more */
-     int level;  /* the level where we found the variable */
-     enum DataTypes Declared_Type;  /* the type of the symbol */
-     enum SYMBOL_SUBTYPE SubType;  /* the subtype of the symbol */
-     ASTnode * fparms; /* Function Parameters */
-
-     struct SymbTab *next;
+    char *name;
+    int offset; /* from activation record boundary */
+    int mysize;  /* number of words this item is 1 or more */
+    int level;  /* the level where we found the variable */
+    enum DataTypes Declared_Type;  /* the type of the symbol */
+    enum SYMBOL_SUBTYPE SubType;  /* the subtype of the symbol */
+    ASTnode * fparms; /* Function Parameters */
+    struct SymbTab *next;
 } SymbTab;
 
 

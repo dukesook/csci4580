@@ -193,18 +193,31 @@ static int get_array_size(ASTnode* p) {
 	return -1; // should never reach here
 }
 
-static void assert_params_match(ASTnode *params1, ASTnode *params2) {
+static bool assert_params_match(ASTnode *params1, ASTnode *params2) {
 	if (!params1 && !params2) {
-		return; // both are empty
+		return true; // both are empty
+	} else if (!params1 || !params2) {
+		return false; // one is empty, the other is not
 	}
 
+	// Parameters Count
 	int params1_count = count_params(params1);
 	int params2_count = count_params(params2);
 	if (params1_count != params2_count) {
-		yyerror("Function parameters do not match");
-		printf("Expected %d parameters, but got %d parameters\n", params1_count, params2_count);
-		exit(1);
+		return false;
 	}
+	
+	// Compare Types
+	if (params1->datatype != params2->datatype) {
+		return false; // types do not match
+	}
+
+	if (params1->value != params2->value) {
+		return false; // one is array, the other is not
+	}
+
+	bool children_match = assert_params_match(params1->s1, params2->s1);
+
 }
 
 // TODO - comments
@@ -423,7 +436,11 @@ Func_Declaration:
 			
 			if (pre_function->SubType == SYM_FUNCTION_PROTO) {
 				// Prototype found!
-				assert_params_match(pre_function->fparms, $5); // Check if parameters match
+				bool match = assert_params_match(pre_function->fparms, $5); // Check if parameters match
+				if (!match) {
+					yyerror("Function parameters do not match prototype");
+					exit(1);
+				}
 			}
 
 			pre_function->fparms = $5; // link parameters to symbol table entry
@@ -478,7 +495,7 @@ Param_List: Param
 	| Param ',' Param_List
 		{	
 			$$ = $1; // First parameter
-			$$->s1 = $3;
+			$$->s1 = $3; // 
 		};
 
 /* Rule #9 */

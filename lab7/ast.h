@@ -35,7 +35,7 @@ enum ASTtype {
   A_STMT_LIST,            // List of Statements
   A_WRITE,                // Write Statement
   A_READ,                 // Read Statement
-  A_PARAM,                // Function Declaration Parameter
+  A_PARAM,                // s1 = Next Parameter (if any), s2 = NULL
   A_VOID_PARAM,           // Empty Parameter List
   A_EXPRESSION_STATEMENT, // Example: x + 5;
   A_ASSIGNMENT_STATEMENT, // Example: x = 5;
