@@ -1,6 +1,7 @@
-int f(void);
+// int f(void);
 
 int f(void)
 begin
   int x[100];
+  int y;
 end

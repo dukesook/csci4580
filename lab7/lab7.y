@@ -13,7 +13,6 @@ Enhancements:
 %{
 
 
-
 /* begin specs */
 #include <stdio.h>
 #include <ctype.h>
@@ -26,13 +25,13 @@ Enhancements:
 #define SCALAR_SIZE 1 // size of scalar variable
 
 /* declare function prototype to resolve warning */
-int yylex(void); // prototype for the lexing function
+int yylex(void); 		// prototype for the lexing function
 extern int line_num; // the current line number
-int debugsw=0; 		// debug switch
-int LEVEL = 0; 		// how many compoound statements deep are we in
-int OFFSET = 0; 	// how many words have we seen at GLOBAL, or inside a function
-int GOFFSET = 0; 	// holder for global offset when entering a function
-int maxoffset = 0; // total number of words a function needs
+int debugsw=0; 			// debug switch
+int LEVEL = 0; 			// how many compoound statements deep are we in
+int OFFSET = 0; 		// how many words have we seen at GLOBAL, or inside a function
+int GOFFSET = 0; 		// holder for global offset when entering a function
+int maxoffset = 0; 	// total number of words a function needs
 
 // Error Handling Function
 void yyerror (s)  /* Called by yyparse on error */
@@ -292,11 +291,18 @@ Program: Declaration_List
 			};
 
 /* Rule #2 */
-Declaration_List: Declaration { $$ = ASTCreateNode(A_DEC_LIST);
-																$$->s1 = $1; }
-								| Declaration_List Declaration {  $$ = ASTCreateNode(A_DEC_LIST);
-																									$$->s1 = $1;
-																									$$->s2 = $2; }
+Declaration_List: Declaration
+		{ 
+			$$ = ASTCreateNode(A_DEC_LIST);
+			$$->s1 = $1; 		// Variable or Function Declaration
+			$$->s2 = NULL; 	// Next A_DEC_LIST (none)
+		}
+	| Declaration_List Declaration
+		{ 
+			$$ = ASTCreateNode(A_DEC_LIST);
+			$$->s1 = $2; // Variable or Function Declaration
+			$$->s2 = $1; // Next A_DEC_LIST
+		}
 ;
 
 /* Rule #3 */
@@ -329,6 +335,7 @@ Var_List: T_ID
 	| T_ID '[' T_NUM ']'
 		{ 
 			$$ = ASTCreateNode(A_VARDEC);
+			ASTnode *p = $$;
 			$$->name = $1;
 			$$->value = $3; // array size
 			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3);
@@ -421,6 +428,7 @@ Fun_Tail: ';' { $$ = ASTCreateNode(A_PROTOTYPE); }
 				{ 
 					$$ = ASTCreateNode(A_FUNCTIONDEC);
 					$$->s2 = $1; // Function Body
+					Display();
 				}
 			;
 
@@ -462,6 +470,7 @@ Compound_Stmt: 	T_BEGIN  { LEVEL++; }
 								Local_Declarations  Statement_List  T_END 
 									{ 
 										$$ = ASTCreateNode(A_COMPOUND);
+										ASTnode* p = $$;
 										$$->s1 = $3; // Local Declarations
 										$$->s2 = $4; // Statement List
 										if (OFFSET > maxoffset) {
@@ -472,10 +481,13 @@ Compound_Stmt: 	T_BEGIN  { LEVEL++; }
 									};
 
 /* Rule #11 */
-Local_Declarations: Var_Declaration Local_Declarations	{	$$ = $1;
-																													$$->s2 = $2;	}
-                  | { $$ = NULL; } // No local declarations
-									;
+Local_Declarations: Var_Declaration Local_Declarations
+		{
+			$$ = $1;
+			$$->s1 = $2;
+		}
+	| { $$ = NULL; }; // No local declarations
+
 
 /* Rule #12 */
 Statement_List: Statement Statement_List	{ $$ = ASTCreateNode(A_STMT_LIST);

@@ -80,8 +80,8 @@ void ASTprint(int level, ASTnode *p) {
   switch (p->nodetype) {
   case A_DEC_LIST:
     PT(level);
-    ASTprint(level, p->s1); // Declaration (list)
-    ASTprint(level, p->s2); // Declaration (if additional)
+    ASTprint(level, p->s1); // Varaible or Function Declaration
+    ASTprint(level, p->s2); // Next A_DEC_LIST (if any)
     break;
 
   case A_VARDEC:
@@ -92,7 +92,7 @@ void ASTprint(int level, ASTnode *p) {
     if (p->value > 0) // if variable is an array
       printf("[%d]", p->value); // print array size
     printf(" with offset %d and level %d\n", p->symbol->offset, p->symbol->level);
-    ASTprint(level, p->s1);
+    ASTprint(level, p->s1); // next variable declaration (if any)
     break;
 
   case A_FUNCTIONDEC:

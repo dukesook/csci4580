@@ -20,8 +20,8 @@ extern int mydebug; // defined in main.c
 sort of production rule we came across */
 
 enum ASTtype {
-  A_VARDEC,               // Variable Declaration
-  A_DEC_LIST,             // List of Declarations
+  A_VARDEC,               // s1 = Next Variable Declaration (if any), s2 = NULL
+  A_DEC_LIST,             // s1 = Varaible or Function Declaration, s2 = next Declaration_List (if any)
   A_FUNCTIONDEC,          // Function Declaration
   A_PROTOTYPE,            // Function Prototype Declaration
   A_FUNCTION_CALL,        // Function Call Argument

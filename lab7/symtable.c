@@ -45,7 +45,6 @@ char * CreateTemp() {
 
 struct SymbTab * Insert(char *name, enum DataTypes my_assigned_type, enum  SYMBOL_SUBTYPE subtype, int  level, int mysize, int offset )
 {
-   printf("inserting %s with size %d\n", name, mysize);
   struct SymbTab * n;
     n=Search(name,level, 0);
     if(n!=NULL)
@@ -102,14 +101,12 @@ void Display()
    int i;
    struct SymbTab *p;
    p=first;
-   printf("==============Symbol Table Contents==============\n");
    printf("\n\tLABEL\t\tOffset \t\tLEVEL \ttype\n");
       while (p!=NULL)
       {
          PrintSym(p);
          p=p->next;
       }
-    printf("==============================================================\n\n");
 }
 
 /*  Search for a symbol name at level or below.  We have to do multiple passes into the symbol table because we have to find
