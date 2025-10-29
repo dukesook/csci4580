@@ -1,6 +1,6 @@
-int sum(int x1, int y);
+int sum(int x, boolean b);
 
-int sum(int x, int y)
+int sum(void s, int a)
 begin
 
 end

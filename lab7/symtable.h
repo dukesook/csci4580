@@ -39,7 +39,7 @@ enum  SYMBOL_SUBTYPE
    SYM_SCALAR, // not array
    SYM_FUNCTION,
    SYM_FUNCTION_PROTO, // example: int f(void);
-   SYM_FUNCTION_PRE, // before function is fully defined
+   SYM_FUNCTION_PRE, // example: int f, parameters & body is unknown
    SYM_ARRAY
    // missing for array as parameter
 };
@@ -56,7 +56,7 @@ typedef struct SymbTab
      int level;  /* the level where we found the variable */
      enum DataTypes Declared_Type;  /* the type of the symbol */
      enum SYMBOL_SUBTYPE SubType;  /* the subtype of the symbol */
-     ASTnode * fparms; /* pointer to parameters of the function in the AST */
+     ASTnode * fparms; /* Function Parameters */
 
      struct SymbTab *next;
 } SymbTab;

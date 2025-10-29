@@ -34,8 +34,7 @@ int GOFFSET = 0; 		// holder for global offset when entering a function
 int maxoffset = 0; 	// total number of words a function needs
 
 // Error Handling Function
-void yyerror (s)  /* Called by yyparse on error */
-     char *s;
+void yyerror (char* s)  /* Called by yyparse on error */
 {
   printf ("%s on line number %d\n", s, line_num);
 }
@@ -192,6 +191,20 @@ static int get_array_size(ASTnode* p) {
 			exit(1);
 	}
 	return -1; // should never reach here
+}
+
+static void assert_params_match(ASTnode *params1, ASTnode *params2) {
+	if (!params1 && !params2) {
+		return; // both are empty
+	}
+
+	int params1_count = count_params(params1);
+	int params2_count = count_params(params2);
+	if (params1_count != params2_count) {
+		yyerror("Function parameters do not match");
+		printf("Expected %d parameters, but got %d parameters\n", params1_count, params2_count);
+		exit(1);
+	}
 }
 
 // TODO - comments
@@ -379,7 +392,7 @@ Func_Declaration:
 				Insert($2, $1, SYM_FUNCTION_PRE, LEVEL, 0, 0);
 				GOFFSET = OFFSET; // Save global offset
 				OFFSET = 2; // we need two memory locations for Stack Pointer and Return Address
-				maxoffset;
+				/* maxoffset; */
 			} else {
 				switch (p->SubType) {
 					case SYM_FUNCTION:
@@ -402,11 +415,19 @@ Func_Declaration:
 
 
 	Params ')'
-		{
-			// Update Symbol Table with parameter
-			// allows us to have recursive functions
-			SymbTab* node = Search($2, LEVEL, false);
-			node->fparms = $5; // link parameters to symbol table entry
+		{ 
+			// Mid-level actions allows us to have recursive functions
+			// Now that the parameters are known, link them to the pre function
+			SymbTab* pre_function = Search($2, LEVEL, false);
+			assert_not_null(pre_function);
+			
+			if (pre_function->SubType == SYM_FUNCTION_PROTO) {
+				// Prototype found!
+				assert_params_match(pre_function->fparms, $5); // Check if parameters match
+			}
+
+			pre_function->fparms = $5; // link parameters to symbol table entry
+
 
 		}
 
@@ -423,6 +444,7 @@ Func_Declaration:
 			if (p->nodetype == A_PROTOTYPE) {
 				$$->symbol->SubType = SYM_FUNCTION_PROTO;
 			} else if (p->nodetype == A_FUNCTIONDEC) {
+				// if prototype exists, update to function
 				$$->symbol->SubType = SYM_FUNCTION;
 			} else {
 				yyerror("Function tail has unknown type");
