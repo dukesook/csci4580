@@ -294,12 +294,14 @@ Program: Declaration_List
 Declaration_List: Declaration
 		{ 
 			$$ = ASTCreateNode(A_DEC_LIST);
+			ASTnode* p = $$; // for debugging
 			$$->s1 = $1; 		// Variable or Function Declaration
 			$$->s2 = NULL; 	// Next A_DEC_LIST (none)
 		}
 	| Declaration_List Declaration
 		{ 
 			$$ = ASTCreateNode(A_DEC_LIST);
+			ASTnode* p = $$; // for debugging
 			$$->s1 = $2; // Variable or Function Declaration
 			$$->s2 = $1; // Next A_DEC_LIST
 		}

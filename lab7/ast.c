@@ -80,8 +80,8 @@ void ASTprint(int level, ASTnode *p) {
   switch (p->nodetype) {
   case A_DEC_LIST:
     PT(level);
-    ASTprint(level, p->s1); // Varaible or Function Declaration
     ASTprint(level, p->s2); // Next A_DEC_LIST (if any)
+    ASTprint(level, p->s1); // Varaible or Function Declaration
     break;
 
   case A_VARDEC:
