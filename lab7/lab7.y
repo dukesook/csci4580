@@ -688,7 +688,15 @@ Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
 Call: T_ID '(' Args ')'	{	
 	int level = 0; // Functions are always at global level
 	struct SymbTab* p = assert_exists($1, level); // Ensure function exists
-	assert_subtype(p, SYM_FUNCTION); // Ensure symbol is of subtype SYM_FUNCTION
+	if (p->SubType != SYM_FUNCTION &&
+			p->SubType != SYM_FUNCTION_PROTO &&
+			p->SubType != SYM_FUNCTION_PRE) {
+		yyerror($1);
+		yyerror("is not a function");
+		printf("found subtype: %s\n", subtype_to_string(p->SubType));
+		exit(1);
+	}
+	/* assert_subtype(p, SYM_FUNCTION_PRE); // Ensure symbol is of subtype SYM_FUNCTION */
 
 	// check to see if formals and actuals match in length and type
 	// $3 = A_ARG_LIST
