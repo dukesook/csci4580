@@ -129,6 +129,10 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 	return symbol;
 }
 
+static void yy_delete(int level) {
+	int removed_size = Delete(level);
+	OFFSET -= removed_size;
+}
 
 static int count_params(ASTnode *params) {
 	if (!params) {
@@ -424,7 +428,7 @@ Func_Declaration:
 				yyerror("Function tail has unknown type");
 				exit(1);
 			}
-			Delete(LEVEL+1); // remove parameters from symbol table
+			yy_delete(LEVEL+1); // remove parameters from symbol table
 		};
 
 /* NEW: Rule #6a */
@@ -486,7 +490,7 @@ Compound_Stmt: 	T_BEGIN  { LEVEL++; }
 										if (OFFSET > maxoffset) {
 											maxoffset = OFFSET;
 										}
-										OFFSET = OFFSET - Delete(LEVEL);
+										yy_delete(LEVEL); // remove local variables from symbol table
 										LEVEL--;
 									};
 
