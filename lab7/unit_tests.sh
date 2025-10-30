@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+make
+
 SUCCESS=1
 COUNT=0
 
@@ -18,11 +20,12 @@ done
 # Bad Tests
 for f in tests/bad/*; do
   ./lab7 < "$f" > /dev/null
-  if [ $? -eq 1 ]; then
+  RESULT=$?
+  if [ $RESULT -eq 1 ]; then
     let COUNT+=1
-    : # echo "Bad Test Passed"
   else
-    echo "Bad Test Failed: $f"
+    echo "Bad Test Failed: $f with value $RESULT"
+    cat "$f"
     SUCCESS=0
   fi
 done
