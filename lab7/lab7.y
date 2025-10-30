@@ -88,7 +88,6 @@ static void assert_datatype(ASTnode* p, enum DataTypes datatype) {
 		const char* correct_datatype = DataTypes_to_string(datatype);
 		const char* actual_datatype = DataTypes_to_string(p->datatype);
 		printf("expected datatype: %s, but got datatype: %s\n", correct_datatype, actual_datatype);
-		
 		exit(1);
 	}
 }
@@ -114,7 +113,6 @@ static void assert_nodetype(ASTnode* p, enum ASTtype nodetype) {
 		const char* correct_nodetype = ASTtype_to_string(nodetype);
 		const char* actual_nodetype = ASTtype_to_string(p->nodetype);
 		printf("expected nodetype: %s, but got nodetype: %s\n", correct_nodetype, actual_nodetype);
-		
 		exit(1);
 	}
 }
@@ -348,6 +346,7 @@ Var_Declaration: Type_Specifier Var_List ';'
 	{
 		$$ = $2; // Pass up the Var_List node
 		ASTnode* p = $2;
+		// A Var_List doesn't know it's datatype, so we need to set it here
 		while (p != NULL) { // Iterate through the Var_List
 			p->datatype = $1; // Set the datatype for each variable
 			p->symbol->Declared_Type = $1;
