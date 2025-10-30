@@ -1,6 +1,6 @@
 int sum(void x, boolean b[]);
 
-int sum(void s, boolean a[])
+int sum(int s, boolean a[])
 begin
   
   sum(s, a);

@@ -3,6 +3,4 @@ int sum(void x, boolean b[]);
 int sum(void s, boolean a[])
 begin
   
-  sum(s, a);
-
 end
