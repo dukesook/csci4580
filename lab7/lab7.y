@@ -37,7 +37,7 @@ int maxoffset = 0; 	// total number of words a function needs
 void yyerror (char* s)  /* Called by yyparse on error */
 {
   printf ("%s on line number %d\n", s, line_num);
-	exit(1);
+	// exit(1);
 }
 
 static void assert_not_null(void *p) {
@@ -70,11 +70,10 @@ static struct SymbTab* assert_exists(char name[], int level) {
 static void assert_subtype(struct SymbTab* symbol, enum SYMBOL_SUBTYPE subtype) {
 	assert_not_null(symbol);
 	if (symbol->SubType != subtype) {
-		yyerror(symbol->name);
 		const char* correct_subtype = subtype_to_string(subtype);
 		const char* actual_subtype = subtype_to_string(symbol->SubType);
 		printf("expected subtype: %s, but got subtype: %s\n", correct_subtype, actual_subtype);
-		exit(1);
+		yyerror(symbol->name);
 	}
 }
 
@@ -624,7 +623,9 @@ Expression: Simple_Expression { $$ = $1; }; // Pass up the AST node
 /* Rule #22 */
 Variable: T_ID 	{ 
 		struct SymbTab* p = assert_exists($1, LEVEL); // Ensure variable exists
-		assert_subtype(p, SYM_SCALAR); // Ensure variable is of subtype SYM_SCALAR
+		
+		// bugfix! value may also be array
+		//assert_subtype(p, SYM_SCALAR); // Ensure variable is of subtype SYM_SCALAR
 
 		$$ = ASTCreateNode(A_VARIABLE); // Create variable node
 		$$->name = $1; // Variable name
