@@ -37,7 +37,7 @@ int maxoffset = 0; 	// total number of words a function needs
 void yyerror (char* s)  /* Called by yyparse on error */
 {
   printf ("%s on line number %d\n", s, line_num);
-	// exit(1);
+	exit(1);
 }
 
 static void assert_not_null(void *p) {
