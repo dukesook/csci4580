@@ -442,6 +442,7 @@ Func_Declaration:
 				}
 			}
 
+			ASTnode* params = $5;
 			pre_function->fparms = $5; // link parameters to symbol table entry
 
 
@@ -750,7 +751,9 @@ Call: T_ID '(' Args ')'	{
 	// check to see if formals and actuals match in length and type
 	// $3 = A_ARG_LIST
 	// $3->s1 = first A_ARGUMENT
-	bool match = check_params(p->fparms, $3->s1);
+	ASTnode* arg_list = $3;
+	ASTnode* first_arg = arg_list->s1;
+	bool match = check_params(p->fparms, first_arg);
 	if (!match) {
 		printf("function parameters don't match for function: %s\n", $1);
 		yyerror($1);
@@ -771,19 +774,21 @@ Args: Arg_List { 	$$ = ASTCreateNode(A_ARG_LIST); // Create argument list node
 
 /* Rule #30 */
 Arg_List: Expression	{ 	
-												$$ = ASTCreateNode(A_ARGUMENT); // Create argument node
+												ASTnode* p = ASTCreateNode(A_ARGUMENT); // for debugging
+												$$ = p; // Create argument node
 												$$->s1 = $1; // Argument Expression
+												$$->s2 = NULL; // No remaining arguments
 												$$->datatype = $1->datatype;
 												$$->value = get_array_size($1);
-												
-												// Dr. Cooper did this
-												// $$->symbol = Insert(CreateTemp(), $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+												$$->symbol = yy_insert(CreateTemp(), $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 
-											} // Single argument
+											}
 	| Expression ',' Arg_List { $$ = ASTCreateNode(A_ARGUMENT); // Create argument node
 															$$->s1 = $1; // Argument Expression
 															$$->s2 = $3; // Remaining arguments
 															$$->datatype = $1->datatype;
+															$$->value = get_array_size($1);
+															$$->symbol = yy_insert(CreateTemp(), $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 														};
 
 /* Graduate Student Required Rule */
