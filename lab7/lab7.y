@@ -528,6 +528,7 @@ Compound_Stmt: 	T_BEGIN  { LEVEL++; }
 										if (OFFSET > maxoffset) {
 											maxoffset = OFFSET;
 										}
+										Display(); // Requirement: output symbol table at each compound statement
 										yy_delete(LEVEL); // remove local variables from symbol table
 										LEVEL--;
 									};
@@ -613,6 +614,8 @@ Assignment_Stmt: Variable '=' Simple_Expression ';' {
 	assert_same_datatype($1, $3); // Ensure variable and expression have the same datatype
 	$$->s1 = $1; // Variable
 	$$->s2 = $3; // Expression
+	$$->name = CreateTemp();
+	yy_insert($$->name, $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 };
 
 /* Rule #21 */
