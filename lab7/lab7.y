@@ -737,12 +737,12 @@ Call: T_ID '(' Args ')'	{
 	int level = 0; // Functions are always at global level
 	struct SymbTab* p = assert_exists($1, level); // Ensure function exists
 	if (p->SubType != SYM_FUNCTION &&
-			p->SubType != SYM_FUNCTION_PROTO &&
 			p->SubType != SYM_FUNCTION_PRE) {
-		yyerror($1);
+		printf("%s is not a function: it's a: %s\n", $1, subtype_to_string(p->SubType));
 		yyerror("is not a function");
-		printf("found subtype: %s\n", subtype_to_string(p->SubType));
-		exit(1);
+	} else if (p->SubType == SYM_FUNCTION_PROTO) {
+		printf("Prototype function call: %s\n", $1);
+		yyerror("calling function prototype");
 	}
 	/* assert_subtype(p, SYM_FUNCTION_PRE); // Ensure symbol is of subtype SYM_FUNCTION */
 

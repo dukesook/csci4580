@@ -1,7 +1,8 @@
-int foo(void);
-
+int main(void);
 
 int main(void)
 begin
-   foo();
+
 end
+
+main();
