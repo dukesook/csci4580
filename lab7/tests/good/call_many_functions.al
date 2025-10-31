@@ -1,0 +1,42 @@
+int one, two, three, four, five;
+void v1, v2, v3, v4, v5;
+boolean bool1, bool2, bool3, bool4, bool5;
+
+
+int int_one, int_two, int_three, int_four, int_five;
+void void_v1, void_v2, void_v3, void_v4, void_v5;
+boolean a_bool1, b_bool2, c_bool3, d_bool4, e_bool5;
+
+int fun1(int x) begin end
+int fun2(boolean x, boolean y) begin end
+int fun3(void a, void b, void c) begin end
+int fun4(int i, boolean b, void v) begin end
+
+int main(void)
+begin
+   int x;
+
+   x = fun1(one);
+   x = fun1(two);
+   x = fun1(three);
+   x = fun1(four);
+   x = fun1(five);
+
+   x = fun1(int_one);
+   x = fun1(int_two);
+   x = fun1(int_three);
+   x = fun1(int_four);
+   x = fun1(int_five);
+
+   fun2(bool1, bool1);
+   fun2(bool1, bool2);
+   fun2(bool2, bool1);
+   fun2(bool2, bool2);
+   fun2(a_bool1, bool2);
+   fun2(bool2, e_bool5);
+
+   fun3(void_v1, void_v4, v5);
+   fun3(v5, void_v4, v1);
+
+   x = fun4(x, bool1, v1);
+end

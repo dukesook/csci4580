@@ -1,0 +1,1 @@
+void boolean[10];
