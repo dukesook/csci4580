@@ -1,12 +1,11 @@
 int y,Z[100];
-
+int asdf[0];
 int f(int b)
 begin 
  int y;
  begin  int x[10];
   x[2+3-5]=b + f(5+x[2]*b);
  end
- void y; // REDECLARATION OF Y
 
  begin  int x[10];
   x[2+3-5]=b + f(5+x[2]*b);

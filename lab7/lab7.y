@@ -37,6 +37,7 @@ int maxoffset = 0; 	// total number of words a function needs
 void yyerror (char* s)  /* Called by yyparse on error */
 {
   printf ("%s on line number %d\n", s, line_num);
+	exit(1);
 }
 
 static void assert_not_null(void *p) {
@@ -51,7 +52,6 @@ static void assert_doesnt_exist(char name[], int level, bool recur) {
   if (Search(name, level, recur)) {
     yyerror(name);
     yyerror("already defined");
-    exit(1);
   }
 }
 
@@ -62,7 +62,6 @@ static struct SymbTab* assert_exists(char name[], int level) {
 	if (!p) {
 		yyerror(name);
 		yyerror("not defined");
-		exit(1);
 	}
 	return p;
 }
@@ -368,6 +367,9 @@ Var_List: T_ID
 			$$ = ASTCreateNode(A_VARDEC);
 			ASTnode *p = $$;
 			$$->name = $1;
+			if ($3 <= 0) {
+				yyerror("Array size must be greater than 0");
+			}
 			$$->value = $3; // array size
 			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3);
 		}
@@ -408,9 +410,8 @@ Func_Declaration:
 			} else {
 				switch (p->SubType) {
 					case SYM_FUNCTION:
-						yyerror("Function already defined");
 						printf("%s\n", $2);
-						exit(1);
+						yyerror("Function already defined");
 					break;
 
 					case SYM_FUNCTION_PROTO:
@@ -418,9 +419,8 @@ Func_Declaration:
 					break;
 
 					default:
-						yyerror("Function declaraction has unknown type");
 						printf("%s\n", $2);
-						exit(1);
+						yyerror("Function declaraction has unknown type");
 				}
 			}
 		}
@@ -438,7 +438,6 @@ Func_Declaration:
 				bool match = assert_params_match(pre_function->fparms, $5); // Check if parameters match
 				if (!match) {
 					yyerror("Function parameters do not match prototype");
-					exit(1);
 				}
 			}
 
@@ -464,7 +463,6 @@ Func_Declaration:
 				$$->symbol->SubType = SYM_FUNCTION;
 			} else {
 				yyerror("Function tail has unknown type");
-				exit(1);
 			}
 			yy_delete(LEVEL+1); // remove parameters from symbol table
 		};
@@ -753,9 +751,8 @@ Call: T_ID '(' Args ')'	{
 	// $3->s1 = first A_ARGUMENT
 	bool match = check_params(p->fparms, $3->s1);
 	if (!match) {
+		printf("function parameters don't match for function: %s\n", $1);
 		yyerror($1);
-		yyerror("function parameters do not match");
-		exit(1);
 	}
 
 	$$ = ASTCreateNode(A_FUNCTION_CALL); // Create function call node
