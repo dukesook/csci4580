@@ -176,6 +176,7 @@ static int get_array_size(ASTnode* p) {
 	switch (p->nodetype) {
 		case A_NUMBER:
 		case A_EXPRESSION:
+		case A_FUNCTION_CALL: // ASTnode->value is not used for functions
 			return 0; // Scalar
 		case A_VARIABLE:
 		  if (p->value == -1) { // value is uninitialized

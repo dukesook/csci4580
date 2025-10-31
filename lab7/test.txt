@@ -1,11 +1,13 @@
-int foo(int x[])
+
+int foo(int x)
 begin
+
+   foo(foo(x));
+
 end
 
 int main(void)
 begin
 
-  int x[10];
-  foo(x);
 
 end
