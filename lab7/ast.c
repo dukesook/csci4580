@@ -409,11 +409,11 @@ char *ASTtype_to_string(enum ASTtype type) {
 char* DataTypes_to_string(enum DataTypes datatype) {
   switch (datatype) { // switch on the type
   case A_INTTYPE:
-    return "A_INTTYPE";
+    return "int";
   case A_VOIDTYPE:
-    return "A_VOIDTYPE";
+    return "void";
   case A_BOOLEANTYPE:
-    return "A_BOOLEANTYPE";
+    return "boolean";
   case A_DATATYPE_UNKNOWN:
     return "A_DATATYPE_UNKNOWN";
   default:
