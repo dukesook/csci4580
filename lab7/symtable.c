@@ -1,3 +1,12 @@
+/*
+Devon Sookhoo
+October 31st, 2025
+Lab 7 Add Symbol Table and Type Checking
+Enhancements:
+  - Make PrintSym() display the Declared_Type as a string
+
+*/
+
 /*  Symbol Table --linked list
     Used for Compilers class
 
@@ -86,8 +95,8 @@ struct SymbTab * Insert(char *name, enum DataTypes my_assigned_type, enum  SYMBO
 //  POST:  output to the screen in human readable form
 void PrintSym(struct SymbTab *s)
 {
-         printf("\t%s\t\t%d\t\t%d\t%d\n",s->name,s->offset, s->level,s->Declared_Type);
-
+   char* type = DataTypes_to_string(s->Declared_Type);
+   printf("\t%s\t\t%d\t\t%d\t%s\n",s->name,s->offset, s->level, type);
 }
 
 

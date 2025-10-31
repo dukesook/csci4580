@@ -1,13 +1,9 @@
 
-int foo(int x)
-begin
 
-   foo(foo(x));
-
-end
 
 int main(void)
 begin
-
-
+   int x;
+   boolean b;
+   void v;
 end
