@@ -183,6 +183,7 @@ static int get_array_size(ASTnode* p) {
 				printf("ERROR: get_array_size: value not set for variable: %s\n", p->name);
 				exit(1);
 			}
+			return p->value;
 		default:
 			printf("ERROR: get_array_size() unhandled nodetype: %s\n", ASTtype_to_string(p->nodetype));
 			exit(1);
