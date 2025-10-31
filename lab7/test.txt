@@ -1,7 +1,1 @@
-int foo(void);
-
-
-int main(void)
-begin
-   foo();
-end
+int x[1];
