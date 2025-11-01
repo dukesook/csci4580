@@ -4,6 +4,8 @@ October 31st, 2025
 Lab 7 Add Symbol Table and Type Checking
 Enhancements:
   - Make PrintSym() display the Declared_Type as a string
+  - Implemented CreateTemp() to generate temporary variable names
+  - Added GTEMP global variable to track temporary variable count
 
 */
 
@@ -34,7 +36,6 @@ int GTEMP=0;  /* Global Temp counter */
 // POST:  Returns string with the format _t%d and increments the global vairbal
 // USAGE:   creates a variable name that is used to hold temporary, intermediate
 //         values in the runtime enviroment
-
 char * CreateTemp() {    
    char hold[100];
    char *s;

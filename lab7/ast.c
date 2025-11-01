@@ -349,6 +349,8 @@ const char *operator_to_string(enum OPERATORS operator) {
 } // end of operator_to_string()
 
 
+// PRE: The AST type to convert
+// POST: A string representation of the AST type
 char *ASTtype_to_string(enum ASTtype type) {
   switch (type) { // switch on the type
   case A_VARDEC:
@@ -406,6 +408,8 @@ char *ASTtype_to_string(enum ASTtype type) {
   } // end of switch
 }
 
+// PRE: a Data Type to convert
+// POST: a character string for that type to print nicely -- caller does final output
 char* DataTypes_to_string(enum DataTypes datatype) {
   switch (datatype) { // switch on the type
   case A_INTTYPE:
@@ -419,31 +423,4 @@ char* DataTypes_to_string(enum DataTypes datatype) {
   default:
     return "UNKNOWN_DATATYPE";
   } // end of switch
-}
-
-void ASTnode_debug(ASTnode *p) {
-  printf("\n========ASTnode_debug()========\n");
-  if (p == NULL) {
-    printf("ASTnode is NULL\n");
-    printf("========ASTnode_debug()========\n");
-    return;
-  }
-
-  printf("Node Type: %s\n", ASTtype_to_string(p->nodetype));
-  printf("Operator: %s\n", operator_to_string(p->operator));
-  printf("Data Type: %s\n", DataTypeToString(p->datatype));
-  printf("Name: %s\n", p->name ? p->name : "NULL");
-  printf("Value: %d\n", p->value);
-  if (p->s1) {
-    printf("s1: ASTnode at %p\n", (void *)p->s1);
-  } else {
-    printf("s1: NULL\n");
-  }
-
-  if (p->s2) {
-    printf("s2: ASTnode at %p\n", (void *)p->s2);
-  } else {
-    printf("s2: NULL\n");
-  }
-  printf("========ASTnode_debug()========\n");
 }

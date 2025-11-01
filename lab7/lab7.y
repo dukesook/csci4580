@@ -5,8 +5,31 @@ Lab 7 Add Symbol Table and Type Checking
 Enhancements:
 		- Removed comments from previous labs
 		- #include "symtable.h"
+		- Check for variable/function existence before insertion
+		- Handle function prototypes
+		- Type checking for expressions and assignments
+		- Ensure function call parameters match definition
+		- Output symbol table at each compound statement
+		- Manage offsets for local variables and function calls
+		- Manage OFFSET and LEVEL for scope handling
+		- Ensure array sizes are not zero.
+		- Link AST nodes to symbol table entries
+		- Delete symbols from symbol table when exiting scope
+		- used static keyword for helper functions scoped to this file
+		- Removed node type: A_FUNCTION_PROTOTYPE
+		- Create temporary variables for expressions
+		- Created function get_array_size()
+		- Created function count_params()
+		- Created function count_args()
+		- Created function yy_delete()
+		- Created function assert_not_null()
 		- Created function assert_doesnt_exist()
-		- #include <assert.h>
+		- Created function assert_exists()
+		- Created function assert_subtype()
+		- Created function assert_datatype()
+		- Created function assert_same_datatype()
+		- Created function yy_insert()
+
 
 */
 
@@ -37,9 +60,12 @@ int maxoffset = 0; 	// total number of words a function needs
 void yyerror (char* s)  /* Called by yyparse on error */
 {
   printf ("%s on line number %d\n", s, line_num);
-	exit(1);
+	exit(1); // exit on error
 }
 
+
+// PRE: generic pointer p
+// POST: exits program if p is NULL
 static void assert_not_null(void *p) {
 	if (!p) {
 		printf("ERROR: NULL POINTER ENCOUNTERED\n");
@@ -47,7 +73,8 @@ static void assert_not_null(void *p) {
 	}
 }
 
-// TODO - comments
+// PRE: name to search, level to search at, recur for recursive search
+// POST: exits program if symbol is found
 static void assert_doesnt_exist(char name[], int level, bool recur) {
   if (Search(name, level, recur)) {
     yyerror(name);
@@ -55,7 +82,8 @@ static void assert_doesnt_exist(char name[], int level, bool recur) {
   }
 }
 
-// TODO - comments
+// PRE: name to search, level to search at, recur for recursive search
+// POST: returns symbol if found, else exits program
 static struct SymbTab* assert_exists(char name[], int level) {
 	bool recursive = true;
 	struct SymbTab* p = Search(name, level, recursive);
@@ -66,7 +94,8 @@ static struct SymbTab* assert_exists(char name[], int level) {
 	return p;
 }
 
-// TODO - comments
+// PRE: symbol to check, expected subtype
+// POST: exits program if symbol subtype does not match expected subtype
 static void assert_subtype(struct SymbTab* symbol, enum SYMBOL_SUBTYPE subtype) {
 	assert_not_null(symbol);
 	if (symbol->SubType != subtype) {
@@ -77,8 +106,8 @@ static void assert_subtype(struct SymbTab* symbol, enum SYMBOL_SUBTYPE subtype) 
 	}
 }
 
-// TODO - comments
-// int, void, or boolean
+// PRE: AST node to check, expected datatype
+// POST: exits program if AST node datatype does not match expected datatype
 static void assert_datatype(ASTnode* p, enum DataTypes datatype) {
 	assert_not_null(p);
 	if (p->datatype != datatype) {
@@ -90,6 +119,8 @@ static void assert_datatype(ASTnode* p, enum DataTypes datatype) {
 	}
 }
 
+// PRE: two AST nodes to compare
+// POST: exits program if AST node datatypes do not match
 static void assert_same_datatype(ASTnode* p1, ASTnode* p2) {
 	assert_not_null(p1);
 	assert_not_null(p2);
@@ -104,6 +135,8 @@ static void assert_same_datatype(ASTnode* p1, ASTnode* p2) {
 	}
 }
 
+// PRE: AST node to check, expected nodetype
+// POST: exits program if AST node nodetype does not match expected nodetype
 static void assert_nodetype(ASTnode* p, enum ASTtype nodetype) {
 	assert_not_null(p);
 	if (p->nodetype != nodetype) {
@@ -115,7 +148,8 @@ static void assert_nodetype(ASTnode* p, enum ASTtype nodetype) {
 	}
 }
 
-// TODO - comments
+// PRE: name, datatype, subtype, level, size
+// POST: inserts symbol into symbol table, returns pointer to symbol
 static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTYPE subtype, int level, int size) {
 	assert_doesnt_exist(name, level, false);
 	SymbTab* symbol;
@@ -124,11 +158,15 @@ static SymbTab* yy_insert(char *name, enum DataTypes datatype, enum SYMBOL_SUBTY
 	return symbol;
 }
 
+// PRE: level to delete
+// POST: deletes symbols at level from symbol table, updates OFFSET
 static void yy_delete(int level) {
 	int removed_size = Delete(level);
 	OFFSET -= removed_size;
 }
 
+// PRE: params AST node representing function parameters
+// POST: returns count of parameters
 static int count_params(ASTnode *params) {
 	if (!params) {
 		return 0;
@@ -138,17 +176,12 @@ static int count_params(ASTnode *params) {
 
 	assert_nodetype(params, A_PARAM); // ensure datatype is valid
 	
-	// printf("Parameter:\n");
-	// printf("  Name: %s\n", params->name);
-	// printf("  DataType: %s\n", DataTypes_to_string(params->datatype));
-	// printf("  value: %d\n", params->value); // indicates array or not
-	
 	return 1 + count_params(params->s1);
-
-
 }
 
 
+// PRE: args AST node representing function arguments
+// POST: returns count of arguments
 static int count_args(ASTnode *arg) {
 	// s1 is the argument (expression)
 	// s2 is the next A_ARGUMENT
@@ -164,11 +197,10 @@ static int count_args(ASTnode *arg) {
 	}
 
 	return 1 + count_args(arg->s2);
-
-
 }
 
-// TODO - comments
+// PRE: AST node representing variable/expression
+// POST: returns size of array
 // 0 if scalar
 static int get_array_size(ASTnode* p) {
 	assert_not_null(p);
@@ -191,6 +223,8 @@ static int get_array_size(ASTnode* p) {
 	return -1; // should never reach here
 }
 
+// PRE: Two lists that represent FORMALS and ACTUALS
+// POST: returns true if they match (length and type), false if they don't.
 static bool assert_params_match(ASTnode *params1, ASTnode *params2) {
 	if (!params1 && !params2) {
 		return true; // both are empty
@@ -218,7 +252,6 @@ static bool assert_params_match(ASTnode *params1, ASTnode *params2) {
 
 }
 
-// TODO - comments
 // PRE: Two lists that represent FORMALS and ACTUALS
 // POST: returns 1 if they match (length and type), 0 if they don't.
 static bool check_params(ASTnode *params, ASTnode *args) {
@@ -227,6 +260,9 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 
 	if (!params && !args) {
 		return true; // both are empty
+	} else if (!params || !args) {
+		// This is handled in count_params/count_args length check
+		// params may be A_VOID_PARAM and args may be NULL
 	}
 
 
@@ -234,17 +270,14 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 	int params_count = count_params(params);
 	int args_count = count_args(args);
 
+	// check lengths
 	if (params_count != args_count) {
 		return false; // lengths do not match
 	}
 
+	// both are empty
 	if (params_count == 0 && args_count == 0) {
 		return true; // both are empty
-	}
-
-	if (!args) {
-		printf("Warning! args is NULL\n");
-		// TODO
 	}
 
 	// compare type1 & type2
@@ -252,12 +285,12 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 		return false; // types do not match
 	}
 
+	// compare array vs scalar
 	if (params->value != args->value) {
 		return false; // one is array, the other is not
 	}
 
-
-
+	// check children
 	bool children_match = check_params(params->s1, args->s2);
 	return children_match;
 }
@@ -360,35 +393,35 @@ Var_List: T_ID
 			$$ = ASTCreateNode(A_VARDEC);
 			$$->name = $1;
 			$$->value = 0; // single variable (not array)
-			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert into symbol table
 		}
 
 	| T_ID '[' T_NUM ']'
 		{ 
 			$$ = ASTCreateNode(A_VARDEC);
-			ASTnode *p = $$;
-			$$->name = $1;
+			ASTnode *p = $$; // for debugging
+			$$->name = $1; // variable name
 			if ($3 <= 0) {
 				yyerror("Array size must be greater than 0");
 			}
 			$$->value = $3; // array size
-			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3);
+			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3); // insert into symbol table
 		}
 	| T_ID ',' Var_List	
 		{ 
 			$$ = ASTCreateNode(A_VARDEC);
-			$$->name = $1; 
+			$$->name = $1;  // variable name
 			$$->value = 0; // single variable (not array)
-			$$->s1 = $3;
-			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+			$$->s1 = $3; // next variable in list
+			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert into symbol table
 		}
 	| T_ID '[' T_NUM ']' ',' Var_List
 		{ 
-			$$ = ASTCreateNode(A_VARDEC);
-			$$->name = $1;
+			$$ = ASTCreateNode(A_VARDEC); // array variable
+			$$->name = $1; // variable name
 			$$->value = $3; // array size
-			$$->s1 = $6;
-			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3);
+			$$->s1 = $6; // next variable in list
+			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3); // insert into symbol table
 		};
 
 /* Rule #5 */
@@ -409,8 +442,9 @@ Func_Declaration:
 				OFFSET = 2; // we need two memory locations for Stack Pointer and Return Address
 				/* maxoffset; */
 			} else {
+				// function/prototype found
 				switch (p->SubType) {
-					case SYM_FUNCTION:
+					case SYM_FUNCTION: // function already defined
 						printf("%s\n", $2);
 						yyerror("Function already defined");
 					break;
@@ -438,11 +472,11 @@ Func_Declaration:
 				// Prototype found!
 				bool match = assert_params_match(pre_function->fparms, $5); // Check if parameters match
 				if (!match) {
+					// Parameters do not match
 					yyerror("Function parameters do not match prototype");
 				}
 			}
-
-			ASTnode* params = $5;
+			ASTnode* params = $5; // for debugging
 			pre_function->fparms = $5; // link parameters to symbol table entry
 
 
@@ -450,15 +484,16 @@ Func_Declaration:
 
 	Fun_Tail
 		{
-			ASTnode *p = $8;
+			ASTnode *p = $8;   // for debugging
 			$$ = $8; 					 // Pass up the Fun_Tail node
 			$$->datatype = $1; // Return Type
 			$$->name = $2;		 // Function Name
 			$$->s1 = $5; 		   // Parameters
 			$$->symbol = Search($2, LEVEL, false);
-			$$->symbol->offset = maxoffset;
+			$$->symbol->offset = maxoffset; // the offset is the size of the function
 			$$->symbol->mysize = maxoffset; // the size if maxoffset because it includes local variables
 			if (p->nodetype == A_PROTOTYPE) {
+				// function prototype
 				$$->symbol->SubType = SYM_FUNCTION_PROTO;
 			} else if (p->nodetype == A_FUNCTIONDEC) {
 				// if prototype exists, update to function
@@ -500,20 +535,20 @@ Param_List: Param
 /* Rule #9 */
 Param: Type_Specifier T_ID 	
 		{	
-			$$ = ASTCreateNode(A_PARAM);
+			$$ = ASTCreateNode(A_PARAM); // Create parameter node
 			ASTnode* p = $$; // for debugging
-			$$->datatype = $1;
+			$$->datatype = $1; // Parameter datatype
 			$$->name = $2; // Parameter name
 			$$->value = 0; // indicates non-array parameter
 			$$->symbol = yy_insert($2, $1, SYM_SCALAR, LEVEL+1, SCALAR_SIZE);
 		}
 	| Type_Specifier T_ID '[' ']' 
 		{ 
-			$$ = ASTCreateNode(A_PARAM);
-			$$->datatype = $1;
+			$$ = ASTCreateNode(A_PARAM); // Create parameter node
+			$$->datatype = $1; // Parameter datatype
 			$$->name = $2; // Parameter name
 			$$->value = 1; // indicates array parameter
-			int size = 1;
+			int size = 1; // arrays are passed as pointers, so size is 1
 			$$->symbol = yy_insert($2, $1, SYM_ARRAY, LEVEL+1, size);
 		};
 
@@ -521,8 +556,8 @@ Param: Type_Specifier T_ID
 Compound_Stmt: 	T_BEGIN  { LEVEL++; }
 								Local_Declarations  Statement_List  T_END 
 									{ 
-										$$ = ASTCreateNode(A_COMPOUND);
-										ASTnode* p = $$;
+										$$ = ASTCreateNode(A_COMPOUND); // Create compound statement node
+										ASTnode* p = $$; // for debugging
 										$$->s1 = $3; // Local Declarations
 										$$->s2 = $4; // Statement List
 										if (OFFSET > maxoffset) {
@@ -530,7 +565,7 @@ Compound_Stmt: 	T_BEGIN  { LEVEL++; }
 										}
 										Display(); // Requirement: output symbol table at each compound statement
 										yy_delete(LEVEL); // remove local variables from symbol table
-										LEVEL--;
+										LEVEL--; // exit scope
 									};
 
 /* Rule #11 */
@@ -614,8 +649,8 @@ Assignment_Stmt: Variable '=' Simple_Expression ';' {
 	assert_same_datatype($1, $3); // Ensure variable and expression have the same datatype
 	$$->s1 = $1; // Variable
 	$$->s2 = $3; // Expression
-	$$->name = CreateTemp();
-	yy_insert($$->name, $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+	$$->name = CreateTemp(); // temp variable to hold assigned value
+	yy_insert($$->name, $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert temp variable into symbol table
 };
 
 /* Rule #21 */
@@ -652,10 +687,10 @@ Variable: T_ID 	{
 Simple_Expression: Additive_Expression { $$ = $1;}
 	| Simple_Expression Relop Additive_Expression {	
 		assert_same_datatype($1, $3); // Only compare operands of the same datatype
-		$$ = ASTCreateNode(A_EXPRESSION);
-		$$->s1 = $1;
-		$$->s2 = $3;
-		$$->operator = $2;
+		$$ = ASTCreateNode(A_EXPRESSION); // Create expression node
+		$$->s1 = $1; // Left operand
+		$$->s2 = $3; // Right operand
+		$$->operator = $2; // Relational operator
 		$$->datatype = A_BOOLEANTYPE; // Result of relational operation is boolean
 		$$->name = CreateTemp(); // temp 1/3
 		yy_insert($$->name, A_BOOLEANTYPE, SYM_SCALAR, LEVEL, SCALAR_SIZE);
@@ -695,7 +730,7 @@ Term: Factor { $$ = $1; }
 														$$ = ASTCreateNode(A_EXPRESSION);  // Create expression node
 														$$->s1 = $1; // Left operand
 														$$->s2 = $3; // Right operand
-														$$->operator = $2;
+														$$->operator = $2; // Multiplicative operator
 														$$->datatype = $1->datatype; // Set datatype
 														$$->name = CreateTemp(); // temp 3/3
 														$$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
@@ -724,25 +759,26 @@ Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
 	| T_TRUE 	 			{
 										$$ = ASTCreateNode(A_BOOLEAN); 
 										$$->value = 1; // true is represented as 1
-										$$->datatype = A_BOOLEANTYPE;
+										$$->datatype = A_BOOLEANTYPE; // Set datatype
 									} 
 	| T_FALSE  			{
 										$$ = ASTCreateNode(A_BOOLEAN);
 										$$->value = 0; // false is represented as 0
-										$$->datatype = A_BOOLEANTYPE;
+										$$->datatype = A_BOOLEANTYPE; // Set datatype
 									}
 	| T_NOT Factor	{ 
 										assert_datatype($2, A_BOOLEANTYPE); // Ensure the factor is boolean
 										$$ = ASTCreateNode(A_EXPRESSION);
-										$$->operator = A_NOT;
-										$$->s1 = $2;
-										$$->datatype = A_BOOLEANTYPE;
+										$$->operator = A_NOT; // NOT operator
+										$$->s1 = $2; // Operand
+										$$->datatype = A_BOOLEANTYPE; // Result is boolean
 									};
 
 /* Rule #28 */
 Call: T_ID '(' Args ')'	{	
 	int level = 0; // Functions are always at global level
 	struct SymbTab* p = assert_exists($1, level); // Ensure function exists
+	// check to see if symbol is a function
 	if (p->SubType != SYM_FUNCTION &&
 			p->SubType != SYM_FUNCTION_PRE) {
 		printf("%s is not a function: it's a: %s\n", $1, subtype_to_string(p->SubType));
@@ -751,7 +787,6 @@ Call: T_ID '(' Args ')'	{
 		printf("Prototype function call: %s\n", $1);
 		yyerror("calling function prototype");
 	}
-	/* assert_subtype(p, SYM_FUNCTION_PRE); // Ensure symbol is of subtype SYM_FUNCTION */
 
 	// check to see if formals and actuals match in length and type
 	// $3 = A_ARG_LIST

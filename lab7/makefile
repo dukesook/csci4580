@@ -1,6 +1,7 @@
 # Devon Sookhoo
-# October 27th, 2025
+# October 31st, 2025
 # Lab 7 Add Symbol Table and Type Checking
+# Added symtable.c and symtable.h for symbol table management
 
 
 # Compiler Flags

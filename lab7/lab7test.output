@@ -1,0 +1,171 @@
+
+	LABEL		Offset 		LEVEL 	type
+	_t6		20		2	int
+	_t5		19		2	int
+	_t4		18		2	int
+	_t3		17		2	int
+	_t2		16		2	int
+	_t1		15		2	int
+	_t0		14		2	int
+	x		4		2	int
+	y		3		1	int
+	b		2		1	int
+	f		0		0	int
+	y		100		0	int
+	Z		0		0	int
+
+	LABEL		Offset 		LEVEL 	type
+	_t13		20		2	int
+	_t12		19		2	int
+	_t11		18		2	int
+	_t10		17		2	int
+	_t9		16		2	int
+	_t8		15		2	int
+	_t7		14		2	int
+	x		4		2	int
+	y		3		1	int
+	b		2		1	int
+	f		0		0	int
+	y		100		0	int
+	Z		0		0	int
+
+	LABEL		Offset 		LEVEL 	type
+	y		3		1	int
+	b		2		1	int
+	f		0		0	int
+	y		100		0	int
+	Z		0		0	int
+
+	LABEL		Offset 		LEVEL 	type
+	_t23		13		1	int
+	_t22		12		1	int
+	_t21		11		1	int
+	_t20		10		1	int
+	_t19		9		1	int
+	_t18		8		1	int
+	_t17		7		1	int
+	_t16		6		1	int
+	_t15		5		1	int
+	_t14		4		1	int
+	arg2		3		1	int
+	arg1		2		1	int
+	main		0		0	int
+	z		2		0	int
+	f		21		0	int
+	y		100		0	int
+	Z		0		0	int
+============= Successful Parse! =============
+
+	LABEL		Offset 		LEVEL 	type
+	main		21		0	int
+	z		2		0	int
+	f		21		0	int
+	y		100		0	int
+	Z		0		0	int
+Variable int  y with offset 100 and level 0
+Variable int  Z[100] with offset 0 and level 0
+Function int  f with size 21
+ (
+  parameter int  b  offset 2 level 1
+ )
+ BEGIN
+  Variable int  y with offset 3 and level 1
+  BEGIN
+   Variable int  x[10] with offset 4 and level 2
+   ASSIGNMENT
+    LEFT HAND SIDE
+     VAR with name: x offset: 4 level: 2
+      [
+       EXPR  -
+        EXPR  +
+         NUM with value 2
+         NUM with value 3
+        NUM with value 5
+      ]
+    RIGHT HAND SIDE
+     EXPR  +
+      VAR with name: b offset: 2 level: 1
+      CALL f
+       (
+        CALL ARGUMENT
+         EXPR  +
+          NUM with value 5
+          EXPR  *
+           VAR with name: x offset: 4 level: 2
+            [
+             NUM with value 2
+            ]
+           VAR with name: b offset: 2 level: 1
+       )
+  END
+  BEGIN
+   Variable int  x[10] with offset 4 and level 2
+   ASSIGNMENT
+    LEFT HAND SIDE
+     VAR with name: x offset: 4 level: 2
+      [
+       EXPR  -
+        EXPR  +
+         NUM with value 2
+         NUM with value 3
+        NUM with value 5
+      ]
+    RIGHT HAND SIDE
+     EXPR  +
+      VAR with name: b offset: 2 level: 1
+      CALL f
+       (
+        CALL ARGUMENT
+         EXPR  +
+          NUM with value 5
+          EXPR  *
+           VAR with name: x offset: 4 level: 2
+            [
+             NUM with value 2
+            ]
+           VAR with name: b offset: 2 level: 1
+       )
+  END
+ END
+Variable int  z with offset 2 and level 0
+Function int  main with size 21
+ (
+  parameter int  arg1  offset 2 level 1
+  parameter int  arg2[]  offset 3 level 1
+ )
+ BEGIN
+  WRITE
+   CALL f
+    (
+     CALL ARGUMENT
+      EXPR  +
+       EXPR  -
+        EXPR  +
+         VAR with name: arg1 offset: 2 level: 1
+         VAR with name: arg2 offset: 3 level: 1
+          [
+           EXPR  +
+            NUM with value 3
+            NUM with value 5
+          ]
+        VAR with name: z offset: 2 level: 0
+       VAR with name: y offset: 100 level: 0
+    )
+  WRITE
+   CALL f
+    (
+     CALL ARGUMENT
+      EXPR  +
+       EXPR  -
+        EXPR  +
+         VAR with name: arg1 offset: 2 level: 1
+         VAR with name: arg2 offset: 3 level: 1
+          [
+           EXPR  +
+            NUM with value 3
+            NUM with value 5
+          ]
+        VAR with name: z offset: 2 level: 0
+       VAR with name: y offset: 100 level: 0
+    )
+ END

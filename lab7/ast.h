@@ -1,10 +1,14 @@
 /*
 Devon Sookhoo
-October 27th, 2025
+October 31st, 2025
 Lab 7 Add Symbol Table and Type Checking
 Enhancements:
   - Removed comments from previous labs
   - #include "symtable.h" to access symbol table structures
+  - Added DataTypes_to_string() function to convert enum DataTypes to string for printing
+  - Added ASTtype_to_string() function to convert enum ASTtype to string for printing
+  - Added operator_to_string() function to convert enum OPERATORS to string for printing
+  
 
 */
 
@@ -101,10 +105,10 @@ void ASTprint(int level, ASTnode *p);
 // Convert DataType enum to string for printing
 const char *operator_to_string(enum OPERATORS);
 
+// Convert ASTtype enum to string for printing
 char *ASTtype_to_string(enum ASTtype);
 
+// Convert DataTypes enum to string for printing
 char* DataTypes_to_string(enum DataTypes);
-
-void ASTnode_debug(ASTnode *);
 
 #endif // of AST_H
