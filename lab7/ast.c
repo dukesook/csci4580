@@ -1,20 +1,15 @@
 /*
 Devon Sookhoo
-October 12th, 2025
-Lab 6 Abstract Syntax Tree
+October 31st, 2025
+Lab 7 Add Symbol Table and Type Checking
 Enhancements:
-  - Moved ASTnode *program to ast.c to avoid multiple definition errors
-  - Added support for A_CONTINUE, A_BREAK, and A_RETURN in ASTprint
-  - Added operator_to_string function to convert enum OPERATORS to string for printing
-  - Added AST types including: A_EXPRESSION_STATEMENT, A_ASSIGNMENT_STATEMENT, A_ITERATION_STAT
-  - Implemented the PT() function to handle indentation in ASTprint
-  - Implemented the DataTypeToString() function to convert enum DataTypes to string for printing
-  - Implemented the ASTCreateNode() function to create and initialize AST nodes
-  - Updated ASTprint to handle new AST types and print them appropriately
-  - Added global variable "program" to ast.c and declared it as extern in ast.h
-  - Created the operator_to_string() function to convert enum OPERATORS to string for printing
-  - Documented the PRE and POST conditions for functions
-*/
+  - Removed comments from previous labs
+  - Updated date and lab info
+  - Added DataTypes_to_string() function to convert enum DataTypes to string for printing
+  - Added ASTtype_to_string() function to convert enum ASTtype to string for printing
+  - Added operator_to_string() function to convert enum OPERATORS to string for printing  
+
+  */
 
 #include "ast.h"
 #include <malloc.h>

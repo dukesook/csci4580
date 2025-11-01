@@ -1,11 +1,12 @@
   /*
 Devon Sookhoo
-October 27th, 2025
+October 31st, 2025
 Lab 7 Add Symbol Table and Type Checking
 Enhancements:
   - Removed comments from previous labs
   - #include "ast.h"  
   - All Tokens start with T_
+  - No other changes made in this lab
   */
 
 
