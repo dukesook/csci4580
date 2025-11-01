@@ -848,7 +848,10 @@ Break_Stmt: T_BREAK ';' { $$ = ASTCreateNode(A_BREAK); } ;
 %%	/* end of rules, start of program */
 
 /* The main function which calls yyparse() */
-int main() { 
+int main(int argc, char* argv[]) { 
+
+	FILE* fp; // pointer to open file
+
 	yyparse();
 
 	Display();
