@@ -1,36 +1,11 @@
 /*
 Devon Sookhoo
-October 27th, 2025
-Lab 7 Add Symbol Table and Type Checking
+December 5th, 2025
+Lab 9 ALGOL Create MIPS code from you AST
 Enhancements:
 		- Removed comments from previous labs
-		- #include "symtable.h"
-		- Check for variable/function existence before insertion
-		- Handle function prototypes
-		- Type checking for expressions and assignments
-		- Ensure function call parameters match definition
-		- Output symbol table at each compound statement
-		- Manage offsets for local variables and function calls
-		- Manage OFFSET and LEVEL for scope handling
-		- Ensure array sizes are not zero.
-		- Link AST nodes to symbol table entries
-		- Delete symbols from symbol table when exiting scope
-		- used static keyword for helper functions scoped to this file
-		- Removed node type: A_FUNCTION_PROTOTYPE
-		- Create temporary variables for expressions
-		- Created function get_array_size()
-		- Created function count_params()
-		- Created function count_args()
-		- Created function yy_delete()
-		- Created function assert_not_null()
-		- Created function assert_doesnt_exist()
-		- Created function assert_exists()
-		- Created function assert_subtype()
-		- Created function assert_datatype()
-		- Created function assert_same_datatype()
-		- Created function yy_insert()
-
-
+		- #include "string.h" for strcmp
+		- Added int main(int argc, char* argv[]) to read in arguments
 */
 
 %{
@@ -40,6 +15,7 @@ Enhancements:
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h> // exit()
+#include <string.h> // for strcmp
 #include "ast.h" // include the AST header file
 #include "symtable.h" // include the Symbol Table header file
 
@@ -850,7 +826,44 @@ Break_Stmt: T_BREAK ';' { $$ = ASTCreateNode(A_BREAK); } ;
 /* The main function which calls yyparse() */
 int main(int argc, char* argv[]) { 
 
-	FILE* fp; // pointer to open file
+	// Local Variables
+	char s[100];
+	FILE* fp = NULL; // pointer to open file
+
+
+	bool mydebug = false;
+	for (int i = 1; i < argc; i++) {
+		if (strcmp(argv[i], "-d") == 0) {
+			mydebug = true;
+		}
+
+		if (strcmp(argv[i], "-o") == 0) {
+			if (argv[i+1] == NULL) {
+				printf("ERROR: -o flag requires a filename argument\n");
+				exit(1);
+			}  // end if
+			strcpy(s, argv[i+1]);
+			strcat(s, ".asm");
+
+			if (mydebug) {
+				printf("opening file: %s\n", s);
+			}  // end if
+
+			fp = fopen(s, "w");
+			if (fp == NULL) {
+				printf("ERROR: could not open file: %s\n", s);
+				exit(1);
+			} // end if
+
+		} // end if "-o"
+
+	} // end for argc
+
+	if (fp == NULL) {
+		printf("No filename provided. Must use -o <filename>\n");
+		exit(1);
+	} // end if fp==NULL
+
 
 	yyparse();
 
