@@ -15,12 +15,27 @@ Enhancements:
 // PRE: ASTnode pointer p, file pointer fp
 // POST: All MIPS code directly and through helper functions
 //       prints in the file via the file pointer.
-void EMIT(ASTnode* p, FILE* fp) {
+void EMIT(ASTnode* root, FILE* fp) {
 
   fprintf(fp, "# MIPS code generated from AST\n");
+  
+  // Data
   fprintf(fp, ".data\n\n");
+  
+  // Globals
   fprintf(fp, ".align 2\n\n");
+  emit_globals(root, fp);
+
+  // Text
   fprintf(fp, ".text\n\n");
+
+  // Main label
   fprintf(fp, ".globl main\n\n");
 
+}
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits global variable declarations in MIPS code
+void emit_globals(ASTnode* root, FILE* fp) {
+  // TODO
 }

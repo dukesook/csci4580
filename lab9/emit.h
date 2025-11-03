@@ -18,5 +18,8 @@ Enhancements:
 // POST: Generates MIPS code from the AST and writes it to the file
 void EMIT(ASTnode*, FILE*);
 
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits global variable declarations in MIPS code
+void emit_globals(ASTnode*, FILE*);
 
 #endif // EMIT_H
