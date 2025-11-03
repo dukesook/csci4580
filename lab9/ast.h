@@ -1,14 +1,9 @@
 /*
 Devon Sookhoo
-October 31st, 2025
-Lab 7 Add Symbol Table and Type Checking
+December 5th, 2025
+Lab 9 ALGOL Create MIPS code from you AST
 Enhancements:
-  - Removed comments from previous labs
-  - #include "symtable.h" to access symbol table structures
-  - Added DataTypes_to_string() function to convert enum DataTypes to string for printing
-  - Added ASTtype_to_string() function to convert enum ASTtype to string for printing
-  - Added operator_to_string() function to convert enum OPERATORS to string for printing
-  
+  - Removed comments from previous labs  
 
 */
 

@@ -5,6 +5,7 @@ Lab 9 ALGOL Create MIPS code from you AST
 Enhancements:
 		- Removed comments from previous labs
 		- #include "string.h" for strcmp
+		- #include "emit.h" for EMIT() function
 		- Added int main(int argc, char* argv[]) to read in arguments
 */
 
@@ -18,6 +19,7 @@ Enhancements:
 #include <string.h> // for strcmp
 #include "ast.h" // include the AST header file
 #include "symtable.h" // include the Symbol Table header file
+#include "emit.h" // include the Emit header file
 
 #define MAX_VARIABLES 4 // max number of variables
 #define ERROR -1 // error code
@@ -843,7 +845,7 @@ int main(int argc, char* argv[]) {
 				exit(1);
 			}  // end if
 			strcpy(s, argv[i+1]);
-			strcat(s, ".asm");
+			/* strcat(s, ".asm"); */
 
 			if (mydebug) {
 				printf("opening file: %s\n", s);
@@ -873,6 +875,8 @@ int main(int argc, char* argv[]) {
 
 	ASTprint(0, program); // print the AST
 	
+	EMIT(program, fp);
+
 	return 0; // Success
 }
 

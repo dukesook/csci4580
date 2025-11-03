@@ -11,11 +11,11 @@ all: lab9
 
 # the yacc -d flag: generate the header file lab9.tab.h
 
-lab9: lab9.y lab9.l ast.c ast.h symtable.c symtable.h
+lab9: lab9.y lab9.l ast.c ast.h symtable.c symtable.h emit.h emit.c
 	clear
 	yacc -dv lab9.y 
 	lex lab9.l
-	gcc $(CFLAGS) -o lab9 lex.yy.c y.tab.c ast.c symtable.c
+	gcc $(CFLAGS) -o lab9 lex.yy.c y.tab.c ast.c symtable.c emit.c
 
 clean:
 	rm -f lab9 y.tab.c y.tab.h y.output lex.yy.c
