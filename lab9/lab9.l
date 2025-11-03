@@ -13,10 +13,11 @@ Enhancements:
 %{
 
 /* Turned off debugging statement */
-int mydebug=0; // set to 1 to see debug info
-int line_num=1; // line number for error reporting
 #include "ast.h" // include the AST header file
 #include "y.tab.h" // for token defines
+#include <stdbool.h>
+extern bool mydebug; // defined in lab9.y
+int line_num=1; // line number for error reporting
 
 // Debug function to reduce clutter
 void debug() {

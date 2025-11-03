@@ -33,6 +33,7 @@ int LEVEL = 0; 			// how many compoound statements deep are we in
 int OFFSET = 0; 		// how many words have we seen at GLOBAL, or inside a function
 int GOFFSET = 0; 		// holder for global offset when entering a function
 int maxoffset = 0; 	// total number of words a function needs
+bool mydebug = false; // debug flag
 
 // Error Handling Function
 void yyerror (char* s)  /* Called by yyparse on error */
@@ -542,7 +543,9 @@ Compound_Stmt: 	T_BEGIN  { LEVEL++; }
 										if (OFFSET > maxoffset) {
 											maxoffset = OFFSET;
 										}
-										Display(); // Requirement: output symbol table at each compound statement
+										if (mydebug) {
+											Display(); // Requirement: output symbol table at each compound statement
+										}
 										yy_delete(LEVEL); // remove local variables from symbol table
 										LEVEL--; // exit scope
 									};
@@ -843,7 +846,6 @@ int main(int argc, char* argv[]) {
 	FILE* fp = NULL; // pointer to open file
 
 
-	bool mydebug = false;
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "-d") == 0) {
 			mydebug = true;
@@ -879,14 +881,15 @@ int main(int argc, char* argv[]) {
 
 	yyparse();
 
-	Display();
-
-	// Sets the program variable to an AST.
-
-	ASTprint(0, program); // print the AST
+	if (mydebug) {
+		Display();
+		ASTprint(0, program); // print the AST
+	}
 	
 	EMIT(program, fp);
+	printf("Created file: %s\n", s);
 
+	fclose(fp);
 	return 0; // Success
 }
 

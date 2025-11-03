@@ -18,5 +18,9 @@ Enhancements:
 void EMIT(ASTnode* p, FILE* fp) {
 
   fprintf(fp, "# MIPS code generated from AST\n");
+  fprintf(fp, ".data\n\n");
+  fprintf(fp, ".align 2\n\n");
+  fprintf(fp, ".text\n\n");
+  fprintf(fp, ".globl main\n\n");
 
 }

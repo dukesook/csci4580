@@ -10,10 +10,11 @@ Enhancements:
 #include <malloc.h>
 #include <stdio.h>
 #include "symtable.h"
+#include <stdbool.h>
 
 #ifndef AST_H
 #define AST_H
-extern int mydebug; // defined in main.c
+extern bool mydebug; // defined in main.c
 
 /* define the enumerated types for the AST.  This is used to tell us what
 sort of production rule we came across */
