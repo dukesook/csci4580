@@ -1,6 +1,7 @@
 // words
 
 int A[100];
+int x;
 
 int f(int x, int y[])
 begin

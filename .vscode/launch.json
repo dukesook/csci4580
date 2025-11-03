@@ -27,6 +27,33 @@
           "ignoreFailures": true
         }
       ]
+    },
+    {
+      "name": "Lab 9",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/lab9/lab9",
+      // prettier-ignore
+      "args": [
+        "-o", "${workspaceFolder}/lab9/out.asm",
+        "<", "${workspaceFolder}/lab9/test.al"],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }

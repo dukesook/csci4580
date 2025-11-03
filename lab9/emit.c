@@ -20,22 +20,48 @@ void EMIT(ASTnode* root, FILE* fp) {
   fprintf(fp, "# MIPS code generated from AST\n");
   
   // Data
-  fprintf(fp, ".data\n\n");
+  fprintf(fp, "\n.data\n");
   
   // Globals
-  fprintf(fp, ".align 2\n\n");
+  fprintf(fp, "\n.align 2\n");
   emit_globals(root, fp);
 
   // Text
-  fprintf(fp, ".text\n\n");
+  fprintf(fp, "\n.text\n");
 
   // Main label
-  fprintf(fp, ".globl main\n\n");
+  fprintf(fp, "\n.globl main\n");
 
 }
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits global variable declarations in MIPS code
-void emit_globals(ASTnode* root, FILE* fp) {
-  // TODO
+void emit_globals(ASTnode* node, FILE* fp) {
+  if (!node) {
+    return;
+  }
+
+  // Emit Children
+  emit_globals(node->s1, fp);
+  emit_globals(node->s2, fp);
+
+  if (!node->symbol) {
+    return; // No symbol table entry
+  } else if (node->symbol->level != 0) {
+    return; // Not a global variable
+  }
+
+  if (node->nodetype == A_VARDEC) {
+    char* type = ASTtype_to_string(node->nodetype);
+    printf("%s", type);
+    int size = node->value * WSIZE; // size in bytes
+    printf("\n");
+
+
+    fprintf(fp, "%s: .space %d  # global variable\n", node->name, size);
+  }
+
+  
+
+
 }
