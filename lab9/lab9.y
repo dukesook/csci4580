@@ -218,12 +218,19 @@ static bool assert_params_match(ASTnode *params1, ASTnode *params2) {
 		return false;
 	}
 	
+	if (params1_count == 0 && params2_count == 0) {
+		return true; // both are empty
+	}
+	
 	// Compare Types
 	if (params1->datatype != params2->datatype) {
 		return false; // types do not match
 	}
 
-	if (params1->value != params2->value) {
+	// Compare Array vs Scalar
+	assert_not_null(params1->symbol);
+	assert_not_null(params2->symbol);
+	if (params1->symbol->SubType != params2->symbol->SubType) {
 		return false; // one is array, the other is not
 	}
 
@@ -372,7 +379,7 @@ Var_List: T_ID
 		{ 
 			$$ = ASTCreateNode(A_VARDEC);
 			$$->name = $1;
-			$$->value = 0; // single variable (not array)
+			$$->value = 1; // single variable (not array)
 			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert into symbol table
 		}
 
@@ -391,7 +398,7 @@ Var_List: T_ID
 		{ 
 			$$ = ASTCreateNode(A_VARDEC);
 			$$->name = $1;  // variable name
-			$$->value = 0; // single variable (not array)
+			$$->value = 1; // single variable (not array)
 			$$->s1 = $3; // next variable in list
 			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert into symbol table
 		}
@@ -519,7 +526,7 @@ Param: Type_Specifier T_ID
 			ASTnode* p = $$; // for debugging
 			$$->datatype = $1; // Parameter datatype
 			$$->name = $2; // Parameter name
-			$$->value = 0; // indicates non-array parameter
+			$$->value = 1; // indicates non-array parameter
 			$$->symbol = yy_insert($2, $1, SYM_SCALAR, LEVEL+1, SCALAR_SIZE);
 		}
 	| Type_Specifier T_ID '[' ']' 
@@ -649,7 +656,7 @@ Variable: T_ID 	{
 		$$->name = $1; // Variable name
 		$$->symbol = p; // Link to symbol table entry
 		$$->datatype = p->Declared_Type; // Set datatype to the declared type of the variable
-		$$->value = 0; // scalar variable
+		$$->value = 1; // scalar variable
 	}
 
 	| T_ID '[' Expression ']'	{ 
