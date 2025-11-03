@@ -24,7 +24,9 @@ void EMIT(ASTnode* root, FILE* fp) {
   
   // Globals
   fprintf(fp, "\n.align 2\n");
-  emit_globals(root, fp);
+  // emit_globals(root, fp);
+  emit_traverse_ast(root, fp, emit_global_variable);
+  emit_traverse_ast(root, fp, emit_string);
 
   // Text
   fprintf(fp, "\n.text\n");
@@ -34,16 +36,34 @@ void EMIT(ASTnode* root, FILE* fp) {
 
 }
 
-// PRE: ASTnode pointer p, file pointer fp
-// POST: Emits global variable declarations in MIPS code
-void emit_globals(ASTnode* node, FILE* fp) {
+void emit_debug(ASTnode* node, FILE* fp) {
   if (!node) {
     return;
   }
 
-  // Emit Children
-  emit_globals(node->s1, fp);
-  emit_globals(node->s2, fp);
+  fprintf(stdout, "# Node Type: %s\n", ASTtype_to_string(node->nodetype));
+}
+
+void emit_traverse_ast(ASTnode* root, FILE* fp, void (*function)(ASTnode*, FILE*)) {
+  if (!root) {
+    return;
+  }
+  
+  // Process current node
+  function(root, fp);
+
+  // Traverse children
+  emit_traverse_ast(root->s1, fp, function);
+  emit_traverse_ast(root->s2, fp, function);
+
+}
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits global variable declarations in MIPS code
+void emit_global_variable(ASTnode* node, FILE* fp) {
+  if (!node) {
+    return;
+  }
 
   if (!node->symbol) {
     return; // No symbol table entry
@@ -61,7 +81,18 @@ void emit_globals(ASTnode* node, FILE* fp) {
     fprintf(fp, "%s: .space %d  # global variable\n", node->name, size);
   }
 
-  
+}
 
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits string literals in MIPS code
+void emit_string(ASTnode* node, FILE* fp) {
+  
+  if (node->nodetype != A_WRITE) {
+    return;
+  } else if (node->name == NULL) {
+    return;
+  }
+  char * label = "TODO_LABEL";
+  fprintf(fp, "%s:  .asciiz %s\n", label, node->name);
 
 }

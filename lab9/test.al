@@ -1,11 +1,15 @@
-int foo(void);
+// words
 
-int foo(void)
+int A[100];
+int x;
+
+
+int f(int x, int y[])
 begin
+  write "hello world";
 end
 
-
-int main(void)
+int main(int x)
 begin
-   foo();
+  f(x, A);
 end

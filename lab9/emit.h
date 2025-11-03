@@ -18,8 +18,17 @@ Enhancements:
 // POST: Generates MIPS code from the AST and writes it to the file
 void EMIT(ASTnode*, FILE*);
 
+// PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
+void emit_traverse_ast(ASTnode*, FILE*, void (*func)(ASTnode*, FILE*));
+
+void emit_debug(ASTnode*, FILE*);
+
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits global variable declarations in MIPS code
-void emit_globals(ASTnode*, FILE*);
+void emit_global_variable(ASTnode*, FILE*);
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits string literals in MIPS code
+void emit_string(ASTnode*, FILE*);
 
 #endif // EMIT_H
