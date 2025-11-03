@@ -1,13 +1,12 @@
+// words
 
-int foo(int x)
+int A[100];
+
+int f(int x, int y[])
 begin
-
-   foo(foo(x));
-
 end
 
-int main(void)
+int main(int x)
 begin
-
-
+  f(x, A);
 end
