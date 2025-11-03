@@ -286,7 +286,7 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 	}
 
 	// compare array vs scalar
-	if (params->value != args->value) {
+	if (params->symbol->SubType != args->symbol->SubType) {
 		return false; // one is array, the other is not
 	}
 
@@ -398,8 +398,8 @@ Var_List: T_ID
 
 	| T_ID '[' T_NUM ']'
 		{ 
-			$$ = ASTCreateNode(A_VARDEC);
-			ASTnode *p = $$; // for debugging
+			ASTnode *p = ASTCreateNode(A_VARDEC); // for debugging
+			$$ = p;
 			$$->name = $1; // variable name
 			if ($3 <= 0) {
 				yyerror("Array size must be greater than 0");
@@ -671,15 +671,19 @@ Variable: T_ID 	{
 	}
 
 	| T_ID '[' Expression ']'	{ 
-		struct SymbTab* p = assert_exists($1, LEVEL); // Ensure variable exists
-		assert_subtype(p, SYM_ARRAY); // Ensure variable is of subtype SYM_ARRAY
+		struct SymbTab* symbol = assert_exists($1, LEVEL); // Ensure variable exists
+		assert_subtype(symbol, SYM_ARRAY); // Ensure variable is of subtype SYM_ARRAY
 		
-		$$ = ASTCreateNode(A_VARIABLE); // Create array variable node
+		ASTnode* p = ASTCreateNode(A_VARIABLE); // for debugging
+		$$ = p; // Create array variable node
 		$$->name = $1; // Variable name
 		$$->s1 = $3; // Index expression
-		$$->symbol = p; // Link to symbol table entry
-		$$->datatype = p->Declared_Type; // Set datatype to the declared type of the array
+		$$->symbol = symbol; // Link to symbol table entry
+		$$->datatype = symbol->Declared_Type; // Set datatype to the declared type of the array
 		$$->value = get_array_size($$->s1); // array size
+		/* $$->symbol->SubType = SYM_SCALAR; // while T_ID is an array, the result of indexing it is a scalar */
+		$$->name = CreateTemp(); // temp variable to hold indexed value
+		$$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert temp variable into symbol table
 		assert_datatype($3, A_INTTYPE); // Ensure index is of integer type
 	};
 
@@ -749,6 +753,8 @@ Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
 										$$ = ASTCreateNode(A_NUMBER);
 										$$->value = $1;
 										$$->datatype = A_INTTYPE;
+										$$->name = CreateTemp(); // temp 3/3
+										$$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 									}
 	| Variable 			{
 										$$ = $1;
@@ -820,15 +826,16 @@ Arg_List: Expression	{
 												$$->s2 = NULL; // No remaining arguments
 												$$->datatype = $1->datatype;
 												$$->value = get_array_size($1);
-												$$->symbol = yy_insert(CreateTemp(), $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
-
+												$$->symbol = yy_insert(CreateTemp(), $1->datatype, $1->symbol->SubType, LEVEL, SCALAR_SIZE);
 											}
-	| Expression ',' Arg_List { $$ = ASTCreateNode(A_ARGUMENT); // Create argument node
+	| Expression ',' Arg_List { 
+															ASTnode* p = ASTCreateNode(A_ARGUMENT); // Create argument node
+															$$ = p;
 															$$->s1 = $1; // Argument Expression
 															$$->s2 = $3; // Remaining arguments
 															$$->datatype = $1->datatype;
 															$$->value = get_array_size($1);
-															$$->symbol = yy_insert(CreateTemp(), $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+															$$->symbol = yy_insert(CreateTemp(), $1->datatype, $1->symbol->SubType, LEVEL, SCALAR_SIZE);
 														};
 
 /* Graduate Student Required Rule */
