@@ -1,4 +1,4 @@
 clear
 clear
 
-make && ./lab9 -d -o out.asm < input.al
+make && ./lab9 -d -o out.asm < test.al
