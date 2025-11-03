@@ -21,12 +21,12 @@ void EMIT(ASTnode* root, FILE* fp) {
   
   // Data
   fprintf(fp, "\n.data\n");
+  emit_traverse_ast(root, fp, emit_string);
   
   // Globals
   fprintf(fp, "\n.align 2\n");
   // emit_globals(root, fp);
   emit_traverse_ast(root, fp, emit_global_variable);
-  emit_traverse_ast(root, fp, emit_string);
 
   // Text
   fprintf(fp, "\n.text\n");
@@ -92,7 +92,20 @@ void emit_string(ASTnode* node, FILE* fp) {
   } else if (node->name == NULL) {
     return;
   }
-  char * label = "TODO_LABEL";
+  char label[64];
+  emit_create_label(label);
   fprintf(fp, "%s:  .asciiz %s\n", label, node->name);
 
+}
+
+// PRE: None
+// POST: Creates and returns a unique label string
+void emit_create_label(char* label) {
+  if (!label) {
+    printf("Error: NULL label pointer passed to emit_create_label()\n");
+    exit(1);
+  }
+
+  static int label_count = 0;
+  sprintf(label, "_L%d", label_count++);
 }
