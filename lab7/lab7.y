@@ -808,7 +808,8 @@ Call: T_ID '(' Args ')'	{
 	$$ = ASTCreateNode(A_FUNCTION_CALL); // Create function call node
 	$$->name = $1; // Function name
 	$$->s1 = $3;  // Arguments
-	$$->symbol = p; // Link to symbol table entry
+	/* $$->symbol = p; // Link to symbol table entry */
+	$$->symbol = yy_insert(CreateTemp(), p->Declared_Type, SYM_SCALAR, LEVEL, SCALAR_SIZE); // temp variable to hold return value
 	$$->datatype = $$->symbol->Declared_Type; // Function return type
 };
 
