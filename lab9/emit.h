@@ -25,7 +25,7 @@ void EMIT(ASTnode*, FILE*);
 // PRE: Pointer to astnode
 // POST: Main driver for walking out AST Tree to produce
 //     MIPS code by calling appropriate helper functions
-void emit_ast(ASTnode*, FILE*);
+void emit_node(ASTnode*, FILE*);
 
 // PRE: file pointer fp, char pointers label, command, comment
 // POST: Emits a MIPS command with optional label and comment
@@ -42,6 +42,10 @@ void emit_global_variable(ASTnode*, FILE*);
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits string literals in MIPS code
 void emit_string(ASTnode*, FILE*);
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for function declarations
+void emit_function_declaration(ASTnode*, FILE*);
 
 // PRE: char pointer label
 // POST: Creates and returns a unique label string

@@ -35,7 +35,7 @@ void EMIT(ASTnode* root, FILE* fp) {
 
   // Main label
   fprintf(fp, "\n.globl main\n");
-  emit_ast(root, fp);
+  emit_traverse_ast(root, fp, emit_node);
 
 
 } // end of EMIT()
@@ -43,7 +43,7 @@ void EMIT(ASTnode* root, FILE* fp) {
 // PRE: Pointer to astnode
 // POST: Main driver for walking out AST Tree to produce
 //     MIPS code by calling appropriate helper functions
-void emit_ast(ASTnode* p, FILE* fp) {
+void emit_node(ASTnode* p, FILE* fp) {
 
   if (!p) {
     return;
@@ -52,9 +52,39 @@ void emit_ast(ASTnode* p, FILE* fp) {
   char* type = ASTtype_to_string(p->nodetype);
 
   switch (p->nodetype) {
+    case A_DEC_LIST:
+    case A_VARDEC:
+      // do nothing
+      break;
+    case A_FUNCTIONDEC:
+      emit_function_declaration(p, fp);
+      break;
+    case A_PROTOTYPE:
+    case A_FUNCTION_CALL:
+    case A_ARG_LIST:
+    case A_ARGUMENT:
+    case A_NUMBER:
+    case A_VARIABLE:
+    case A_BOOLEAN:
+    case A_EXPRESSION:
+    case A_COMPOUND:
+    case A_STMT_LIST:
+    case A_WRITE:
+    case A_READ:
+    case A_PARAM:
+    case A_VOID_PARAM:
+    case A_EXPRESSION_STATEMENT:
+    case A_ASSIGNMENT_STATEMENT:
+    case A_ITERATION_STATEMENT:
+    case A_SELECTION_STATEMENT:
+    case A_SELECTION_BODY:
+    case A_FUNCTION_PROTOTYPE:
+    case A_CONTINUE:
+    case A_BREAK:
+    case A_RETURN:
     default:
       printf("emit_ast(): ERROR! Unhandled node type %s\n", type);
-      exit(1);
+      // exit(1);
   } // end of switch(p->nodetype)
 
 
@@ -134,6 +164,13 @@ void emit_string(ASTnode* node, FILE* fp) {
   fprintf(fp, "%s:  .asciiz %s\n", label, node->name);
 
 } // end of emit_string()
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for function declarations
+void emit_function_declaration(ASTnode* p, FILE* fp) {
+  emit_command(fp, p->name, "", "Start of function");
+  fprintf(fp, "\n");
+}
 
 // PRE: None
 // POST: Creates and returns a unique label string

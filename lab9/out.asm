@@ -10,3 +10,5 @@ A: .space 400  # global variable
 .text
 
 .globl main
+main:			# Start of function
+
