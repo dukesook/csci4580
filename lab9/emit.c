@@ -8,6 +8,8 @@ Set of functions to create proper MIPS code and place it in the appropriate open
 
 Enhancements:
   - Created emit.h and emit.c files to handle MIPS code generation
+  - #include <string.h> for strcmp()
+
 */
 
 #include "emit.h"
@@ -33,17 +35,52 @@ void EMIT(ASTnode* root, FILE* fp) {
 
   // Main label
   fprintf(fp, "\n.globl main\n");
+  emit_ast(root, fp);
 
-}
 
-void emit_debug(ASTnode* node, FILE* fp) {
-  if (!node) {
+} // end of EMIT()
+
+// PRE: Pointer to astnode
+// POST: Main driver for walking out AST Tree to produce
+//     MIPS code by calling appropriate helper functions
+void emit_ast(ASTnode* p, FILE* fp) {
+
+  if (!p) {
     return;
   }
 
-  fprintf(stdout, "# Node Type: %s\n", ASTtype_to_string(node->nodetype));
-}
+  char* type = ASTtype_to_string(p->nodetype);
 
+  switch (p->nodetype) {
+    default:
+      printf("emit_ast(): ERROR! Unhandled node type %s\n", type);
+      exit(1);
+  } // end of switch(p->nodetype)
+
+
+
+} // end of emit_ast()
+
+// PRE: file pointer fp, char pointers label, command, comment
+// POST: Emits a MIPS command with optional label and comment
+void emit_command(FILE* fp, char* label, char* command, char* comment) {
+  if (strcmp("", comment) == 0) {
+    if (strcmp("", label) == 0) {
+      fprintf(fp, "\t%s\t\t\n", command);
+    } else {
+      fprintf(fp, "%s:\t%s\t\t\\n", label, command);
+    }
+  } else {
+    if (strcmp("", label) == 0) {
+      fprintf(fp, "\t%s\t\t# %s\n", command, comment);
+    } else {
+      fprintf(fp, "%s:\t%s\t\t# %s\n", label, command, comment);
+    }
+  }
+} // of emit_command()
+
+// PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
+// POST: Traverses the AST and applies the given function to each node
 void emit_traverse_ast(ASTnode* root, FILE* fp, void (*function)(ASTnode*, FILE*)) {
   if (!root) {
     return;
@@ -56,7 +93,7 @@ void emit_traverse_ast(ASTnode* root, FILE* fp, void (*function)(ASTnode*, FILE*
   emit_traverse_ast(root->s1, fp, function);
   emit_traverse_ast(root->s2, fp, function);
 
-}
+} // end of emit_traverse_ast()
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits global variable declarations in MIPS code
@@ -81,7 +118,7 @@ void emit_global_variable(ASTnode* node, FILE* fp) {
     fprintf(fp, "%s: .space %d  # global variable\n", node->name, size);
   }
 
-}
+} // end of emit_global_variable()
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits string literals in MIPS code
@@ -96,7 +133,7 @@ void emit_string(ASTnode* node, FILE* fp) {
   emit_create_label(label);
   fprintf(fp, "%s:  .asciiz %s\n", label, node->name);
 
-}
+} // end of emit_string()
 
 // PRE: None
 // POST: Creates and returns a unique label string
@@ -108,4 +145,14 @@ void emit_create_label(char* label) {
 
   static int label_count = 0;
   sprintf(label, "_L%d", label_count++);
-}
+} // end of emit_create_label()
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits debug information for the given AST node
+void emit_debug(ASTnode* node, FILE* fp) {
+  if (!node) {
+    return;
+  }
+
+  fprintf(stdout, "# Node Type: %s\n", ASTtype_to_string(node->nodetype));
+} // end of emit_debug()
