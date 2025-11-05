@@ -241,16 +241,16 @@ CallbackFn emit_write(ASTnode* p, FILE* fp) {
     emit_command(fp, "", "li $v0, 4", "# print a string");
     emit_command(fp, "", s, "# print fetch string location");
     emit_command(fp, "", "syscall", "Perform a write string");
-    // li $v0, 4		# #print a string
-    // la $a0, _L0		# #print fetch string location
-    // syscall		# Perform a write string
   } else {
+
     // Expression
 
   }
 
   fprintf(fp, "\n");
   fprintf(fp, "\n");
+
+  return NULL;
 
 } // end of emit_write()
 
