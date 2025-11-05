@@ -21,3 +21,10 @@ main:			# Start of function
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
 	lw $sp, ($sp)		# Return from function store SP
+	li $v0, 10		# Exit from Main we are done
+	syscall		# EXIT everything
+	li $v0, 4		# # print a string
+	la $a0, (null)		# # print fetch string location
+	syscall		# Perform a write string
+
+

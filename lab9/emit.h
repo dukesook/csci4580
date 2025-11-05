@@ -47,6 +47,10 @@ void emit_string(ASTnode*, FILE*);
 // POST: Emits MIPS code for function declarations
 void emit_function_declaration(ASTnode*, FILE*);
 
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for write statements
+void emit_write(ASTnode*, FILE*);
+
 // PRE: char pointer label
 // POST: Creates and returns a unique label string
 void emit_create_label(char* label);

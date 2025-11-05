@@ -54,10 +54,15 @@ void emit_node(ASTnode* p, FILE* fp) {
   switch (p->nodetype) {
     case A_DEC_LIST:
     case A_VARDEC:
+    case A_COMPOUND:
+    case A_STMT_LIST:
       // do nothing
       break;
     case A_FUNCTIONDEC:
       emit_function_declaration(p, fp);
+      break;
+    case A_WRITE:
+      emit_write(p, fp);
       break;
     case A_PROTOTYPE:
     case A_FUNCTION_CALL:
@@ -67,9 +72,6 @@ void emit_node(ASTnode* p, FILE* fp) {
     case A_VARIABLE:
     case A_BOOLEAN:
     case A_EXPRESSION:
-    case A_COMPOUND:
-    case A_STMT_LIST:
-    case A_WRITE:
     case A_READ:
     case A_PARAM:
     case A_VOID_PARAM:
@@ -204,6 +206,34 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
 	// lw $sp ($sp)		# Return from function store SP
 
 }
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for write statements
+void emit_write(ASTnode* p, FILE* fp) {
+  // There are type types of write:
+  //    1. String
+  //    2. Expression
+
+  
+  if (p->name) {
+    // String
+    char s[100];
+    sprintf(s, "la $a0, %s", p->label);
+    emit_command(fp, "", "li $v0, 4", "# print a string");
+    emit_command(fp, "", s, "# print fetch string location");
+    emit_command(fp, "", "syscall", "Perform a write string");
+    // li $v0, 4		# #print a string
+    // la $a0, _L0		# #print fetch string location
+    // syscall		# Perform a write string
+  } else {
+    // Expression
+
+  }
+
+  fprintf(fp, "\n");
+  fprintf(fp, "\n");
+
+} // end of emit_write()
 
 // PRE: None
 // POST: Creates and returns a unique label string
