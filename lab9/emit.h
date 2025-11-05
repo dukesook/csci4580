@@ -17,8 +17,7 @@ Enhancements:
 
 
 typedef void (*CallbackFn)(ASTnode*, FILE*);
-// typedef CallbackFn (*EmitFunction)(ASTnode*, FILE*);
-typedef void (*EmitFunction)(ASTnode*, FILE*);
+typedef CallbackFn (*EmitFunction)(ASTnode*, FILE*);
 
 #define WSIZE 4
 #define LOG_WSIZE 2
@@ -30,7 +29,7 @@ void EMIT(ASTnode*, FILE*);
 // PRE: Pointer to astnode
 // POST: Main driver for walking out AST Tree to produce
 //     MIPS code by calling appropriate helper functions
-void emit_node(ASTnode*, FILE*);
+CallbackFn emit_node(ASTnode*, FILE*);
 
 // PRE: file pointer fp, char pointers label, command, comment
 // POST: Emits a MIPS command with optional label and comment
@@ -42,19 +41,23 @@ void emit_traverse_ast(ASTnode*, FILE*, EmitFunction);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits global variable declarations in MIPS code
-void emit_global_variable(ASTnode*, FILE*);
+CallbackFn emit_global_variable(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits string literals in MIPS code
-void emit_string(ASTnode*, FILE*);
+CallbackFn emit_string(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function declarations
-void emit_function_declaration(ASTnode*, FILE*);
+CallbackFn emit_function_declaration(ASTnode*, FILE*);
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for function tail
+void emit_function_tail(ASTnode* p, FILE* fp);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for write statements
-void emit_write(ASTnode*, FILE*);
+CallbackFn emit_write(ASTnode*, FILE*);
 
 // PRE: char pointer label
 // POST: Creates and returns a unique label string

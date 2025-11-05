@@ -27,7 +27,6 @@ void EMIT(ASTnode* root, FILE* fp) {
   
   // Globals
   fprintf(fp, "\n.align 2\n");
-  // emit_globals(root, fp);
   emit_traverse_ast(root, fp, emit_global_variable);
 
   // Text
@@ -43,10 +42,10 @@ void EMIT(ASTnode* root, FILE* fp) {
 // PRE: Pointer to astnode
 // POST: Main driver for walking out AST Tree to produce
 //     MIPS code by calling appropriate helper functions
-void emit_node(ASTnode* p, FILE* fp) {
+CallbackFn emit_node(ASTnode* p, FILE* fp) {
 
   if (!p) {
-    return;
+    return NULL;
   }
 
   char* type = ASTtype_to_string(p->nodetype);
@@ -60,6 +59,7 @@ void emit_node(ASTnode* p, FILE* fp) {
       break;
     case A_FUNCTIONDEC:
       emit_function_declaration(p, fp);
+      return emit_function_tail;
       break;
     case A_WRITE:
       emit_write(p, fp);
@@ -89,6 +89,7 @@ void emit_node(ASTnode* p, FILE* fp) {
       // exit(1);
   } // end of switch(p->nodetype)
 
+  return NULL;
 
 
 } // end of emit_ast()
@@ -118,26 +119,32 @@ void emit_traverse_ast(ASTnode* root, FILE* fp, EmitFunction function) {
     return;
   }
   
+  printf("# Traversing node type: %s\n", ASTtype_to_string(root->nodetype));
+
   // Process current node
-  function(root, fp);
+  CallbackFn callback = function(root, fp);
 
   // Traverse children
   emit_traverse_ast(root->s1, fp, function);
   emit_traverse_ast(root->s2, fp, function);
 
+  if (callback) {
+    callback(root, fp);
+  }
+
 } // end of emit_traverse_ast()
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits global variable declarations in MIPS code
-void emit_global_variable(ASTnode* node, FILE* fp) {
+CallbackFn emit_global_variable(ASTnode* node, FILE* fp) {
   if (!node) {
-    return;
+    return NULL;
   }
 
   if (!node->symbol) {
-    return; // No symbol table entry
+    return NULL;// No symbol table entry
   } else if (node->symbol->level != 0) {
-    return; // Not a global variable
+    return NULL;// Not a global variable
   }
 
   if (node->nodetype == A_VARDEC) {
@@ -154,12 +161,12 @@ void emit_global_variable(ASTnode* node, FILE* fp) {
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits string literals in MIPS code
-void emit_string(ASTnode* node, FILE* fp) {
+CallbackFn emit_string(ASTnode* node, FILE* fp) {
   
   if (node->nodetype != A_WRITE) {
-    return;
+    return NULL;
   } else if (node->name == NULL) {
-    return;
+    return NULL;
   }
   char label[64];
   emit_create_label(label);
@@ -169,7 +176,7 @@ void emit_string(ASTnode* node, FILE* fp) {
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function declarations
-void emit_function_declaration(ASTnode* p, FILE* fp) {
+CallbackFn emit_function_declaration(ASTnode* p, FILE* fp) {
 
   char s[256];
   int size = p->symbol->offset * WSIZE; // size in bytes
@@ -184,7 +191,19 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
   fprintf(fp, "\n");
   fprintf(fp, "\n");
 
-  emit_node(p->s2, fp); // Call for compound statement (function body)
+  // emit_node(p->s2, fp); // Call for compound statement (function body)
+
+
+
+	// li $a0, 0		# RETURN has no specified value set to 0
+	// lw $ra 4($sp)		# restore old environment RA
+	// lw $sp ($sp)		# Return from function store SP
+
+}
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for function tail
+void emit_function_tail(ASTnode* p, FILE* fp) {
 
   emit_command(fp, "", "li $a0, 0", "restore RA");
   emit_command(fp, "", "lw $ra, 4($sp)", "restore old environment RA");
@@ -201,24 +220,23 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
     exit(1);
   }
 
-	// li $a0, 0		# RETURN has no specified value set to 0
-	// lw $ra 4($sp)		# restore old environment RA
-	// lw $sp ($sp)		# Return from function store SP
-
 }
+
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for write statements
-void emit_write(ASTnode* p, FILE* fp) {
+CallbackFn emit_write(ASTnode* p, FILE* fp) {
   // There are type types of write:
   //    1. String
   //    2. Expression
 
+  char label[64];
+  emit_create_label(label);
   
   if (p->name) {
     // String
     char s[100];
-    sprintf(s, "la $a0, %s", p->label);
+    sprintf(s, "la $a0, %s", label);
     emit_command(fp, "", "li $v0, 4", "# print a string");
     emit_command(fp, "", s, "# print fetch string location");
     emit_command(fp, "", "syscall", "Perform a write string");
