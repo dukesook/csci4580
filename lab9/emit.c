@@ -126,6 +126,7 @@ void emit_traverse_ast(ASTnode* node, FILE* fp, EmitFunction function) {
   emit_traverse_ast(node->s1, fp, function);
   emit_traverse_ast(node->s2, fp, function);
 
+  // Run callback() if provided
   if (callback) {
     callback(node, fp);
   }
@@ -169,9 +170,8 @@ CallbackFn emit_string(ASTnode* node, FILE* fp) {
     return NULL;
   }
 
-  char label[64];
-  emit_create_label(label);
-  fprintf(fp, "%s:  .asciiz %s\n", label, node->name);
+  node->label = emit_create_label();
+  fprintf(fp, "%s:  .asciiz %s\n", node->label, node->name);
 
   return NULL;
 
@@ -211,6 +211,7 @@ void emit_function_tail(ASTnode* p, FILE* fp) {
   emit_command(fp, "", "li $a0, 0", "restore RA");
   emit_command(fp, "", "lw $ra, 4($sp)", "restore old environment RA");
   emit_command(fp, "", "lw $sp, ($sp)", "Return from function store SP");
+  fprintf(fp, "\n");
 
   if (strcmp(p->name, "main") == 0) {
     emit_command(fp, "", "li $v0, 10", "Exit from Main we are done");
@@ -233,13 +234,10 @@ CallbackFn emit_write(ASTnode* p, FILE* fp) {
   //    1. String
   //    2. Expression
 
-  char label[64];
-  emit_create_label(label);
-  
   if (p->name) {
     // String
     char s[100];
-    sprintf(s, "la $a0, %s", label);
+    sprintf(s, "la $a0, %s", p->label);
     emit_command(fp, "", "li $v0, 4", "# print a string");
     emit_command(fp, "", s, "# print fetch string location");
     emit_command(fp, "", "syscall", "Perform a write string");
@@ -258,14 +256,11 @@ CallbackFn emit_write(ASTnode* p, FILE* fp) {
 
 // PRE: None
 // POST: Creates and returns a unique label string
-void emit_create_label(char* label) {
-  if (!label) {
-    printf("Error: NULL label pointer passed to emit_create_label()\n");
-    exit(1);
-  }
-
+char* emit_create_label() {
   static int label_count = 0;
+  char label[64];
   sprintf(label, "_L%d", label_count++);
+  return strdup(label);
 } // end of emit_create_label()
 
 // PRE: ASTnode pointer p, file pointer fp

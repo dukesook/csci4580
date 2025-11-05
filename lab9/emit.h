@@ -61,7 +61,7 @@ CallbackFn emit_write(ASTnode*, FILE*);
 
 // PRE: char pointer label
 // POST: Creates and returns a unique label string
-void emit_create_label(char* label);
+char* emit_create_label();
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits debug information for the given AST node

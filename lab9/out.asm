@@ -19,12 +19,13 @@ main:			# Start of function
 
 
 	li $v0, 4		# # print a string
-	la $a0, _L1		# # print fetch string location
+	la $a0, _L0		# # print fetch string location
 	syscall		# Perform a write string
 
 
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
 	lw $sp, ($sp)		# Return from function store SP
+
 	li $v0, 10		# Exit from Main we are done
 	syscall		# EXIT everything
