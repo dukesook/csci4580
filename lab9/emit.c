@@ -168,20 +168,41 @@ void emit_string(ASTnode* node, FILE* fp) {
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function declarations
 void emit_function_declaration(ASTnode* p, FILE* fp) {
-  
+
+  char s[256];
+  int size = p->symbol->offset * WSIZE; // size in bytes
+  sprintf(s, "subu $a0, $sp, %d", size);
+
   emit_command(fp, p->name, "", "Start of function");
   fprintf(fp, "\n");
-  emit_command(fp, "", "subu $a0, $sp, 12", "adjust the stack for function setup");
+  emit_command(fp, "", s, "adjust the stack for function setup");
   emit_command(fp, "", "sw $sp, ($a0)", "remember old SP");
   emit_command(fp, "", "sw $ra, 4($a0)", "remember current Return address");
   emit_command(fp, "", "move $sp, $a0", "adjust the stack pointer");
   fprintf(fp, "\n");
   fprintf(fp, "\n");
 
-	// subu $a0, $sp, 12		# # adjust the stack for function setup
-	// sw $sp, ($a0)		# remember old SP
-	// sw $ra, 4($a0)		# remember current Return address
-	// move $sp, $a0		# # adjust the stack pointer
+  emit_node(p->s2, fp); // Call for compound statement (function body)
+
+  emit_command(fp, "", "li $a0, 0", "restore RA");
+  emit_command(fp, "", "lw $ra, 4($sp)", "restore old environment RA");
+  emit_command(fp, "", "lw $sp, ($sp)", "Return from function store SP");
+
+  if (strcmp(p->name, "main") == 0) {
+    emit_command(fp, "", "li $v0, 10", "Exit from Main we are done");
+    emit_command(fp, "", "syscall", "EXIT everything");
+    // li $v0, 10		# Exit from Main we are done
+	  // syscall			# EXIT everything
+  } else {
+    // TODO! normal function return;
+    printf("# TODO! normal function return;\n");
+    exit(1);
+  }
+
+	// li $a0, 0		# RETURN has no specified value set to 0
+	// lw $ra 4($sp)		# restore old environment RA
+	// lw $sp ($sp)		# Return from function store SP
+
 }
 
 // PRE: None

@@ -17,3 +17,7 @@ main:			# Start of function
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
 
+
+	li $a0, 0		# restore RA
+	lw $ra, 4($sp)		# restore old environment RA
+	lw $sp, ($sp)		# Return from function store SP
