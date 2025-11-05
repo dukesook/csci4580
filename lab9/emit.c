@@ -168,8 +168,20 @@ void emit_string(ASTnode* node, FILE* fp) {
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function declarations
 void emit_function_declaration(ASTnode* p, FILE* fp) {
+  
   emit_command(fp, p->name, "", "Start of function");
   fprintf(fp, "\n");
+  emit_command(fp, "", "subu $a0, $sp, 12", "adjust the stack for function setup");
+  emit_command(fp, "", "sw $sp, ($a0)", "remember old SP");
+  emit_command(fp, "", "sw $ra, 4($a0)", "remember current Return address");
+  emit_command(fp, "", "move $sp, $a0", "adjust the stack pointer");
+  fprintf(fp, "\n");
+  fprintf(fp, "\n");
+
+	// subu $a0, $sp, 12		# # adjust the stack for function setup
+	// sw $sp, ($a0)		# remember old SP
+	// sw $ra, 4($a0)		# remember current Return address
+	// move $sp, $a0		# # adjust the stack pointer
 }
 
 // PRE: None
