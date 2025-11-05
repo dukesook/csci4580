@@ -15,6 +15,11 @@ Enhancements:
 #include <string.h>
 #include "ast.h"
 
+
+typedef void (*CallbackFn)(ASTnode*, FILE*);
+// typedef CallbackFn (*EmitFunction)(ASTnode*, FILE*);
+typedef void (*EmitFunction)(ASTnode*, FILE*);
+
 #define WSIZE 4
 #define LOG_WSIZE 2
 
@@ -33,7 +38,7 @@ void emit_command(FILE*, char* label, char* command, char* comment);
 
 // PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
 // POST: Traverses the AST and applies the given function to each node
-void emit_traverse_ast(ASTnode*, FILE*, void (*func)(ASTnode*, FILE*));
+void emit_traverse_ast(ASTnode*, FILE*, EmitFunction);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits global variable declarations in MIPS code

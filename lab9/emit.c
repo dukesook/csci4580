@@ -113,7 +113,7 @@ void emit_command(FILE* fp, char* label, char* command, char* comment) {
 
 // PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
 // POST: Traverses the AST and applies the given function to each node
-void emit_traverse_ast(ASTnode* root, FILE* fp, void (*function)(ASTnode*, FILE*)) {
+void emit_traverse_ast(ASTnode* root, FILE* fp, EmitFunction function) {
   if (!root) {
     return;
   }
