@@ -69,3 +69,5 @@ void emit_debug(ASTnode*, FILE*);
 
 
 #endif // EMIT_H
+
+// $ java -jar Mars.jar sm file.asm
