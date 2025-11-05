@@ -114,22 +114,20 @@ void emit_command(FILE* fp, char* label, char* command, char* comment) {
 
 // PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
 // POST: Traverses the AST and applies the given function to each node
-void emit_traverse_ast(ASTnode* root, FILE* fp, EmitFunction function) {
-  if (!root) {
+void emit_traverse_ast(ASTnode* node, FILE* fp, EmitFunction function) {
+  if (!node) {
     return;
   }
   
-  printf("# Traversing node type: %s\n", ASTtype_to_string(root->nodetype));
-
   // Process current node
-  CallbackFn callback = function(root, fp);
+  CallbackFn callback = function(node, fp);
 
   // Traverse children
-  emit_traverse_ast(root->s1, fp, function);
-  emit_traverse_ast(root->s2, fp, function);
+  emit_traverse_ast(node->s1, fp, function);
+  emit_traverse_ast(node->s2, fp, function);
 
   if (callback) {
-    callback(root, fp);
+    callback(node, fp);
   }
 
 } // end of emit_traverse_ast()
@@ -157,6 +155,8 @@ CallbackFn emit_global_variable(ASTnode* node, FILE* fp) {
     fprintf(fp, "%s: .space %d  # global variable\n", node->name, size);
   }
 
+  return NULL;
+
 } // end of emit_global_variable()
 
 // PRE: ASTnode pointer p, file pointer fp
@@ -168,9 +168,12 @@ CallbackFn emit_string(ASTnode* node, FILE* fp) {
   } else if (node->name == NULL) {
     return NULL;
   }
+
   char label[64];
   emit_create_label(label);
   fprintf(fp, "%s:  .asciiz %s\n", label, node->name);
+
+  return NULL;
 
 } // end of emit_string()
 
