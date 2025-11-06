@@ -1,7 +1,7 @@
 # MIPS code generated from AST
 
 .data
-_L0:  .asciiz "hello world"
+_L0:  .asciiz "hello world\n"
 _L1:  .asciiz "\n"
 
 .align 2
@@ -13,7 +13,7 @@ A: .space 400  # global variable
 .globl main
 main:			# Start of function
 
-	subu $a0, $sp, 16		# adjust the stack for function setup
+	subu $a0, $sp, 12		# adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
@@ -24,9 +24,11 @@ main:			# Start of function
 	syscall		# Perform a write string
 
 
-	li $a0, 42		# Expression is a constant
+	li $a0, 0		# Expression is a constant
 	li $v0, 1		# # print the number
 	syscall		# #system call for print number
+
+
 
 
 	li $v0, 4		# # print a string
