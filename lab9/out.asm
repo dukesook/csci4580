@@ -24,6 +24,7 @@ main:			# Start of function
 	syscall		# Perform a write string
 
 
+	li $a0, 42		# Expression is a constant
 	li $v0, 1		# # print the number
 	syscall		# #system call for print number
 

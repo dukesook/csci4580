@@ -219,11 +219,12 @@ CallbackFn emit_expression(ASTnode* node, FILE* fp) {
   }
 
   char* type = ASTtype_to_string(node->nodetype);
-  char s[256];
+  char line[256];
   switch (node->nodetype) {
     case A_NUMBER:
-      sprintf(s, "li $a0, %d", node->value);
-      emit_line(fp, s, "Expression is a constant");
+      sprintf(line, "li $a0, %d", node->value);
+      emit_line(fp, line, "Expression is a constant");
+      break;
     case A_VARIABLE:
     case A_FUNCTION_CALL:
     case A_EXPRESSION:
@@ -231,6 +232,8 @@ CallbackFn emit_expression(ASTnode* node, FILE* fp) {
       printf("emit_expression(): unhandled nodetype: %s\n", type);
       // exit(1);
   } // end of switch
+
+  return NULL;
 
 }
 
@@ -273,7 +276,7 @@ CallbackFn emit_write(ASTnode* p, FILE* fp) {
     emit_line(fp, "syscall", "Perform a write string");
   } else {
     // Expression
-    // emit_expression(p->s1, fp);
+    emit_expression(p->s1, fp);
     emit_line(fp, "li $v0, 1", "# print the number");
     emit_line(fp, "syscall", "#system call for print number");
 
