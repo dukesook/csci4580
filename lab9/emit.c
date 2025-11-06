@@ -112,6 +112,12 @@ void emit_command(FILE* fp, char* label, char* command, char* comment) {
   }
 } // of emit_command()
 
+// PRE: file pointer fp, char pointer line, char pointer comment
+// POST: Emits a line of MIPS code with an optional comment
+void emit_line(FILE* fp, char* line, char* comment) {
+  emit_command(fp, "", line, comment);
+}
+
 // PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
 // POST: Traverses the AST and applies the given function to each node
 void emit_traverse_ast(ASTnode* node, FILE* fp, EmitFunction function) {
@@ -187,10 +193,10 @@ CallbackFn emit_function_declaration(ASTnode* p, FILE* fp) {
 
   emit_command(fp, p->name, "", "Start of function");
   fprintf(fp, "\n");
-  emit_command(fp, "", s, "adjust the stack for function setup");
-  emit_command(fp, "", "sw $sp, ($a0)", "remember old SP");
-  emit_command(fp, "", "sw $ra, 4($a0)", "remember current Return address");
-  emit_command(fp, "", "move $sp, $a0", "adjust the stack pointer");
+  emit_line(fp, s, "adjust the stack for function setup");
+  emit_line(fp, "sw $sp, ($a0)", "remember old SP");
+  emit_line(fp, "sw $ra, 4($a0)", "remember current Return address");
+  emit_line(fp, "move $sp, $a0", "adjust the stack pointer");
   fprintf(fp, "\n");
   fprintf(fp, "\n");
 
@@ -205,23 +211,47 @@ CallbackFn emit_function_declaration(ASTnode* p, FILE* fp) {
 }
 
 // PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for expressions
+CallbackFn emit_expression(ASTnode* node, FILE* fp) {
+
+  if (!node) {
+    return NULL;
+  }
+
+  char* type = ASTtype_to_string(node->nodetype);
+  char s[256];
+  switch (node->nodetype) {
+    case A_NUMBER:
+      sprintf(s, "li $a0, %d", node->value);
+      emit_line(fp, s, "Expression is a constant");
+    case A_VARIABLE:
+    case A_FUNCTION_CALL:
+    case A_EXPRESSION:
+    default:
+      printf("emit_expression(): unhandled nodetype: %s\n", type);
+      // exit(1);
+  } // end of switch
+
+}
+
+// PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function tail
 void emit_function_tail(ASTnode* p, FILE* fp) {
 
-  emit_command(fp, "", "li $a0, 0", "restore RA");
-  emit_command(fp, "", "lw $ra, 4($sp)", "restore old environment RA");
-  emit_command(fp, "", "lw $sp, ($sp)", "Return from function store SP");
+  emit_line(fp, "li $a0, 0", "restore RA");
+  emit_line(fp, "lw $ra, 4($sp)", "restore old environment RA");
+  emit_line(fp, "lw $sp, ($sp)", "Return from function store SP");
   fprintf(fp, "\n");
 
   if (strcmp(p->name, "main") == 0) {
-    emit_command(fp, "", "li $v0, 10", "Exit from Main we are done");
-    emit_command(fp, "", "syscall", "EXIT everything");
+    emit_line(fp, "li $v0, 10", "Exit from Main we are done");
+    emit_line(fp, "syscall", "EXIT everything");
     // li $v0, 10		# Exit from Main we are done
 	  // syscall			# EXIT everything
   } else {
     // TODO! normal function return;
     printf("# TODO! normal function return;\n");
-    exit(1);
+    // exit(1);
   }
 
 }
@@ -238,12 +268,14 @@ CallbackFn emit_write(ASTnode* p, FILE* fp) {
     // String
     char s[100];
     sprintf(s, "la $a0, %s", p->label);
-    emit_command(fp, "", "li $v0, 4", "# print a string");
-    emit_command(fp, "", s, "# print fetch string location");
-    emit_command(fp, "", "syscall", "Perform a write string");
+    emit_line(fp, "li $v0, 4", "# print a string");
+    emit_line(fp, s, "# print fetch string location");
+    emit_line(fp, "syscall", "Perform a write string");
   } else {
-
     // Expression
+    // emit_expression(p->s1, fp);
+    emit_line(fp, "li $v0, 1", "# print the number");
+    emit_line(fp, "syscall", "#system call for print number");
 
   }
 

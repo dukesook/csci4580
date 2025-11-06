@@ -35,6 +35,10 @@ CallbackFn emit_node(ASTnode*, FILE*);
 // POST: Emits a MIPS command with optional label and comment
 void emit_command(FILE*, char* label, char* command, char* comment);
 
+// PRE: file pointer fp, char pointer line, char pointer comment
+// POST: Emits a line of MIPS code with an optional comment
+void emit_line(FILE*, char* line, char* comment);
+
 // PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
 // POST: Traverses the AST and applies the given function to each node
 void emit_traverse_ast(ASTnode*, FILE*, EmitFunction);
@@ -50,6 +54,10 @@ CallbackFn emit_string(ASTnode*, FILE*);
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function declarations
 CallbackFn emit_function_declaration(ASTnode*, FILE*);
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for expressions
+CallbackFn emit_expression(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function tail
