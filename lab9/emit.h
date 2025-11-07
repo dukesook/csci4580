@@ -64,6 +64,10 @@ CallbackFn emit_expression(ASTnode*, FILE*);
 void emit_function_tail(ASTnode* p, FILE* fp);
 
 // PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for read statements
+CallbackFn emit_read(ASTnode*, FILE*);
+
+// PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for write statements
 CallbackFn emit_write(ASTnode*, FILE*);
 

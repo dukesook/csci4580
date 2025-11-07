@@ -3,6 +3,8 @@
   "files.associations": {
     "*.ejs": "html",
     "*.yarrrml": "yaml",
-    "functional": "c"
+    "*.al": "plaintext",
+    "functional": "c",
+    "emit.h": "c"
   }
 }

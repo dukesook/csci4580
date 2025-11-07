@@ -55,6 +55,8 @@ CallbackFn emit_node(ASTnode* p, FILE* fp) {
     case A_VARDEC:
     case A_COMPOUND:
     case A_STMT_LIST:
+    case A_VOID_PARAM:
+    case A_VARIABLE:
       // do nothing
       break;
     case A_FUNCTIONDEC:
@@ -64,17 +66,17 @@ CallbackFn emit_node(ASTnode* p, FILE* fp) {
     case A_WRITE:
       emit_write(p, fp);
       break;
+    case A_READ:
+      emit_read(p, fp);
+      break;
     case A_PROTOTYPE:
     case A_FUNCTION_CALL:
     case A_ARG_LIST:
     case A_ARGUMENT:
     case A_NUMBER:
-    case A_VARIABLE:
     case A_BOOLEAN:
     case A_EXPRESSION:
-    case A_READ:
     case A_PARAM:
-    case A_VOID_PARAM:
     case A_EXPRESSION_STATEMENT:
     case A_ASSIGNMENT_STATEMENT:
     case A_ITERATION_STATEMENT:
@@ -226,8 +228,11 @@ CallbackFn emit_expression(ASTnode* node, FILE* fp) {
     case A_BOOLEAN:
     sprintf(line, "li $a0, %d", node->value);
     emit_line(fp, line, "Expression is a constant");
-      break;
+      return NULL;
     case A_VARIABLE:
+      emit_variable(node, fp); // $a0 is the location
+      emit_line(fp, "lw $a0, ($a0)", "Expression is a variable, get value");
+      return NULL;
     case A_FUNCTION_CALL:
     case A_EXPRESSION:
     default:
@@ -259,6 +264,17 @@ void emit_function_tail(ASTnode* p, FILE* fp) {
     // exit(1);
   }
 
+}
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for read statements
+CallbackFn emit_read(ASTnode* p, FILE* fp) {
+  emit_variable(p->s1, fp); // $a0 is the location
+  emit_line(fp, "li $v0, 5", "5 in $v0 means: Read an integer from the user");
+  emit_line(fp, "syscall", "READ INTEGER");
+  emit_line(fp, "sw $v0, ($a0)", "Store the read value into the variable");
+  fprintf(fp, "\n");
+  return NULL;
 }
 
 // PRE: ASTnode pointer p, file pointer fp
