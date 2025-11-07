@@ -305,8 +305,12 @@ CallbackFn emit_variable(ASTnode* p, FILE* fp) {
     return NULL;
   }
 
+  char s[256];
+
   if (p->symbol->level == 0) {
     // Global variable
+    sprintf(s, "la $a0, %s", p->name); // load address of global variable into $a0
+    emit_line(fp, s, "EMIT Var global variable");
   } else {
     // Local variable
     printf("TODO - emit_variable() for local variable\n");
