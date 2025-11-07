@@ -67,6 +67,10 @@ void emit_function_tail(ASTnode* p, FILE* fp);
 // POST: Emits MIPS code for write statements
 CallbackFn emit_write(ASTnode*, FILE*);
 
+// PRE: ASTnode pointer p, file pointer fp
+// POST: $a0 will be the memory location of the varible.
+CallbackFn emit_variable(ASTnode*, FILE*);
+
 // PRE: char pointer label
 // POST: Creates and returns a unique label string
 char* emit_create_label();

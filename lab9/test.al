@@ -1,9 +1,6 @@
-int A[100];
 int x;
 
-int main(int x)
+int main(void)
 begin
-  write "hello world\n";
-  write false;
-  write "\n";
+  read x;
 end

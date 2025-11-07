@@ -261,7 +261,6 @@ void emit_function_tail(ASTnode* p, FILE* fp) {
 
 }
 
-
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for write statements
 CallbackFn emit_write(ASTnode* p, FILE* fp) {
@@ -290,6 +289,31 @@ CallbackFn emit_write(ASTnode* p, FILE* fp) {
   return NULL;
 
 } // end of emit_write()
+
+// PRE: ASTnode pointer p, file pointer fp
+// POST: $a0 will be the memory location of the varible.
+CallbackFn emit_variable(ASTnode* p, FILE* fp) {
+// Variables are either global or local.
+//   1. global - the start point is where the label is located
+//   2. local - it is stack pointer + offset (WSIZE).
+// Variables are either array or scalar.
+//    For arrays, add internal offset.
+
+  if (!p) {
+    return NULL;
+  } else if (!p->symbol) {
+    return NULL;
+  }
+
+  if (p->symbol->level == 0) {
+    // Global variable
+  } else {
+    // Local variable
+    printf("TODO - emit_variable() for local variable\n");
+    exit(1);
+  }
+
+}
 
 // PRE: None
 // POST: Creates and returns a unique label string
