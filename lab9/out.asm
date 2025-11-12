@@ -4,6 +4,8 @@
 _L0:  .asciiz "enter a number "
 _L1:  .asciiz "the number you entered is: "
 _L2:  .asciiz "\n"
+_L3:  .asciiz "my favorite number is: "
+_L4:  .asciiz "\n"
 
 .align 2
 x: .space 4  # global variable
@@ -14,7 +16,7 @@ x: .space 4  # global variable
 # Function Declaration
 main:			# Start of function
 
-	subu $a0, $sp, 8		# adjust the stack for function setup
+	subu $a0, $sp, 12		# adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
@@ -50,6 +52,26 @@ main:			# Start of function
 # WRITE statement
 	li $v0, 4		# # print a string
 	la $a0, _L2		# # print fetch string location
+	syscall		# Perform a write string
+
+
+# WRITE statement
+	li $v0, 4		# # print a string
+	la $a0, _L3		# # print fetch string location
+	syscall		# Perform a write string
+
+
+# WRITE statement
+	li $a0, 1000		# Expression is a constant
+	li $v0, 1		# # print the number
+	syscall		# #system call for print number
+
+
+
+
+# WRITE statement
+	li $v0, 4		# # print a string
+	la $a0, _L4		# # print fetch string location
 	syscall		# Perform a write string
 
 
