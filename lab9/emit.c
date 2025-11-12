@@ -267,9 +267,23 @@ void emit_assignment_statement(ASTnode* p, FILE* fp) {
     exit(1);
   }
 
-  
-  printf("TODO\n");
+  char s[256];
 
+  fprintf(fp, "\n");
+  emit_comment(fp, "ASSIGNMENT statement");
+
+  // ---- Right Hand Side ----
+  // emit_line(fp, "li $a0, 5", "expression is a constant");
+  emit_expression(p->s2, fp); // compute RHS → $a0
+  emit_line(fp, "sw $a0, 8($sp)", "Assign store RHS temporarily");
+  
+  // ---- Left Hand Side (still hardcoded for now) ----
+  sprintf(s, "la $a0, %s", p->s1->name);
+  emit_line(fp, s, "EMIT Var global variable");
+  emit_line(fp, "lw $a1, 8($sp)", "Assign get RHS temporarily");
+  emit_line(fp, "sw $a1, ($a0)", "Assign place RHS into memory");
+
+  fprintf(fp, "\n");
   // y = 5;
 	// li $a0, 5		# expression is a constant
 	// sw $a0 8($sp)		# Assign store RHS temporarily
