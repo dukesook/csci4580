@@ -189,6 +189,8 @@ CallbackFn emit_string(ASTnode* node, FILE* fp) {
 // POST: Emits MIPS code for function declarations
 CallbackFn emit_function_declaration(ASTnode* p, FILE* fp) {
 
+  emit_comment(fp, "Function Declaration");
+
   char s[256];
   int size = p->symbol->offset * WSIZE; // size in bytes
   sprintf(s, "subu $a0, $sp, %d", size);
@@ -248,12 +250,15 @@ CallbackFn emit_expression(ASTnode* node, FILE* fp) {
 // POST: Emits MIPS code for function tail
 void emit_function_tail(ASTnode* p, FILE* fp) {
 
+  emit_comment(fp, "Function Return");
+
   emit_line(fp, "li $a0, 0", "restore RA");
   emit_line(fp, "lw $ra, 4($sp)", "restore old environment RA");
   emit_line(fp, "lw $sp, ($sp)", "Return from function store SP");
   fprintf(fp, "\n");
 
   if (strcmp(p->name, "main") == 0) {
+    emit_comment(fp, "Exit from main function");
     emit_line(fp, "li $v0, 10", "Exit from Main we are done");
     emit_line(fp, "syscall", "EXIT everything");
     // li $v0, 10		# Exit from Main we are done
@@ -269,6 +274,7 @@ void emit_function_tail(ASTnode* p, FILE* fp) {
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for read statements
 CallbackFn emit_read(ASTnode* p, FILE* fp) {
+  emit_comment(fp, "READ statement");
   emit_variable(p->s1, fp); // $a0 is the location
   emit_line(fp, "li $v0, 5", "5 in $v0 means: Read an integer from the user");
   emit_line(fp, "syscall", "READ INTEGER");
@@ -283,6 +289,8 @@ CallbackFn emit_write(ASTnode* p, FILE* fp) {
   // There are type types of write:
   //    1. String
   //    2. Expression
+
+  emit_comment(fp, "WRITE statement");
 
   if (p->name) {
     // String
@@ -353,3 +361,9 @@ void emit_debug(ASTnode* node, FILE* fp) {
 
   fprintf(stdout, "# Node Type: %s\n", ASTtype_to_string(node->nodetype));
 } // end of emit_debug()
+
+// PRE: file pointer fp, char pointer comment
+// POST: Emits a comment line in MIPS code
+void emit_comment(FILE* fp, char* comment) {
+  fprintf(fp, "# %s\n", comment);
+}

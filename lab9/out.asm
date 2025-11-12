@@ -11,6 +11,7 @@ x: .space 4  # global variable
 .text
 
 .globl main
+# Function Declaration
 main:			# Start of function
 
 	subu $a0, $sp, 8		# adjust the stack for function setup
@@ -19,21 +20,25 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
+# WRITE statement
 	li $v0, 4		# # print a string
 	la $a0, _L0		# # print fetch string location
 	syscall		# Perform a write string
 
 
+# READ statement
 	la $a0, x		# EMIT Var global variable
 	li $v0, 5		# 5 in $v0 means: Read an integer from the user
 	syscall		# READ INTEGER
 	sw $v0, ($a0)		# Store the read value into the variable
 
+# WRITE statement
 	li $v0, 4		# # print a string
 	la $a0, _L1		# # print fetch string location
 	syscall		# Perform a write string
 
 
+# WRITE statement
 	la $a0, x		# EMIT Var global variable
 	lw $a0, ($a0)		# Expression is a variable, get value
 	li $v0, 1		# # print the number
@@ -42,14 +47,17 @@ main:			# Start of function
 
 
 
+# WRITE statement
 	li $v0, 4		# # print a string
 	la $a0, _L2		# # print fetch string location
 	syscall		# Perform a write string
 
 
+# Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
 	lw $sp, ($sp)		# Return from function store SP
 
+# Exit from main function
 	li $v0, 10		# Exit from Main we are done
 	syscall		# EXIT everything

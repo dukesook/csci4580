@@ -83,6 +83,10 @@ char* emit_create_label();
 // POST: Emits debug information for the given AST node
 void emit_debug(ASTnode*, FILE*);
 
+// PRE: file pointer fp, char pointer comment
+// POST: Emits a comment line in MIPS code
+void emit_comment(FILE* fp, char* comment);
+
 
 #endif // EMIT_H
 
