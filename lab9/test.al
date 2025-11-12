@@ -2,5 +2,5 @@ int y;
 
 int main(void)
 begin
-  5;
+  y = 5;
 end

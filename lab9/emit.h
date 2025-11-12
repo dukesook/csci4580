@@ -59,6 +59,10 @@ void emit_function_declaration(ASTnode*, FILE*);
 void emit_expression(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for assignment statements
+void emit_assignment_statement(ASTnode*, FILE*);
+
+// PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for read statements
 void emit_read(ASTnode*, FILE*);
 

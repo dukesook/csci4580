@@ -72,6 +72,9 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_EXPRESSION_STATEMENT:
       emit_expression(p, fp);
       break;
+    case A_ASSIGNMENT_STATEMENT:
+      emit_assignment_statement(p, fp);
+      break;
     case A_PROTOTYPE:
     case A_FUNCTION_CALL:
     case A_ARG_LIST:
@@ -80,7 +83,6 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_BOOLEAN:
     case A_EXPRESSION:
     case A_PARAM:
-    case A_ASSIGNMENT_STATEMENT:
     case A_ITERATION_STATEMENT:
     case A_SELECTION_STATEMENT:
     case A_SELECTION_BODY:
@@ -257,6 +259,25 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
 }
 
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for assignment statements
+void emit_assignment_statement(ASTnode* p, FILE* fp) {
+  if (!p) {
+    printf("emit_assignment_statement(): NULL pointer\n");
+    exit(1);
+  }
+
+  
+  printf("TODO\n");
+
+  // y = 5;
+	// li $a0, 5		# expression is a constant
+	// sw $a0 8($sp)		# Assign store RHS temporarily
+	// la $a0, y		# EMIT Var global variable
+	// lw $a1 8($sp)		# Assign get RHS temporarily
+	// sw $a1 ($a0)		# Assign place RHS into memory
+
+}
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for read statements
