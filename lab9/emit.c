@@ -245,8 +245,10 @@ void emit_expression(ASTnode* node, FILE* fp) {
       emit_variable(node, fp); // $a0 is the location
       emit_line(fp, "lw $a0, ($a0)", "Expression is a variable, get value");
       return;
-    case A_FUNCTION_CALL:
+    case A_EXPRESSION_STATEMENT:
+      emit_expression(node->s1, fp);
     case A_EXPRESSION:
+    case A_FUNCTION_CALL:
     default:
       printf("emit_expression(): unhandled nodetype: %s\n", type);
       // exit(1);
