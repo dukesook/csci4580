@@ -1,14 +1,8 @@
 # MIPS code generated from AST
 
 .data
-_L0:  .asciiz "enter a number "
-_L1:  .asciiz "the number you entered is: "
-_L2:  .asciiz "\n"
-_L3:  .asciiz "my favorite number is: "
-_L4:  .asciiz "\n"
 
 .align 2
-x: .space 4  # global variable
 
 .text
 
@@ -20,59 +14,6 @@ main:			# Start of function
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
-
-
-# WRITE statement
-	li $v0, 4		# # print a string
-	la $a0, _L0		# # print fetch string location
-	syscall		# Perform a write string
-
-
-# READ statement
-	la $a0, x		# EMIT Var global variable
-	li $v0, 5		# 5 in $v0 means: Read an integer from the user
-	syscall		# READ INTEGER
-	sw $v0, ($a0)		# Store the read value into the variable
-
-# WRITE statement
-	li $v0, 4		# # print a string
-	la $a0, _L1		# # print fetch string location
-	syscall		# Perform a write string
-
-
-# WRITE statement
-	la $a0, x		# EMIT Var global variable
-	lw $a0, ($a0)		# Expression is a variable, get value
-	li $v0, 1		# # print the number
-	syscall		# #system call for print number
-
-
-
-
-# WRITE statement
-	li $v0, 4		# # print a string
-	la $a0, _L2		# # print fetch string location
-	syscall		# Perform a write string
-
-
-# WRITE statement
-	li $v0, 4		# # print a string
-	la $a0, _L3		# # print fetch string location
-	syscall		# Perform a write string
-
-
-# WRITE statement
-	li $a0, 1000		# Expression is a constant
-	li $v0, 1		# # print the number
-	syscall		# #system call for print number
-
-
-
-
-# WRITE statement
-	li $v0, 4		# # print a string
-	la $a0, _L4		# # print fetch string location
-	syscall		# Perform a write string
 
 
 # Function Return

@@ -69,6 +69,9 @@ CallbackFn emit_node(ASTnode* p, FILE* fp) {
     case A_READ:
       emit_read(p, fp);
       break;
+    case A_EXPRESSION_STATEMENT:
+      emit_expression(p, fp);
+      break;
     case A_PROTOTYPE:
     case A_FUNCTION_CALL:
     case A_ARG_LIST:
@@ -77,7 +80,6 @@ CallbackFn emit_node(ASTnode* p, FILE* fp) {
     case A_BOOLEAN:
     case A_EXPRESSION:
     case A_PARAM:
-    case A_EXPRESSION_STATEMENT:
     case A_ASSIGNMENT_STATEMENT:
     case A_ITERATION_STATEMENT:
     case A_SELECTION_STATEMENT:
