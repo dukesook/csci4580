@@ -16,8 +16,7 @@ Enhancements:
 #include "ast.h"
 
 
-typedef void (*CallbackFn)(ASTnode*, FILE*);
-typedef CallbackFn (*EmitFunction)(ASTnode*, FILE*);
+typedef void (*EmitFunction)(ASTnode*, FILE*);
 
 #define WSIZE 4
 #define LOG_WSIZE 2
@@ -45,11 +44,11 @@ void emit_traverse_ast(ASTnode*, FILE*, EmitFunction);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits global variable declarations in MIPS code
-CallbackFn emit_global_variable(ASTnode*, FILE*);
+void emit_global_variable(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits string literals in MIPS code
-CallbackFn emit_string(ASTnode*, FILE*);
+void emit_string(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function declarations
@@ -57,19 +56,19 @@ void emit_function_declaration(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for expressions
-CallbackFn emit_expression(ASTnode*, FILE*);
+void emit_expression(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for read statements
-CallbackFn emit_read(ASTnode*, FILE*);
+void emit_read(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for write statements
-CallbackFn emit_write(ASTnode*, FILE*);
+void emit_write(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: $a0 will be the memory location of the varible.
-CallbackFn emit_variable(ASTnode*, FILE*);
+void emit_variable(ASTnode*, FILE*);
 
 // PRE: char pointer label
 // POST: Creates and returns a unique label string

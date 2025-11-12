@@ -129,30 +129,26 @@ void emit_traverse_ast(ASTnode* node, FILE* fp, EmitFunction function) {
   }
   
   // Process current node
-  CallbackFn callback = function(node, fp);
+  function(node, fp);
 
   // Traverse children
   emit_traverse_ast(node->s1, fp, function);
   emit_traverse_ast(node->s2, fp, function);
 
-  // Run callback() if provided
-  if (callback) {
-    callback(node, fp);
-  }
 
 } // end of emit_traverse_ast()
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits global variable declarations in MIPS code
-CallbackFn emit_global_variable(ASTnode* node, FILE* fp) {
+void emit_global_variable(ASTnode* node, FILE* fp) {
   if (!node) {
-    return NULL;
+    return;
   }
 
   if (!node->symbol) {
-    return NULL;// No symbol table entry
+    return;// No symbol table entry
   } else if (node->symbol->level != 0) {
-    return NULL;// Not a global variable
+    return;// Not a global variable
   }
 
   if (node->nodetype == A_VARDEC) {
@@ -165,24 +161,24 @@ CallbackFn emit_global_variable(ASTnode* node, FILE* fp) {
     fprintf(fp, "%s: .space %d  # global variable\n", node->name, size);
   }
 
-  return NULL;
+  return;
 
 } // end of emit_global_variable()
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits string literals in MIPS code
-CallbackFn emit_string(ASTnode* node, FILE* fp) {
+void emit_string(ASTnode* node, FILE* fp) {
   
   if (node->nodetype != A_WRITE) {
-    return NULL;
+    return;
   } else if (node->name == NULL) {
-    return NULL;
+    return;
   }
 
   node->label = emit_create_label();
   fprintf(fp, "%s:  .asciiz %s\n", node->label, node->name);
 
-  return NULL;
+  return;
 
 } // end of emit_string()
 
@@ -230,10 +226,10 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for expressions
-CallbackFn emit_expression(ASTnode* node, FILE* fp) {
+void emit_expression(ASTnode* node, FILE* fp) {
 
   if (!node) {
-    return NULL;
+    return;
   }
 
   char* type = ASTtype_to_string(node->nodetype);
@@ -244,11 +240,11 @@ CallbackFn emit_expression(ASTnode* node, FILE* fp) {
     case A_BOOLEAN:
     sprintf(line, "li $a0, %d", node->value);
     emit_line(fp, line, "Expression is a constant");
-      return NULL;
+      return;
     case A_VARIABLE:
       emit_variable(node, fp); // $a0 is the location
       emit_line(fp, "lw $a0, ($a0)", "Expression is a variable, get value");
-      return NULL;
+      return;
     case A_FUNCTION_CALL:
     case A_EXPRESSION:
     default:
@@ -256,26 +252,25 @@ CallbackFn emit_expression(ASTnode* node, FILE* fp) {
       // exit(1);
   } // end of switch
 
-  return NULL;
 
 }
 
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for read statements
-CallbackFn emit_read(ASTnode* p, FILE* fp) {
+void emit_read(ASTnode* p, FILE* fp) {
   emit_comment(fp, "READ statement");
   emit_variable(p->s1, fp); // $a0 is the location
   emit_line(fp, "li $v0, 5", "5 in $v0 means: Read an integer from the user");
   emit_line(fp, "syscall", "READ INTEGER");
   emit_line(fp, "sw $v0, ($a0)", "Store the read value into the variable");
   fprintf(fp, "\n");
-  return NULL;
+  return;
 }
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for write statements
-CallbackFn emit_write(ASTnode* p, FILE* fp) {
+void emit_write(ASTnode* p, FILE* fp) {
   // There are type types of write:
   //    1. String
   //    2. Expression
@@ -300,13 +295,12 @@ CallbackFn emit_write(ASTnode* p, FILE* fp) {
   fprintf(fp, "\n");
   fprintf(fp, "\n");
 
-  return NULL;
 
 } // end of emit_write()
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: $a0 will be the memory location of the varible.
-CallbackFn emit_variable(ASTnode* p, FILE* fp) {
+void emit_variable(ASTnode* p, FILE* fp) {
 // Variables are either global or local.
 //   1. global - the start point is where the label is located
 //   2. local - it is stack pointer + offset (WSIZE).
@@ -314,9 +308,9 @@ CallbackFn emit_variable(ASTnode* p, FILE* fp) {
 //    For arrays, add internal offset.
 
   if (!p) {
-    return NULL;
+    return;
   } else if (!p->symbol) {
-    return NULL;
+    return;
   }
 
   char s[256];
