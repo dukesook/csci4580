@@ -4,7 +4,7 @@
 
 .align 2 
 
-yolo: .space 4 # global variable
+z: .space 4 # global variable
 
 .text  
 
@@ -20,7 +20,7 @@ main:			# START of FUNCION
 
 	li $a0, 5		# expression is a constant
 	sw $a0 8($sp)		# Assign store RHS temporarily
-	la $a0, yolo		# EMIT Var global variable
+	la $a0, z		# EMIT Var global variable
 	lw $a1 8($sp)		# Assign get RHS temporarily
 	sw $a1 ($a0)		# Assign place RHS into memory
 	li $a0, 0		# RETURN has no specified value set to 0

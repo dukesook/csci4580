@@ -1,6 +1,6 @@
-int yolo;
+int z;
 
 int main(void)
 begin
-  yolo = 5;
+  z = 5;
 end
