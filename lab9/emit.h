@@ -29,11 +29,11 @@ void EMIT(ASTnode*, FILE*);
 // PRE: Pointer to astnode
 // POST: Main driver for walking out AST Tree to produce
 //     MIPS code by calling appropriate helper functions
-CallbackFn emit_node(ASTnode*, FILE*);
+void emit_ast(ASTnode*, FILE*);
 
 // PRE: file pointer fp, char pointers label, command, comment
 // POST: Emits a MIPS command with optional label and comment
-void emit_command(FILE*, char* label, char* command, char* comment);
+void emit(FILE*, char* label, char* command, char* comment);
 
 // PRE: file pointer fp, char pointer line, char pointer comment
 // POST: Emits a line of MIPS code with an optional comment
@@ -53,15 +53,11 @@ CallbackFn emit_string(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function declarations
-CallbackFn emit_function_declaration(ASTnode*, FILE*);
+void emit_function_declaration(ASTnode*, FILE*);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for expressions
 CallbackFn emit_expression(ASTnode*, FILE*);
-
-// PRE: ASTnode pointer p, file pointer fp
-// POST: Emits MIPS code for function tail
-void emit_function_tail(ASTnode* p, FILE* fp);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for read statements
