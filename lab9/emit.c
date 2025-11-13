@@ -14,6 +14,25 @@ Enhancements:
 
 #include "emit.h"
 
+static void emit_ast(ASTnode*, FILE*);
+static void emit(FILE*, char* label, char* command, char* comment);
+static void emit_line(FILE*, char* line, char* comment);
+static void emit_traverse_ast(ASTnode*, FILE*, EmitFunction);
+static void emit_global_variable(ASTnode*, FILE*);
+static void emit_string(ASTnode*, FILE*);
+static void emit_function_declaration(ASTnode*, FILE*);
+static void emit_expression(ASTnode*, FILE*);
+static void emit_assignment_statement(ASTnode*, FILE*);
+static void emit_read(ASTnode*, FILE*);
+static void emit_write(ASTnode*, FILE*);
+static void emit_variable(ASTnode*, FILE*);
+static void emit_debug(ASTnode*, FILE*);
+static void emit_comment(FILE* fp, char* comment);
+static void emit_call(ASTnode*, FILE*);
+static void emit_if(ASTnode*, FILE*);
+static void emit_while(ASTnode*, FILE*);
+static char* emit_create_label();
+
 // PRE: ASTnode pointer p, file pointer fp
 // POST: All MIPS code directly and through helper functions
 //       prints in the file via the file pointer.
@@ -124,6 +143,16 @@ void emit(FILE* fp, char* label, char* command, char* comment) {
 void emit_line(FILE* fp, char* line, char* comment) {
   emit(fp, "", line, comment);
 }
+
+void emit_if(ASTnode* p, FILE* fp) {
+  // TODO - implement emit_if()
+  // Explained in 2nd half of lecture on November 13
+} // end of emit_if()
+
+void emit_while(ASTnode* p, FILE* fp) {
+  // TODO - implement emit_while()
+  // Explained in 2nd half of lecture on November 13
+} // end of emit_while()
 
 // PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
 // POST: Traverses the AST and applies the given function to each node
