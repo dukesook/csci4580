@@ -14,6 +14,7 @@ Enhancements:
 
 #include "emit.h"
 
+// Prototypes
 static void emit_ast(ASTnode*, FILE*);
 static void emit(FILE*, char* label, char* command, char* comment);
 static void emit_line(FILE*, char* line, char* comment);
@@ -32,6 +33,7 @@ static void emit_call(ASTnode*, FILE*);
 static void emit_if(ASTnode*, FILE*);
 static void emit_while(ASTnode*, FILE*);
 static char* emit_create_label();
+
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: All MIPS code directly and through helper functions

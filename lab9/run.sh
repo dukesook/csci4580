@@ -2,7 +2,6 @@ clear
 clear
 
 TEST_FILE="test.al"
-RUN_SCOOPER=1
 
 # Compile test.al to out.asm
 make && ./lab9 -o out.asm < "$TEST_FILE"
@@ -16,7 +15,7 @@ else
   echo "Created out.asm"
 fi
 
-if [ $RUN_SCOOPER -eq 1 ]
+if [ -x ~scooper/lab9 ]
   then
     ~scooper/lab9 -o scooper < "$TEST_FILE"
     if [ $? -ne 0 ]
@@ -27,7 +26,7 @@ if [ $RUN_SCOOPER -eq 1 ]
     else
       echo ""
       echo "Scooper created scooper.asm"
-    fi  
+    fi 
 fi
 
 
