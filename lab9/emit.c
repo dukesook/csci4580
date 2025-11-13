@@ -75,8 +75,10 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_ASSIGNMENT_STATEMENT:
       emit_assignment_statement(p, fp);
       break;
-    case A_PROTOTYPE:
     case A_FUNCTION_CALL:
+      emit_call(p, fp);
+      break;
+    case A_PROTOTYPE:
     case A_ARG_LIST:
     case A_ARGUMENT:
     case A_NUMBER:
@@ -227,7 +229,7 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
 }
 
 // PRE: ASTnode pointer p, file pointer fp
-// POST: Emits MIPS code for expressions
+// POST: MIPS Code so that $a0 has the return value
 void emit_expression(ASTnode* node, FILE* fp) {
 
   if (!node) {
@@ -237,6 +239,7 @@ void emit_expression(ASTnode* node, FILE* fp) {
   char* type = ASTtype_to_string(node->nodetype);
   char line[256];
 
+  // Check all nodes in "Expression Family"
   switch (node->nodetype) {
     case A_NUMBER:
     case A_BOOLEAN:
@@ -248,6 +251,7 @@ void emit_expression(ASTnode* node, FILE* fp) {
       emit_line(fp, "lw $a0, ($a0)", "Expression is a variable, get value");
       return;
     case A_EXPRESSION_STATEMENT:
+      // TODO - combine A_EXPRESSION_STATEMENT and A_EXPRESSION
       emit_expression(node->s1, fp);
     case A_EXPRESSION:
     case A_FUNCTION_CALL:
@@ -256,8 +260,38 @@ void emit_expression(ASTnode* node, FILE* fp) {
       // exit(1);
   } // end of switch
 
+  emit_expression(node->s1, fp); // $a0 has the result
+  // TODO - copy $a0 to SP+offset
+  emit_expression(node->s2, fp); // $a0 has the result
+  // TODO - move $a1 <- $a0
+  // now, $0 has LHS and $1 has RHS
+
+  char* operator = "";
+  switch(node->operator) {
+    case A_PLUS:
+      emit_line(fp, "add $a0, $a0, $a1", "Expression PLUS");
+      break;
+    case A_MINUS:
+      emit_line(fp, "sub $a0, $a0, $a1", "Expression MINUS");
+      break;
+    case A_TIMES:
+      emit_line(fp, "mul $a0, $a0, $a1", "Expression TIMES");
+      break;
+    case A_DIVIDE:
+      emit_line(fp, "div $a0, $a0, $a1", "Expression DIVIDE");
+      break;
+    default:
+      printf("emit_expression(): unhandled operator\n");
+      exit(1);
+  }
 
 }
+
+// PRE: 
+// POST: $a0 will have the return value
+void emit_call(ASTnode* p, FILE* fp) {
+
+} // end of emit_call()
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for assignment statements
@@ -335,8 +369,8 @@ void emit_write(ASTnode* p, FILE* fp) {
 
 } // end of emit_write()
 
-// PRE: ASTnode pointer p, file pointer fp
-// POST: $a0 will be the memory location of the varible.
+// PRE: Pointer to A_VARIABLE
+// POST: VAR in $a0
 void emit_variable(ASTnode* p, FILE* fp) {
 // Variables are either global or local.
 //   1. global - the start point is where the label is located
@@ -354,7 +388,8 @@ void emit_variable(ASTnode* p, FILE* fp) {
 
   if (p->symbol->level == 0) {
     // Global variable
-    sprintf(s, "la $a0, %s", p->name); // load address of global variable into $a0
+    // load address of global variable into $a0
+    sprintf(s, "la $a0, %s", p->name);
     emit_line(fp, s, "EMIT Var global variable");
   } else {
     // Local variable

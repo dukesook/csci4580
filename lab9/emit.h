@@ -21,6 +21,8 @@ typedef void (*EmitFunction)(ASTnode*, FILE*);
 #define WSIZE 4
 #define LOG_WSIZE 2
 
+void emit_call(ASTnode*, FILE*);
+
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Generates MIPS code from the AST and writes it to the file
 void EMIT(ASTnode*, FILE*);
