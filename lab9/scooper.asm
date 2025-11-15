@@ -1,13 +1,9 @@
 #  Compilers MIPS code 
 .data   
 
-_L0: .asciiz	 "hello world"
-_L1: .asciiz	 "\n"
 
 .align 2 
 
-A: .space 400 # global variable
-x: .space 4 # global variable
 
 .text  
 
@@ -22,21 +18,6 @@ main:			# START of FUNCION
 
 
 	sw $t0, 8($sp)		# Load temp variable int formal paramter
-	li $v0, 4		# #print a string
-	la $a0, _L0		# #print fetch string location
-	syscall		# Perform a write string
-
-
-	li $a0, 42		# expression is a constant
-	li $v0 1		# #   Print the number
-	syscall		# # system call for print number
-
-
-	li $v0, 4		# #print a string
-	la $a0, _L1		# #print fetch string location
-	syscall		# Perform a write string
-
-
 	li $a0, 0		# RETURN has no specified value set to 0
 	lw $ra 4($sp)		# restore old environment RA
 	lw $sp ($sp)		# Return from function store SP

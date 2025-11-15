@@ -44,7 +44,8 @@ void EMIT(ASTnode* root, FILE* fp) {
   
   // Data
   fprintf(fp, "\n.data\n");
-  emit_traverse_ast(root, fp, emit_string);
+  // emit_traverse_ast(root, fp, emit_string);
+  emit_string(root, fp);
   
   // Globals
   fprintf(fp, "\n.align 2\n");
@@ -163,13 +164,12 @@ void emit_traverse_ast(ASTnode* node, FILE* fp, EmitFunction function) {
     return;
   }
   
+  // Traverse children
+  emit_traverse_ast(node->s2, fp, function);
+  emit_traverse_ast(node->s1, fp, function);
+
   // Process current node
   function(node, fp);
-
-  // Traverse children
-  emit_traverse_ast(node->s1, fp, function);
-  emit_traverse_ast(node->s2, fp, function);
-
 
 } // end of emit_traverse_ast()
 
@@ -204,14 +204,17 @@ void emit_global_variable(ASTnode* node, FILE* fp) {
 // POST: Emits string literals in MIPS code
 void emit_string(ASTnode* node, FILE* fp) {
   
-  if (node->nodetype != A_WRITE) {
-    return;
-  } else if (node->name == NULL) {
+  if (!node) {
     return;
   }
 
-  node->label = emit_create_label();
-  fprintf(fp, "%s:  .asciiz %s\n", node->label, node->name);
+  if (node->nodetype == A_WRITE && node->name)  {
+    node->label = emit_create_label();
+    fprintf(fp, "%s:  .asciiz %s\n", node->label, node->name);
+  }
+
+  emit_string(node->s1, fp);
+  emit_string(node->s2, fp);
 
   return;
 
