@@ -19,7 +19,7 @@ else
 fi
 
 # if [ -x ~scooper/lab9 ]
-if [ -x scooperlab9 ]
+if [ -x ./tests/scooperlab9 ]
   then
     ./tests/scooperlab9 -o ${EXPECTED_ASM%.asm} < "$TEST_FILE"
     if [ $? -ne 0 ]

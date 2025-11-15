@@ -1,6 +1,9 @@
-int z;
+int A[100];
+int x;
 
-int main(void)
+int main(int x)
 begin
-  # z = 5;
+  write "hello world";
+  write 42;
+  write "\n";
 end
