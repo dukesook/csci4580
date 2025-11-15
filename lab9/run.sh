@@ -15,9 +15,10 @@ else
   echo "Created out.asm"
 fi
 
-if [ -x ~scooper/lab9 ]
+# if [ -x ~scooper/lab9 ]
+if [ -x scooperlab9 ]
   then
-    ~scooper/lab9 -o scooper < "$TEST_FILE"
+    ./scooperlab9 -o scooper < "$TEST_FILE"
     if [ $? -ne 0 ]
     then
       echo ""
