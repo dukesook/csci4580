@@ -2,11 +2,18 @@
 
 mkdir -p asm/output/
 mkdir -p asm/expected/
-
-(cd ..; make)
-
 SUCCESS=1
 COUNT=0
+
+# Build Project
+make -C .. > /dev/null
+if [ $? -ne 0 ]
+then
+  echo "error! Build failed."
+  exit 1
+fi
+
+
 
 for f in ./algo/good/*
 do
@@ -19,12 +26,13 @@ do
   # Run Scooper's Lab 9
   ./scooperlab9 -o "${EXPECTED%.asm}" < "$f" > /dev/null
 
-
+  # Compare the outputs
+  diff -u <(./normalize_mips.sh "$EXPECTED") <(./normalize_mips.sh "$OUTPUT")
   if [ $? -eq 0 ]; then
     let COUNT+=1
-    echo "Good Test: Passed $f"
+    echo "Test: Passed $f"
   else
-    echo "Good Test Failed: $f"
+    echo "Test: Failed!: $f"
     SUCCESS=0
   fi
 done
