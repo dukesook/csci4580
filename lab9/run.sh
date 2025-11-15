@@ -32,22 +32,21 @@ if [ -x scooperlab9 ]
     fi 
 fi
 
-# Compare out.asm to scooper.asm
-echo "TODO: Compare out.asm to ${EXPECTED_ASM}"
 
+# Function Definition
 normalize_mips() {
   local file="$1"
-  sed 's/#.*$//' "$file" |          # strip comments
-  sed 's/,//g' |                    # REMOVE COMMAS TODO: fix scooper
+  sed 's/#.*$//' "$file" |                     # strip comments
+  sed 's/,//g' |                               # REMOVE COMMAS TODO: fix scooper
   sed 's/^[[:space:]]*//;s/[[:space:]]*$//' |  # trim both ends
-  sed '/^$/d' |                     # drop blank lines
-  tr -s ' '                         # collapse multiple spaces to one
+  sed '/^$/d' |                                # drop blank lines
+  tr -s ' '                                    # collapse multiple spaces to one
 }
 
-
-if diff -u <(normalize_mips "$EXPECTED_ASM") <(normalize_mips "$OUTPUT"); then
-  echo "PASS"
+# Compare out.asm to scooper.asm
+if diff -u <(normalize_mips "$EXPECTED_ASM") <(normalize_mips "$OUTPUT")
+then
+  echo -e "\e[32mPASS\e[0m"
 else
-  echo "FAIL"
-  exit 1
+  echo -e "\e[31mFAIL\e[0m"
 fi
