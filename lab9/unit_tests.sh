@@ -6,8 +6,9 @@ SUCCESS=1
 COUNT=0
 
 # Good Tests
-for f in tests/good_al/*; do
-  ./lab9 -o out.asm < "$f" > /dev/null
+for f in tests/good_al/*
+do
+  ./lab9 -o out.asm < "$f" > /dev/null # creates out.asm
   if [ $? -eq 0 ]; then
     let COUNT+=1
     : # echo "Good Test: Passed $f"

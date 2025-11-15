@@ -4,6 +4,7 @@ clear
 TEST_FILE="test.al"
 OUTPUT="out.asm"
 EXPECTED_ASM="scooper.asm"
+NORMALIZE="./tests/normalize_mips.sh"
 
 # Compile test.al to out.asm
 make && ./lab9 -o out.asm < "$TEST_FILE"
@@ -33,18 +34,8 @@ if [ -x scooperlab9 ]
 fi
 
 
-# Function Definition
-normalize_mips() {
-  local file="$1"
-  sed 's/#.*$//' "$file" |                     # strip comments
-  sed 's/,//g' |                               # REMOVE COMMAS TODO: fix scooper
-  sed 's/^[[:space:]]*//;s/[[:space:]]*$//' |  # trim both ends
-  sed '/^$/d' |                                # drop blank lines
-  tr -s ' '                                    # collapse multiple spaces to one
-}
-
 # Compare out.asm to scooper.asm
-if diff -u <(normalize_mips "$EXPECTED_ASM") <(normalize_mips "$OUTPUT")
+if diff -u <($NORMALIZE "$EXPECTED_ASM") <($NORMALIZE "$OUTPUT")
 then
   echo -e "\e[32mPASS\e[0m"
 else
