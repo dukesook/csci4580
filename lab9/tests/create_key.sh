@@ -7,7 +7,7 @@ mkdir -p key
 EXE='~scooper/lab9'
 #EXE="../lab9"
 
-for filepath in good/*.al;
+for filepath in good_al/*.al;
 do
   FILE=$(basename "${filepath%.al}")
   ~scooper/lab9 -o "key/${FILE}"  < "$filepath"

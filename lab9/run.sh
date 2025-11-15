@@ -2,6 +2,8 @@ clear
 clear
 
 TEST_FILE="test.al"
+OUTPUT="out.asm"
+EXPECTED_ASM="scooper.asm"
 
 # Compile test.al to out.asm
 make && ./lab9 -o out.asm < "$TEST_FILE"
@@ -18,7 +20,7 @@ fi
 # if [ -x ~scooper/lab9 ]
 if [ -x scooperlab9 ]
   then
-    ./scooperlab9 -o scooper < "$TEST_FILE"
+    ./scooperlab9 -o ${EXPECTED_ASM%.asm} < "$TEST_FILE"
     if [ $? -ne 0 ]
     then
       echo ""
@@ -26,18 +28,26 @@ if [ -x scooperlab9 ]
       exit $EXIT_CODE
     else
       echo ""
-      echo "Scooper created scooper.asm"
+      echo "Scooper created ${EXPECTED_ASM}"
     fi 
 fi
 
+# Compare out.asm to scooper.asm
+echo "TODO: Compare out.asm to ${EXPECTED_ASM}"
 
-# if statement that always fails to skip running MARS during automated testing
-if [ 1 -eq 0 ]
-then
-  echo ""
-  echo ""
-  echo "Running MARS with out.asm"
+normalize_mips() {
+  local file="$1"
+  sed 's/#.*$//' "$file" |          # strip comments
+  sed 's/,//g' |                    # REMOVE COMMAS TODO: fix scooper
+  sed 's/^[[:space:]]*//;s/[[:space:]]*$//' |  # trim both ends
+  sed '/^$/d' |                     # drop blank lines
+  tr -s ' '                         # collapse multiple spaces to one
+}
 
-  java -jar Mars4_5.jar sm out.asm
+
+if diff -u <(normalize_mips "$EXPECTED_ASM") <(normalize_mips "$OUTPUT"); then
+  echo "PASS"
+else
+  echo "FAIL"
+  exit 1
 fi
-

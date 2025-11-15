@@ -6,7 +6,7 @@ SUCCESS=1
 COUNT=0
 
 # Good Tests
-for f in tests/good/*; do
+for f in tests/good_al/*; do
   ./lab9 -o out.asm < "$f" > /dev/null
   if [ $? -eq 0 ]; then
     let COUNT+=1
