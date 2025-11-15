@@ -21,7 +21,7 @@ fi
 # if [ -x ~scooper/lab9 ]
 if [ -x scooperlab9 ]
   then
-    ./scooperlab9 -o ${EXPECTED_ASM%.asm} < "$TEST_FILE"
+    ./tests/scooperlab9 -o ${EXPECTED_ASM%.asm} < "$TEST_FILE"
     if [ $? -ne 0 ]
     then
       echo ""
