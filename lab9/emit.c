@@ -27,13 +27,13 @@ static void emit_assignment_statement(ASTnode*, FILE*);
 static void emit_read(ASTnode*, FILE*);
 static void emit_write(ASTnode*, FILE*);
 static void emit_variable(ASTnode*, FILE*);
-static void emit_debug(ASTnode*, FILE*);
 static void emit_comment(FILE* fp, char* comment);
 static void emit_call(ASTnode*, FILE*);
 static void emit_if(ASTnode*, FILE*);
 static void emit_while(ASTnode*, FILE*);
-static char* emit_create_label();
-
+static void emit_parameter(ASTnode*, FILE*);
+static char* create_label();
+static char* create_temp_variable();
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: All MIPS code directly and through helper functions
@@ -100,13 +100,15 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_FUNCTION_CALL:
       emit_call(p, fp);
       break;
+    case A_PARAM:
+      emit_parameter(p, fp);
+      break;
     case A_PROTOTYPE:
     case A_ARG_LIST:
     case A_ARGUMENT:
     case A_NUMBER:
     case A_BOOLEAN:
     case A_EXPRESSION:
-    case A_PARAM:
     case A_ITERATION_STATEMENT:
     case A_SELECTION_STATEMENT:
     case A_SELECTION_BODY:
@@ -209,7 +211,7 @@ void emit_string(ASTnode* node, FILE* fp) {
   }
 
   if (node->nodetype == A_WRITE && node->name)  {
-    node->label = emit_create_label();
+    node->label = create_label();
     fprintf(fp, "%s:  .asciiz %s\n", node->label, node->name);
   }
 
@@ -239,6 +241,7 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
   fprintf(fp, "\n");
   fprintf(fp, "\n");
 
+  emit_ast(p->s1, fp); // Call for parameters (if any)
   emit_ast(p->s2, fp); // Call for compound statement (function body)
 
   emit_comment(fp, "Function Return");
@@ -433,27 +436,41 @@ void emit_variable(ASTnode* p, FILE* fp) {
 
 }
 
-// PRE: None
-// POST: Creates and returns a unique label string
-char* emit_create_label() {
-  static int label_count = 0;
-  char label[64];
-  sprintf(label, "_L%d", label_count++);
-  return strdup(label);
-} // end of emit_create_label()
-
-// PRE: ASTnode pointer p, file pointer fp
-// POST: Emits debug information for the given AST node
-void emit_debug(ASTnode* node, FILE* fp) {
-  if (!node) {
+// PRE:
+// POST:
+void emit_parameter(ASTnode* p, FILE* fp) {
+  if (!p) {
     return;
   }
 
-  fprintf(stdout, "# Node Type: %s\n", ASTtype_to_string(node->nodetype));
-} // end of emit_debug()
+  int offset = p->symbol->offset * WSIZE; // offset in bytes
+  char s[256];
+  char* temp_name = create_temp_variable();
+  sprintf(s, "sw $%s, %d($sp)", temp_name, offset);
+  emit_line(fp, s, "Load formal parameter into temp variable");
+
+} // end of emit_parameter()
 
 // PRE: file pointer fp, char pointer comment
 // POST: Emits a comment line in MIPS code
 void emit_comment(FILE* fp, char* comment) {
   fprintf(fp, "# %s\n", comment);
 }
+
+// PRE: None
+// POST: Creates and returns a unique label string
+char* create_label() {
+  static int label_count = 0;
+  char label[64];
+  sprintf(label, "_L%d", label_count++);
+  return strdup(label);
+} // end of create_label()
+
+// PRE:
+// POST:
+char* create_temp_variable() {
+  static int temp_count = 0;
+  char temp[64];
+  sprintf(temp, "t%d", temp_count++);
+  return strdup(temp);
+} // end of create_temp_variable()

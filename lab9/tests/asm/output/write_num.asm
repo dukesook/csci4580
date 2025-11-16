@@ -5,8 +5,8 @@ _L0:  .asciiz "hello world"
 _L1:  .asciiz "\n"
 
 .align 2
-x: .space 4  # global variable
 A: .space 400  # global variable
+x: .space 4  # global variable
 
 .text
 
@@ -20,6 +20,7 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
+	sw $t0, 8($sp)		# Load formal parameter into temp variable
 # WRITE statement
 	li $v0, 4		# # print a string
 	la $a0, _L0		# # print fetch string location

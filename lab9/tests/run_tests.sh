@@ -30,9 +30,9 @@ do
   diff -u <(./normalize_mips.sh "$EXPECTED") <(./normalize_mips.sh "$OUTPUT")
   if [ $? -eq 0 ]; then
     let COUNT+=1
-    echo "Test: Passed $f"
+    echo -e "Test $f: \e[32mPassed\e[0m"
   else
-    echo "Test: Failed!: $f"
+    echo -e "Test $f: \e[31mFailed!\e[0m"
     SUCCESS=0
   fi
 done
