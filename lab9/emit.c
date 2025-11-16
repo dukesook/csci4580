@@ -449,6 +449,8 @@ void emit_parameter(ASTnode* p, FILE* fp) {
   sprintf(s, "sw $%s, %d($sp)", temp_name, offset);
   emit_line(fp, s, "Load formal parameter into temp variable");
 
+  emit_ast(p->s1, fp); // Next parameter (if any)
+
 } // end of emit_parameter()
 
 // PRE: file pointer fp, char pointer comment
