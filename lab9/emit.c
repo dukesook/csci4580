@@ -32,6 +32,7 @@ static void emit_call(ASTnode*, FILE*);
 static void emit_if(ASTnode*, FILE*);
 static void emit_while(ASTnode*, FILE*);
 static void emit_parameter(ASTnode*, FILE*);
+static void emit_constant(ASTnode*, FILE*);
 static char* create_label();
 static char* create_temp_variable();
 
@@ -79,6 +80,7 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_STMT_LIST:
     case A_VOID_PARAM:
     case A_VARIABLE:
+    case A_EXPRESSION_STATEMENT:
       emit_ast(p->s1, fp);
       emit_ast(p->s2, fp);
       break;
@@ -91,9 +93,6 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_READ:
       emit_read(p, fp);
       break;
-    case A_EXPRESSION_STATEMENT:
-      emit_expression(p, fp);
-      break;
     case A_ASSIGNMENT_STATEMENT:
       emit_assignment_statement(p, fp);
       break;
@@ -103,12 +102,16 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_PARAM:
       emit_parameter(p, fp);
       break;
+    case A_EXPRESSION:
+      emit_expression(p, fp);
+      break;
+    case A_NUMBER:
+    case A_BOOLEAN:
+      emit_constant(p, fp);
+      break;
     case A_PROTOTYPE:
     case A_ARG_LIST:
     case A_ARGUMENT:
-    case A_NUMBER:
-    case A_BOOLEAN:
-    case A_EXPRESSION:
     case A_ITERATION_STATEMENT:
     case A_SELECTION_STATEMENT:
     case A_SELECTION_BODY:
@@ -278,18 +281,10 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
   // Check all nodes in "Expression Family"
   switch (node->nodetype) {
-    case A_NUMBER:
-    case A_BOOLEAN:
-    sprintf(line, "li $a0, %d", node->value);
-    emit_line(fp, line, "Expression is a constant");
-      return;
     case A_VARIABLE:
       emit_variable(node, fp); // $a0 is the location
       emit_line(fp, "lw $a0, ($a0)", "Expression is a variable, get value");
       return;
-    case A_EXPRESSION_STATEMENT:
-      // TODO - combine A_EXPRESSION_STATEMENT and A_EXPRESSION
-      emit_expression(node->s1, fp);
     case A_EXPRESSION:
     case A_FUNCTION_CALL:
     default:
@@ -458,6 +453,19 @@ void emit_parameter(ASTnode* p, FILE* fp) {
 void emit_comment(FILE* fp, char* comment) {
   fprintf(fp, "# %s\n", comment);
 }
+
+// PRE:
+// POST:
+void emit_constant(ASTnode* p, FILE* fp) {
+  if (!p) {
+    return;
+  }
+
+  char s[256];
+  sprintf(s, "li $a0, %d", p->value);
+  emit_line(fp, s, "Expression is a constant");
+}
+
 
 // PRE: None
 // POST: Creates and returns a unique label string

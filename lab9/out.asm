@@ -16,6 +16,7 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
+	li $a0, 5		# Expression is a constant
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
