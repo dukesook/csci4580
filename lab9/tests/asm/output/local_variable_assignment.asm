@@ -10,7 +10,7 @@
 # Function Declaration
 main:			# Start of function
 
-	subu $a0, $sp, 20		# adjust the stack for function setup
+	subu $a0, $sp, 16		# adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
@@ -19,10 +19,10 @@ main:			# Start of function
 
 # ASSIGNMENT statement
 	li $a0, 5		# Expression is a constant
-	sw $a0, 16($sp)		# Assign store RHS temporarily
+	sw $a0, 12($sp)		# Assign store RHS temporarily
 	move $a0, $sp		# VAR local make a copy of stackpointer
-	addi $a0, $a0, 12		# EMIT Var local variable
-	lw $a1, 16($sp)		# Assign get RHS temporarily
+	addi $a0, $a0, 8		# EMIT Var local variable
+	lw $a1, 12($sp)		# Assign get RHS temporarily
 	sw $a1, ($a0)		# Assign place RHS into memory
 
 # Function Return

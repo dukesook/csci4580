@@ -338,10 +338,26 @@ void emit_assignment_statement(ASTnode* p, FILE* fp) {
   sprintf(s, "sw $a0, %d($sp)", rhs_offset);
   emit_line(fp, s, "Assign store RHS temporarily");
   
-  // ---- Left Hand Side (still hardcoded for now) ----
-  sprintf(s, "la $a0, %s", p->s1->name);
-  emit_line(fp, s, "EMIT Var global variable");
-  emit_line(fp, "lw $a1, 8($sp)", "Assign get RHS temporarily");
+  // ---- Left Hand Side ----
+  // TODO - local variable assignment
+  // Get Variable Address
+  if (p->s1->symbol->level == 0) {
+    // Global Varible
+    sprintf(s, "la $a0, %s", p->s1->name); // for global variable
+    emit_line(fp, s, "EMIT Var global variable");
+  } else {
+    emit_line(fp, "move $a0, $sp", "VAR local make a copy of stackpointer");
+
+    int offset = p->s1->symbol->offset * WSIZE;
+    sprintf(s, "addi $a0, $a0, %d", offset);
+    emit_line(fp, s, "EMIT Var local variable");
+  }
+
+  // Get RHS value
+  sprintf(s, "lw $a1, %d($sp)", rhs_offset);
+  emit_line(fp, s, "Assign get RHS temporarily");
+
+  // Assign RHS value to variable
   emit_line(fp, "sw $a1, ($a0)", "Assign place RHS into memory");
 
   fprintf(fp, "\n");
