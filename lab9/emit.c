@@ -33,8 +33,11 @@ static void emit_if(ASTnode*, FILE*);
 static void emit_while(ASTnode*, FILE*);
 static void emit_parameter(ASTnode*, FILE*);
 static void emit_constant(ASTnode*, FILE*);
+
+// Prototypes - Helpers
 static char* create_label();
 static char* create_temp_variable();
+static void assert_nodetype(ASTnode* node, enum ASTtype expected_type);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: All MIPS code directly and through helper functions
@@ -72,6 +75,10 @@ void emit_ast(ASTnode* p, FILE* fp) {
   }
 
   char* type = ASTtype_to_string(p->nodetype);
+
+  if (p->nodetype == A_STMT_LIST) {
+    printf("# Statement List\n");
+  }
 
   switch (p->nodetype) {
     case A_DEC_LIST:
@@ -272,29 +279,22 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
 // POST: MIPS Code so that $a0 has the return value
 void emit_expression(ASTnode* node, FILE* fp) {
 
-  if (!node) {
-    return;
-  }
+  assert_nodetype(node, A_EXPRESSION);
 
   char* type = ASTtype_to_string(node->nodetype);
   char line[256];
 
-  // Check all nodes in "Expression Family"
-  switch (node->nodetype) {
-    case A_VARIABLE:
-      emit_variable(node, fp); // $a0 is the location
-      emit_line(fp, "lw $a0, ($a0)", "Expression is a variable, get value");
-      return;
-    case A_EXPRESSION:
-    case A_FUNCTION_CALL:
-    default:
-      printf("emit_expression(): unhandled nodetype: %s\n", type);
-      // exit(1);
-  } // end of switch
 
-  emit_expression(node->s1, fp); // $a0 has the result
-  // TODO - copy $a0 to SP+offset
-  emit_expression(node->s2, fp); // $a0 has the result
+  // Left Hand Side
+  emit_ast(node->s1, fp); // $a0 has the result
+  emit_line(fp, "sw $a0, 8($sp)", "expression store LHS temporarily");
+
+  // Right Hand Side
+  emit_ast(node->s2, fp); // $a0 has the result
+  emit_line(fp, "move $a1, $a0", "Move RHS into $a1");
+
+  emit_line(fp, "lw $a0, 8($sp)", "expression restore LHS from memory");
+
   // TODO - move $a1 <- $a0
   // now, $0 has LHS and $1 has RHS
 
@@ -467,6 +467,9 @@ void emit_constant(ASTnode* p, FILE* fp) {
 }
 
 
+// Prototypes - Helpers
+
+
 // PRE: None
 // POST: Creates and returns a unique label string
 char* create_label() {
@@ -484,3 +487,15 @@ char* create_temp_variable() {
   sprintf(temp, "t%d", temp_count++);
   return strdup(temp);
 } // end of create_temp_variable()
+
+void assert_nodetype(ASTnode* node, enum ASTtype expected_type) {
+  if (!node) {
+    fprintf(stderr, "Error: Expected node type %s but got NULL\n",
+            ASTtype_to_string(expected_type));
+    exit(1);
+  } else if (node->nodetype != expected_type) {
+    fprintf(stderr, "Error: Expected node type %s but got %s\n",
+            ASTtype_to_string(expected_type), ASTtype_to_string(node->nodetype));
+    exit(1);
+  }
+}
