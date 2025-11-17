@@ -11,8 +11,8 @@ make && ./lab9 -o out.asm < "$TEST_FILE"
 if [ $? -ne 0 ]
 then
   echo ""
-  echo "Compilation failed with exit code $EXIT_CODE"
-  exit $EXIT_CODE
+  echo -e "./lab9 -o out.asm: \e[31mFailed!\e[0m"
+  exit 1
 else
   echo ""
   echo "Created out.asm"

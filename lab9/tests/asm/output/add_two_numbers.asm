@@ -19,7 +19,7 @@ main:			# Start of function
 	li $a0, 5		# Expression is a constant
 	sw $a0, 8($sp)		# expression store LHS temporarily
 	li $a0, 2		# Expression is a constant
-	move $a1, $a		# Move RHS into $a1
+	move $a1, $a0		# Move RHS into $a1
 	lw $a0, 8($sp)		# expression restore LHS from memory
 	add $a0, $a0, $a1		# Expression PLUS
 # Function Return

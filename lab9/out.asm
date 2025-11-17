@@ -16,11 +16,5 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-# Function Return
-	li $a0, 0		# restore RA
-	lw $ra, 4($sp)		# restore old environment RA
-	lw $sp, ($sp)		# Return from function store SP
 
-# Exit from main function
-	li $v0, 10		# Exit from Main we are done
-	syscall		# EXIT everything
+# ASSIGNMENT statement
