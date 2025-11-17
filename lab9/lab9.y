@@ -742,8 +742,8 @@ Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
 										$$ = ASTCreateNode(A_NUMBER);
 										$$->value = $1;
 										$$->datatype = A_INTTYPE;
-										/* $$->name = CreateTemp(); // temp 3/3 */
-										/* $$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE); */
+										$$->name = CreateTemp(); // temp 3/3
+										$$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, 0);
 									}
 	| Variable 			{
 										$$ = $1;

@@ -326,6 +326,7 @@ void emit_call(ASTnode* p, FILE* fp) {
 void emit_assignment_statement(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_ASSIGNMENT_STATEMENT);
+  int rhs_offset = p->s2->symbol->offset * WSIZE;
 
   char s[256];
 
@@ -333,9 +334,9 @@ void emit_assignment_statement(ASTnode* p, FILE* fp) {
   emit_comment(fp, "ASSIGNMENT statement");
 
   // ---- Right Hand Side ----
-  // emit_line(fp, "li $a0, 5", "expression is a constant");
   emit_ast(p->s2, fp); // compute RHS → $a0
-  emit_line(fp, "sw $a0, 8($sp)", "Assign store RHS temporarily");
+  sprintf(s, "sw $a0, %d($sp)", rhs_offset);
+  emit_line(fp, s, "Assign store RHS temporarily");
   
   // ---- Left Hand Side (still hardcoded for now) ----
   sprintf(s, "la $a0, %s", p->s1->name);

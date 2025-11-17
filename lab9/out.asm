@@ -19,7 +19,7 @@ main:			# Start of function
 
 # ASSIGNMENT statement
 	li $a0, 5		# Expression is a constant
-	sw $a0, 8($sp)		# Assign store RHS temporarily
+	sw $a0, 12($sp)		# Assign store RHS temporarily
 	la $a0, x		# EMIT Var global variable
 	lw $a1, 8($sp)		# Assign get RHS temporarily
 	sw $a1, ($a0)		# Assign place RHS into memory
