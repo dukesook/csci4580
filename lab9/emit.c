@@ -324,10 +324,8 @@ void emit_call(ASTnode* p, FILE* fp) {
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for assignment statements
 void emit_assignment_statement(ASTnode* p, FILE* fp) {
-  if (!p) {
-    printf("emit_assignment_statement(): NULL pointer\n");
-    exit(1);
-  }
+
+  assert_nodetype(p, A_ASSIGNMENT_STATEMENT);
 
   char s[256];
 
@@ -336,7 +334,7 @@ void emit_assignment_statement(ASTnode* p, FILE* fp) {
 
   // ---- Right Hand Side ----
   // emit_line(fp, "li $a0, 5", "expression is a constant");
-  emit_expression(p->s2, fp); // compute RHS → $a0
+  emit_ast(p->s2, fp); // compute RHS → $a0
   emit_line(fp, "sw $a0, 8($sp)", "Assign store RHS temporarily");
   
   // ---- Left Hand Side (still hardcoded for now) ----
