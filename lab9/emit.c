@@ -294,7 +294,7 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
   emit_line(fp, "lw $a0, 8($sp)", "expression restore LHS from memory");
 
-  char* operator = operator_to_string(node->operator);
+  const char* operator = operator_to_string(node->operator);
   switch(node->operator) {
     case A_PLUS:
       emit_line(fp, "add $a0, $a0, $a1", "Expression PLUS");

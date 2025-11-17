@@ -1,4 +1,4 @@
 void main(void)
 begin
-  5+2;
+  int x;
 end

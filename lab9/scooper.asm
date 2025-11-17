@@ -17,12 +17,6 @@ main:			# START of FUNCION
 	move $sp, $a0		# # adjust the stack pointer
 
 
-	li $a0, 5		# expression is a constant
-	sw $a0, 8($sp)		# expression store LHS temporarily
-	li $a0, 2		# expression is a constant
-	move $a1, $a0		# #right hand side needs to be a1
-	lw $a0, 8($sp)		# expression restore LHS from memory
-	add $a0, $a0, $a1		# #EXPR ADD
 	li $a0, 0		# RETURN has no specified value set to 0
 	lw $ra 4($sp)		# restore old environment RA
 	lw $sp ($sp)		# Return from function store SP
