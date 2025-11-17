@@ -284,7 +284,6 @@ void emit_expression(ASTnode* node, FILE* fp) {
   char* type = ASTtype_to_string(node->nodetype);
   char line[256];
 
-
   // Left Hand Side
   emit_ast(node->s1, fp); // $a0 has the result
   emit_line(fp, "sw $a0, 8($sp)", "expression store LHS temporarily");
@@ -295,10 +294,7 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
   emit_line(fp, "lw $a0, 8($sp)", "expression restore LHS from memory");
 
-  // TODO - move $a1 <- $a0
-  // now, $0 has LHS and $1 has RHS
-
-  char* operator = "";
+  char* operator = operator_to_string(node->operator);
   switch(node->operator) {
     case A_PLUS:
       emit_line(fp, "add $a0, $a0, $a1", "Expression PLUS");
