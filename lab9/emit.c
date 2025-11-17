@@ -339,13 +339,13 @@ void emit_assignment_statement(ASTnode* p, FILE* fp) {
   emit_line(fp, s, "Assign store RHS temporarily");
   
   // ---- Left Hand Side ----
-  // TODO - local variable assignment
   // Get Variable Address
   if (p->s1->symbol->level == 0) {
     // Global Varible
     sprintf(s, "la $a0, %s", p->s1->name); // for global variable
     emit_line(fp, s, "EMIT Var global variable");
   } else {
+    // Local Variable
     emit_line(fp, "move $a0, $sp", "VAR local make a copy of stackpointer");
 
     int offset = p->s1->symbol->offset * WSIZE;
