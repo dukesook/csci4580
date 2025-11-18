@@ -22,8 +22,7 @@ main:			# START of FUNCION
 	li $a0, 29		# expression is a constant
 	move $a1, $a0		# #right hand side needs to be a1
 	lw $a0, 8($sp)		# expression restore LHS from memory
-	mult $a0 $a1		# #EXPR MULT
-	mflo $a0		# #EXPR MULT
+	sub $a0, $a0, $a1		# #EXPR SUB
 	li $a0, 0		# RETURN has no specified value set to 0
 	lw $ra 4($sp)		# restore old environment RA
 	lw $sp ($sp)		# Return from function store SP

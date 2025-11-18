@@ -305,7 +305,8 @@ void emit_expression(ASTnode* node, FILE* fp) {
       emit_line(fp, "sub $a0, $a0, $a1", "Expression MINUS");
       break;
     case A_TIMES:
-      emit_line(fp, "mul $a0, $a0, $a1", "Expression TIMES");
+      emit_line(fp, "mult $a0, $a1", "Expression TIMES");
+      emit_line(fp, "mflo $a0", "EXPR MULT");
       break;
     case A_DIVIDE:
       emit_line(fp, "div $a0, $a0, $a1", "Expression DIVIDE");

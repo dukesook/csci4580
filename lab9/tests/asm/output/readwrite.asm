@@ -25,3 +25,33 @@ main:			# Start of function
 
 
 # READ statement
+	move $a0, $sp		# VAR local make a copy of stackpointer
+	addi $a0, $a0, 8		# EMIT Var local variable
+	li $v0, 5		# 5 in $v0 means: Read an integer from the user
+	syscall		# READ INTEGER
+	sw $v0, ($a0)		# Store the read value into the variable
+
+# WRITE statement
+	li $v0, 4		# # print a string
+	la $a0, _L1		# # print fetch string location
+	syscall		# Perform a write string
+
+
+# WRITE statement
+	move $a0, $sp		# VAR local make a copy of stackpointer
+	addi $a0, $a0, 8		# EMIT Var local variable
+	lw $a0, ($a0)		# # load variable value
+	li $v0, 1		# # print the number
+	syscall		# #system call for print number
+
+
+
+
+# Function Return
+	li $a0, 0		# restore RA
+	lw $ra, 4($sp)		# restore old environment RA
+	lw $sp, ($sp)		# Return from function store SP
+
+# Exit from main function
+	li $v0, 10		# Exit from Main we are done
+	syscall		# EXIT everything

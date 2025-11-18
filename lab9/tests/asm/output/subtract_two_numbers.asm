@@ -21,8 +21,7 @@ main:			# Start of function
 	li $a0, 29		# Expression is a constant
 	move $a1, $a0		# Move RHS into $a1
 	lw $a0, 8($sp)		# expression restore LHS from memory
-	mult $a0, $a1		# Expression TIMES
-	mflo $a0		# EXPR MULT
+	sub $a0, $a0, $a1		# Expression MINUS
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
