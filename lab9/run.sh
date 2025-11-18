@@ -35,7 +35,11 @@ fi
 
 
 # Compare out.asm to scooper.asm
-if diff -u <($NORMALIZE "$EXPECTED_ASM") <($NORMALIZE "$OUTPUT")
+# diff
+#  -y : side-by-side comparison
+#  -u : unified format - means ???
+#  --suppress-common-lines : only show differing lines
+if diff --color=always -u <($NORMALIZE "$EXPECTED_ASM") <($NORMALIZE "$OUTPUT")
 then
   echo -e "\e[32mPASS\e[0m"
 else
