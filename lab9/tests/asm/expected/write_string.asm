@@ -1,6 +1,7 @@
 #  Compilers MIPS code 
 .data   
 
+_L0: .asciiz	 "hello world"
 
 .align 2 
 
@@ -17,9 +18,9 @@ main:			# START of FUNCION
 	move $sp, $a0		# # adjust the stack pointer
 
 
-	li $a0, 42		# expression is a constant
-	li $v0 1		# #   Print the number
-	syscall		# # system call for print number
+	li $v0, 4		# #print a string
+	la $a0, _L0		# #print fetch string location
+	syscall		# Perform a write string
 
 
 	li $a0, 0		# RETURN has no specified value set to 0

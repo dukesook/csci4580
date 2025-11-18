@@ -86,13 +86,15 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_COMPOUND:
     case A_STMT_LIST:
     case A_VOID_PARAM:
-    case A_VARIABLE:
     case A_EXPRESSION_STATEMENT:
       emit_ast(p->s1, fp);
       emit_ast(p->s2, fp);
       break;
     case A_FUNCTIONDEC:
       emit_function_declaration(p, fp);
+      break;
+    case A_VARIABLE:
+      emit_variable(p, fp);
       break;
     case A_WRITE:
       emit_write(p, fp);
@@ -400,7 +402,7 @@ void emit_write(ASTnode* p, FILE* fp) {
     emit_line(fp, "syscall", "Perform a write string");
   } else {
     // Expression
-    emit_expression(p->s1, fp);
+    emit_ast(p->s1, fp);
     emit_line(fp, "li $v0, 1", "# print the number");
     emit_line(fp, "syscall", "#system call for print number");
     fprintf(fp, "\n\n");
@@ -413,7 +415,7 @@ void emit_write(ASTnode* p, FILE* fp) {
 } // end of emit_write()
 
 // PRE: Pointer to A_VARIABLE
-// POST: VAR in $a0
+// POST: Variable's address in $a0
 void emit_variable(ASTnode* p, FILE* fp) {
 // Variables are either global or local.
 //   1. global - the start point is where the label is located
@@ -421,11 +423,7 @@ void emit_variable(ASTnode* p, FILE* fp) {
 // Variables are either array or scalar.
 //    For arrays, add internal offset.
 
-  if (!p) {
-    return;
-  } else if (!p->symbol) {
-    return;
-  }
+  assert_nodetype(p, A_VARIABLE);
 
   char s[256];
 

@@ -1,6 +1,4 @@
 void main(void)
 begin
-  int y;
-  int x;
-  x = 5;
+  write 42;
 end
