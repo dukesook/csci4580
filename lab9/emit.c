@@ -289,7 +289,7 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
   // Left Hand Side
   emit_ast(node->s1, fp); // $a0 has the result
-  offset = node->s1->symbol->offset * WSIZE;
+  offset = node->symbol->offset * WSIZE;
   sprintf(line, "sw $a0, %d($sp)", offset);
   emit_line(fp, line, "expression store LHS temporarily");
 

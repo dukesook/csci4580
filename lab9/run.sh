@@ -39,7 +39,7 @@ fi
 #  -y : side-by-side comparison
 #  -u : unified format - means ???
 #  --suppress-common-lines : only show differing lines
-if diff --color=always -u <($NORMALIZE "$EXPECTED_ASM") <($NORMALIZE "$OUTPUT")
+if diff --color=always -u  <($NORMALIZE "$OUTPUT") <($NORMALIZE "$EXPECTED_ASM")
 then
   echo -e "\e[32mPASS\e[0m"
 else
