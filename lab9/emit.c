@@ -289,6 +289,13 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
   // Left Hand Side
   emit_ast(node->s1, fp); // $a0 has the result
+  if (node->s1->nodetype == A_VARIABLE) {
+    // Load variable value into $a0
+    emit_line(fp, "lw $a0, ($a0)", "# load variable value");
+  } else {
+    // $a0 already has the expression result
+  }
+
   offset = node->symbol->offset * WSIZE;
   sprintf(line, "sw $a0, %d($sp)", offset);
   emit_line(fp, line, "expression store LHS temporarily");
@@ -348,19 +355,7 @@ void emit_assignment_statement(ASTnode* p, FILE* fp) {
   emit_line(fp, s, "Assign store RHS temporarily");
   
   // ---- Left Hand Side ----
-  // Get Variable Address
-  if (p->s1->symbol->level == 0) {
-    // Global Varible
-    sprintf(s, "la $a0, %s", p->s1->name); // for global variable
-    emit_line(fp, s, "EMIT Var global variable");
-  } else {
-    // Local Variable
-    emit_line(fp, "move $a0, $sp", "VAR local make a copy of stackpointer");
-
-    int offset = p->s1->symbol->offset * WSIZE;
-    sprintf(s, "addi $a0, $a0, %d", offset);
-    emit_line(fp, s, "EMIT Var local variable");
-  }
+  emit_ast(p->s1, fp);
 
   // Get RHS value
   sprintf(s, "lw $a1, %d($sp)", rhs_offset);
@@ -370,12 +365,6 @@ void emit_assignment_statement(ASTnode* p, FILE* fp) {
   emit_line(fp, "sw $a1, ($a0)", "Assign place RHS into memory");
 
   fprintf(fp, "\n");
-  // y = 5;
-	// li $a0, 5		# expression is a constant
-	// sw $a0 8($sp)		# Assign store RHS temporarily
-	// la $a0, y		# EMIT Var global variable
-	// lw $a1 8($sp)		# Assign get RHS temporarily
-	// sw $a1 ($a0)		# Assign place RHS into memory
 
 }
 
