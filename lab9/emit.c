@@ -285,16 +285,21 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
   char* type = ASTtype_to_string(node->nodetype);
   char line[256];
+  int offset = 0;
 
   // Left Hand Side
   emit_ast(node->s1, fp); // $a0 has the result
-  emit_line(fp, "sw $a0, 8($sp)", "expression store LHS temporarily");
+  offset = node->s1->symbol->offset * WSIZE;
+  sprintf(line, "sw $a0, %d($sp)", offset);
+  emit_line(fp, line, "expression store LHS temporarily");
 
   // Right Hand Side
   emit_ast(node->s2, fp); // $a0 has the result
   emit_line(fp, "move $a1, $a0", "Move RHS into $a1");
 
-  emit_line(fp, "lw $a0, 8($sp)", "expression restore LHS from memory");
+  offset = node->s2->symbol->offset * WSIZE;
+  sprintf(line, "lw $a0, %d($sp)", offset);
+  emit_line(fp, line, "expression restore LHS from memory");
 
   const char* operator = operator_to_string(node->operator);
   switch(node->operator) {

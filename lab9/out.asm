@@ -25,7 +25,7 @@ main:			# Start of function
 	sw $a0, 8($sp)		# expression store LHS temporarily
 	li $a0, 3		# Expression is a constant
 	move $a1, $a0		# Move RHS into $a1
-	lw $a0, 8($sp)		# expression restore LHS from memory
+	lw $a0, 12($sp)		# expression restore LHS from memory
 	sub $a0, $a0, $a1		# Expression MINUS
 # Function Return
 	li $a0, 0		# restore RA
