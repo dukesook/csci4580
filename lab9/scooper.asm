@@ -4,7 +4,6 @@
 
 .align 2 
 
-x: .space 4 # global variable
 
 .text  
 
@@ -12,13 +11,14 @@ x: .space 4 # global variable
 
 main:			# START of FUNCION
 
-	subu $a0, $sp, 8		# # adjust the stack for function setup
+	subu $a0, $sp, 12		# # adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# # adjust the stack pointer
 
 
-	la $a0, x		# EMIT Var global variable
+	move $a0 $sp		# VAR local make a copy of stackpointer
+	addi $a0 $a0 8		# VAR local stack pointer plus offset
 	lw $a0, ($a0)		# Expression is a VAR
 	li $v0 1		# #   Print the number
 	syscall		# # system call for print number

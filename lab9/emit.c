@@ -440,8 +440,10 @@ void emit_variable(ASTnode* p, FILE* fp) {
     emit_line(fp, s, "EMIT Var global variable");
   } else {
     // Local variable
-    printf("TODO - emit_variable() for local variable\n");
-    exit(1);
+    emit_line(fp, "move $a0, $sp", "VAR local make a copy of stackpointer");
+    int offset = p->symbol->offset * WSIZE;
+    sprintf(s, "addi $a0, $a0, %d", offset);
+    emit_line(fp, s, "EMIT Var local variable");
   }
 
 }

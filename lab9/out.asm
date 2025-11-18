@@ -16,5 +16,21 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-	sw $t0, 8($sp)		# Load formal parameter into temp variable
 # WRITE statement
+	move $a0, $sp		# VAR local make a copy of stackpointer
+	addi $a0, $a0, 8		# EMIT Var local variable
+	lw $a0, ($a0)		# # load variable value
+	li $v0, 1		# # print the number
+	syscall		# #system call for print number
+
+
+
+
+# Function Return
+	li $a0, 0		# restore RA
+	lw $ra, 4($sp)		# restore old environment RA
+	lw $sp, ($sp)		# Return from function store SP
+
+# Exit from main function
+	li $v0, 10		# Exit from Main we are done
+	syscall		# EXIT everything
