@@ -33,6 +33,7 @@ static void emit_if(ASTnode*, FILE*);
 static void emit_while(ASTnode*, FILE*);
 static void emit_parameter(ASTnode*, FILE*);
 static void emit_constant(ASTnode*, FILE*);
+static void emit_expression_operand(ASTnode*, FILE*);
 
 // Prototypes - Helpers
 static char* create_label();
@@ -287,21 +288,15 @@ void emit_expression(ASTnode* node, FILE* fp) {
   char line[256];
   int offset = 0;
 
+  
   // Left Hand Side
-  emit_ast(node->s1, fp); // $a0 has the result
-  if (node->s1->nodetype == A_VARIABLE) {
-    // Load variable value into $a0
-    emit_line(fp, "lw $a0, ($a0)", "# load variable value");
-  } else {
-    // $a0 already has the expression result
-  }
-
+  emit_expression_operand(node->s1, fp);
   offset = node->symbol->offset * WSIZE;
   sprintf(line, "sw $a0, %d($sp)", offset);
   emit_line(fp, line, "expression store LHS temporarily");
 
   // Right Hand Side
-  emit_ast(node->s2, fp); // $a0 has the result
+  emit_expression_operand(node->s2, fp);
   emit_line(fp, "move $a1, $a0", "Move RHS into $a1");
 
   offset = node->symbol->offset * WSIZE;
@@ -479,6 +474,28 @@ void emit_constant(ASTnode* p, FILE* fp) {
   emit_line(fp, s, "Expression is a constant");
 }
 
+// PRE:
+// POST:
+void emit_expression_operand(ASTnode* node, FILE* fp) {
+  if (!node) {
+    printf("emit_expression_operand(): ERROR! NULL node\n");
+    exit(1);
+  } else if ( node->nodetype != A_VARIABLE &&
+              node->nodetype != A_NUMBER &&
+              node->nodetype != A_BOOLEAN &&
+              node->nodetype != A_EXPRESSION) {
+    fprintf(stderr, "ERROR! emit_expression_operand() expected a nodetype in the expression family\n");
+    fprintf(stderr, "Got nodetype: %s\n", ASTtype_to_string(node->nodetype));
+    exit(1);
+  }
+
+  emit_ast(node, fp); // $a0 has the result
+  if (node->nodetype == A_VARIABLE) {
+    // Load variable value into $a0
+    emit_line(fp, "lw $a0, ($a0)", "# load variable value");
+  }
+
+}
 
 // Prototypes - Helpers
 
