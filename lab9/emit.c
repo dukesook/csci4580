@@ -297,7 +297,7 @@ void emit_expression(ASTnode* node, FILE* fp) {
   emit_ast(node->s2, fp); // $a0 has the result
   emit_line(fp, "move $a1, $a0", "Move RHS into $a1");
 
-  offset = node->s2->symbol->offset * WSIZE;
+  offset = node->symbol->offset * WSIZE;
   sprintf(line, "lw $a0, %d($sp)", offset);
   emit_line(fp, line, "expression restore LHS from memory");
 
