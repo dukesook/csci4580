@@ -22,6 +22,12 @@ do
 
   # Run Lab 9
   ../lab9 -o "$OUTPUT" < "$f" > /dev/null
+  if [ $? -ne 0 ]
+  then
+    echo -e "Test $f: \e[31mCompilation Failed!\e[0m"
+    SUCCESS=0
+    continue
+  fi
 
   # Run Scooper's Lab 9
   ./scooperlab9 -o "${EXPECTED%.asm}" < "$f" > /dev/null
@@ -37,3 +43,10 @@ do
   fi
 done
 
+echo ""
+if [ $SUCCESS -eq 1 ]
+then
+  echo -e "All $COUNT tests \e[32mPassed\e[0m"
+else
+  echo -e "Some tests \e[31mFailed\e[0m"
+fi
