@@ -403,6 +403,12 @@ void emit_write(ASTnode* p, FILE* fp) {
   } else {
     // Expression
     emit_ast(p->s1, fp);
+    if (p->s1->nodetype == A_VARIABLE) {
+      // Load variable value into $a0
+      emit_line(fp, "lw $a0, ($a0)", "# load variable value");
+    } else {
+      // $a0 already has the expression result
+    }
     emit_line(fp, "li $v0, 1", "# print the number");
     emit_line(fp, "syscall", "#system call for print number");
     fprintf(fp, "\n\n");
