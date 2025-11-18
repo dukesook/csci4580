@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+clear
+clear
+
 mkdir -p asm/output/
 mkdir -p asm/expected/
 SUCCESS=1
@@ -33,10 +36,11 @@ do
   ./scooperlab9 -o "${EXPECTED%.asm}" < "$f" > /dev/null
 
   # Compare the outputs
+  BASENAME=$(basename "$f")
   diff -u <(./normalize_mips.sh "$EXPECTED") <(./normalize_mips.sh "$OUTPUT")
   if [ $? -eq 0 ]; then
     let COUNT+=1
-    echo -e "Test $f: \e[32mPassed\e[0m"
+    echo -e "Test $BASENAME: \e[32mPassed\e[0m"
   else
     echo -e "Test $f: \e[31mFailed!\e[0m"
     SUCCESS=0
