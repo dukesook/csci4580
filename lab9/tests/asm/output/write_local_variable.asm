@@ -16,5 +16,4 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-	sw $t0, 8($sp)		# Load formal parameter into temp variable
 # WRITE statement

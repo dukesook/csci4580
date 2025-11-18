@@ -1,5 +1,4 @@
-int x;
-void main(void)
+void main(int x)
 begin
   write x;
 end
