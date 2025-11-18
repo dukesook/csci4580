@@ -1,6 +1,7 @@
-
-void main(int x)
+int x;
+int y;
+void main(void)
 begin
-  x + 1;
-  1 + x;
+  x = y;
+  
 end

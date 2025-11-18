@@ -17,7 +17,7 @@ main:			# Start of function
 
 
 
-# ASSIGNMENT statement
+# Assignment Statement
 	li $a0, 5		# Expression is a constant
 	sw $a0, 12($sp)		# Assign store RHS temporarily
 	move $a0, $sp		# VAR local make a copy of stackpointer

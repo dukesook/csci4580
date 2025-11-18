@@ -639,7 +639,7 @@ Assignment_Stmt: Variable '=' Simple_Expression ';' {
 	$$->s1 = $1; // Variable
 	$$->s2 = $3; // Expression
 	$$->name = CreateTemp(); // temp variable to hold assigned value
-	yy_insert($$->name, $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert temp variable into symbol table
+	$$->symbol = yy_insert($$->name, $1->datatype, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert temp variable into symbol table
 };
 
 /* Rule #21 */

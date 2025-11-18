@@ -203,11 +203,7 @@ void emit_global_variable(ASTnode* node, FILE* fp) {
 
   if (node->nodetype == A_VARDEC) {
     char* type = ASTtype_to_string(node->nodetype);
-    printf("%s", type);
     int size = node->value * WSIZE; // size in bytes
-    printf("\n");
-
-
     fprintf(fp, "%s: .space %d  # global variable\n", node->name, size);
   }
 
@@ -337,15 +333,16 @@ void emit_call(ASTnode* p, FILE* fp) {
 void emit_assignment_statement(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_ASSIGNMENT_STATEMENT);
-  int rhs_offset = p->s2->symbol->offset * WSIZE;
+  int rhs_offset = p->symbol->offset * WSIZE;
 
   char s[256];
 
   fprintf(fp, "\n");
-  emit_comment(fp, "ASSIGNMENT statement");
+  emit_comment(fp, "Assignment Statement");
 
   // ---- Right Hand Side ----
-  emit_ast(p->s2, fp); // compute RHS → $a0
+  // emit_ast(p->s2, fp); // compute RHS → $a0
+  emit_expression_operand(p->s2, fp); // ensure $a0 has the value of the RHS
   sprintf(s, "sw $a0, %d($sp)", rhs_offset);
   emit_line(fp, s, "Assign store RHS temporarily");
   
