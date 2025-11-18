@@ -78,7 +78,7 @@ void emit_ast(ASTnode* p, FILE* fp) {
   char* type = ASTtype_to_string(p->nodetype);
 
   if (p->nodetype == A_STMT_LIST) {
-    printf("# Statement List\n");
+    ;
   }
 
   switch (p->nodetype) {

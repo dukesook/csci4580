@@ -3,7 +3,6 @@
 .data
 
 .align 2
-x: .space 4  # global variable
 
 .text
 
@@ -11,25 +10,27 @@ x: .space 4  # global variable
 # Function Declaration
 main:			# Start of function
 
-	subu $a0, $sp, 16		# adjust the stack for function setup
+	subu $a0, $sp, 20		# adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
 
 
-	la $a0, x		# EMIT Var global variable
+	move $a0, $sp		# VAR local make a copy of stackpointer
+	addi $a0, $a0, 8		# EMIT Var local variable
 	lw $a0, ($a0)		# # load variable value
-	sw $a0, 8($sp)		# expression store LHS temporarily
-	li $a0, 1		# Expression is a constant
-	move $a1, $a0		# Move RHS into $a1
-	lw $a0, 8($sp)		# expression restore LHS from memory
-	add $a0, $a0, $a1		# Expression PLUS
-	li $a0, 1		# Expression is a constant
 	sw $a0, 12($sp)		# expression store LHS temporarily
-	la $a0, x		# EMIT Var global variable
-	lw $a0, ($a0)		# # load variable value
+	li $a0, 1		# Expression is a constant
 	move $a1, $a0		# Move RHS into $a1
 	lw $a0, 12($sp)		# expression restore LHS from memory
+	add $a0, $a0, $a1		# Expression PLUS
+	li $a0, 1		# Expression is a constant
+	sw $a0, 16($sp)		# expression store LHS temporarily
+	move $a0, $sp		# VAR local make a copy of stackpointer
+	addi $a0, $a0, 8		# EMIT Var local variable
+	lw $a0, ($a0)		# # load variable value
+	move $a1, $a0		# Move RHS into $a1
+	lw $a0, 16($sp)		# expression restore LHS from memory
 	add $a0, $a0, $a1		# Expression PLUS
 # Function Return
 	li $a0, 0		# restore RA
