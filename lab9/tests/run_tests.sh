@@ -37,7 +37,7 @@ do
 
   # Compare the outputs
   BASENAME=$(basename "$f")
-  diff -u <(./normalize_mips.sh "$EXPECTED") <(./normalize_mips.sh "$OUTPUT")
+  diff -u --color=always <(./normalize_mips.sh "$EXPECTED") <(./normalize_mips.sh "$OUTPUT")
   if [ $? -eq 0 ]; then
     let COUNT+=1
     echo -e "Test $BASENAME: \e[32mPassed\e[0m"
