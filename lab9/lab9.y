@@ -739,7 +739,8 @@ Mult_Op: '*' 		{ $$ = A_TIMES; } // Pass up the operator
 /* Rule #27 */
 Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
 	| T_NUM   			{ 
-										$$ = ASTCreateNode(A_NUMBER);
+										ASTnode* p = ASTCreateNode(A_NUMBER); // for debugging
+										$$ = p;
 										$$->value = $1;
 										$$->datatype = A_INTTYPE;
 										$$->name = CreateTemp(); // temp 3/3

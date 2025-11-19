@@ -119,11 +119,13 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_BOOLEAN:
       emit_constant(p, fp);
       break;
+    case A_SELECTION_STATEMENT:
+      emit_if(p, fp);
+      break;
     case A_PROTOTYPE:
     case A_ARG_LIST:
     case A_ARGUMENT:
     case A_ITERATION_STATEMENT:
-    case A_SELECTION_STATEMENT:
     case A_SELECTION_BODY:
     case A_FUNCTION_PROTOTYPE:
     case A_CONTINUE:
@@ -161,11 +163,6 @@ void emit(FILE* fp, char* label, char* command, char* comment) {
 void emit_line(FILE* fp, char* line, char* comment) {
   emit(fp, "", line, comment);
 }
-
-void emit_if(ASTnode* p, FILE* fp) {
-  // TODO - implement emit_if()
-  // Explained in 2nd half of lecture on November 13
-} // end of emit_if()
 
 void emit_while(ASTnode* p, FILE* fp) {
   // TODO - implement emit_while()
@@ -493,6 +490,25 @@ void emit_expression_operand(ASTnode* node, FILE* fp) {
   }
 
 }
+
+// PRE:
+// POST:
+void emit_if(ASTnode* p, FILE* fp) {
+
+  assert_nodetype(p, A_SELECTION_STATEMENT);
+
+  emit_line(fp, "li $a0, 55", "expression is a constant");
+  emit_line(fp, "beq $a0, $0, _L0", "# IF branch to else part");
+
+  emit_comment(fp, "if (true)");
+  emit_line(fp, "li $a0, 88", "expression is a constant");
+  emit_line(fp, "j _L1", "# IF S1 end");
+  fprintf(fp, "_L0:\n");
+
+
+  fprintf(fp, "_L1:\n");
+
+} // end of emit_if()
 
 // Prototypes - Helpers
 
