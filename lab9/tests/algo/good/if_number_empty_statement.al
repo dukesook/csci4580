@@ -2,8 +2,7 @@ void main(void)
 begin
 
   if 5 then
-    77;
-    88;
+    ;
   endif
 
 end
