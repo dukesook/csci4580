@@ -18,7 +18,6 @@ main:			# Start of function
 
 
 	la $a0, y		# EMIT Var global variable
-	lw $a0, ($a0)		# # load variable value
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
