@@ -27,6 +27,7 @@ _L0:			# # ELSE target
 
 			#  the negative  portion of IF if there is an else
 			#  otherwise just these lines
+	li $a0, 100		# expression is a constant
 _L1:			# # End of IF 
 	li $a0, 0		# RETURN has no specified value set to 0
 	lw $ra 4($sp)		# restore old environment RA

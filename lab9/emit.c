@@ -497,16 +497,28 @@ void emit_if(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_SELECTION_STATEMENT);
 
-  emit_line(fp, "li $a0, 55", "expression is a constant");
-  emit_line(fp, "beq $a0, $0, _L0", "# IF branch to else part");
+  // s1 = condition
+  // s2 = body of if statement
+  char s[256];
+  char* else_label = create_label();
+  char* if_label = create_label();
 
-  emit_comment(fp, "if (true)");
+  emit_ast(p->s1, fp); // $a0 has the condition result
+  
+  sprintf(s, "beq $a0, $0, %s", else_label);
+  emit_line(fp, s, "# if expression is 0, jump to else");
+
+  // emit_ast(p->s2, fp); // Emit the body of the if statement
   emit_line(fp, "li $a0, 88", "expression is a constant");
-  emit_line(fp, "j _L1", "# IF S1 end");
-  fprintf(fp, "_L0:\n");
+  sprintf(s, "j %s", if_label);
+  emit_line(fp, s, "# Jump to end of if statement");
 
+  sprintf(s, "%s:", else_label);
+  emit_line(fp, s, "# ELSE label");
+  emit_line(fp, "li $a0, 100", "expression is a constant");
 
-  fprintf(fp, "_L1:\n");
+  sprintf(s, "%s:", if_label);
+  emit_line(fp, s, "# End of IF statement");
 
 } // end of emit_if()
 

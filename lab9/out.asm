@@ -16,13 +16,13 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-	li $a0, 55		# expression is a constant
-	beq $a0, $0, _L0		# # IF branch to else part
-# if (true)
+	li $a0, 55		# Expression is a constant
+	beq $a0, $0, _L0		# # if expression is 0, jump to else
 	li $a0, 88		# expression is a constant
-	j _L1		# # IF S1 end
-_L0:
-_L1:
+	j _L1		# # Jump to end of if statement
+	_L0:		# # ELSE label
+	li $a0, 100		# expression is a constant
+	_L1:		# # End of IF statement
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
