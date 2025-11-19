@@ -21,6 +21,7 @@ main:			# Start of function
 	move $a1, $a0		# Copy index into $a1
 	sll $a1, $a1, 2		# Multiply index by 4 (word size)
 	la $a0, x		# EMIT Var global variable
+	lw, $a0, ($a0)		# Load address of array parameter
 	add $a0, $a0, $a1		# Compute address of array element
 	lw $a0, ($a0)		# # load variable value
 # Function Return

@@ -465,7 +465,7 @@ void emit_variable(ASTnode* p, FILE* fp) {
   char s[256];
   bool is_array = (p->s1) ? true : false; // array vs scalar
   bool is_global_variable = (p->symbol->level == 0) ? true : false;
-  // bool is_parameter = 
+  bool is_parameter = true;
 
   // Get Array Index
   if (is_array) {
@@ -493,6 +493,9 @@ void emit_variable(ASTnode* p, FILE* fp) {
 
   // Array Address + Offset
   if (is_array) {
+    if (is_parameter) {
+      emit_line(fp, "lw, $a0, ($a0)", "Load address of array parameter");
+    }
     emit_line(fp, "add $a0, $a0, $a1", "Compute address of array element");
   }
 
