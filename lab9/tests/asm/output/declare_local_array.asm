@@ -3,7 +3,6 @@
 .data
 
 .align 2
-x: .space 400  # global variable
 
 .text
 
@@ -11,14 +10,12 @@ x: .space 400  # global variable
 # Function Declaration
 main:			# Start of function
 
-	subu $a0, $sp, 12		# adjust the stack for function setup
+	subu $a0, $sp, 48		# adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
 
 
-	move $a0, $sp		# VAR local make a copy of stackpointer
-	addi $a0, $a0, 8		# EMIT Var local variable
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA

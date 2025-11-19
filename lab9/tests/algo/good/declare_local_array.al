@@ -1,8 +1,6 @@
-int x[100];
 
 void main(void)
 begin
-
-  x[5];
+  int x[10];
 
 end

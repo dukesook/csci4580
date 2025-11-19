@@ -4,7 +4,7 @@
 
 .align 2 
 
-x: .space 400 # global variable
+x: .space 40 # global variable
 
 .text  
 
@@ -18,12 +18,6 @@ main:			# START of FUNCION
 	move $sp, $a0		# # adjust the stack pointer
 
 
-	li $a0, 5		# expression is a constant
-	move $a1, $a0		# VAR copy index array in a1
-	sll $a1 $a1 2		# muliply the index by wordszie via SLL
-	la $a0, x		# EMIT Var global variable
-	add $a0 $a0 $a1		# VAR array add internal offset
-	lw $a0, ($a0)		# Expression is a VAR
 	li $a0, 0		# RETURN has no specified value set to 0
 	lw $ra 4($sp)		# restore old environment RA
 	lw $sp ($sp)		# Return from function store SP

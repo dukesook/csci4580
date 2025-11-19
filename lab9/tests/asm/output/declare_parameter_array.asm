@@ -3,7 +3,6 @@
 .data
 
 .align 2
-x: .space 400  # global variable
 
 .text
 
@@ -17,8 +16,7 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-	move $a0, $sp		# VAR local make a copy of stackpointer
-	addi $a0, $a0, 8		# EMIT Var local variable
+	sw $t0, 8($sp)		# Load formal parameter into temp variable
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
