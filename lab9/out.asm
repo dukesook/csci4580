@@ -17,13 +17,13 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-	li $a0, 1		# Expression is a constant
-	beq $a0, $0, _L0		# # if expression is 0, jump to else
-	li $a0, 5		# Expression is a constant
-	li $a0, 5		# Expression is a constant
-	j _L1		# # Jump to end of if statement
-	_L0:		# # ELSE label
-	_L1:		# # End of IF statement
+	li $a0, 99		# Expression is a constant
+	move $a1, $a0		# Copy index into $a1
+	sll $a1, $a1, 2		# Multiply index by 4 (word size)
+	move $a0, $sp		# VAR local make a copy of stackpointer
+	addi $a0, $a0, 8		# EMIT Var local variable
+	add $a0, $a0, $a1		# Compute address of array element
+	lw $a0, ($a0)		# # load variable value
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA

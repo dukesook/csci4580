@@ -463,36 +463,38 @@ void emit_variable(ASTnode* p, FILE* fp) {
   assert_nodetype(p, A_VARIABLE);
 
   char s[256];
+  bool is_array = (p->s1) ? true : false; // array vs scalar
+  bool is_global_variable = (p->symbol->level == 0) ? true : false;
 
-  if (p->s1) {
-    // Array
+  if (is_array) {
     //   p->s1 is the index expression.
     //   Example: x[p->s1]
 
-    // Hard code for now:
     emit_ast(p->s1, fp); // $a0 has the result of the index expression
-    emit_line(fp, "lw $a0, ($a0)", "Expression is a VAR");
-    emit_line(fp, "li $a0, 5", "expression is a constant");
-    emit_line(fp, "move $a1, $a0", "VAR copy index array in a1");
-    emit_line(fp, "sll $a1, $a1, 2", "multiply the index by wordszie via SLL");
-    emit_line(fp, "la $a0, x", "EMIT Var global variable");
-    emit_line(fp, "add $a0, $a0, $a1", "VAR array add internal offset");
-    emit_line(fp, "lw $a0, ($a0)", "Expression is a VAR");
+    emit_dereference_if_variable(p->s1, fp); // ensure $a0 has the value of the index expression
 
+    emit_line(fp, "move $a1, $a0", "Copy index into $a1");
+    emit_line(fp, "sll $a1, $a1, 2", "Multiply index by 4 (word size)");
+    
+    
+
+  }
+
+  if (is_global_variable) {
+    // Global variable
+    // load address of global variable into $a0
+    sprintf(s, "la $a0, %s", p->name);
+    emit_line(fp, s, "EMIT Var global variable");
   } else {
-    // Scalar
-    if (p->symbol->level == 0) {
-      // Global variable
-      // load address of global variable into $a0
-      sprintf(s, "la $a0, %s", p->name);
-      emit_line(fp, s, "EMIT Var global variable");
-    } else {
-      // Local variable
-      emit_line(fp, "move $a0, $sp", "VAR local make a copy of stackpointer");
-      int offset = p->symbol->offset * WSIZE;
-      sprintf(s, "addi $a0, $a0, %d", offset);
-      emit_line(fp, s, "EMIT Var local variable");
-    }
+    // Local variable
+    emit_line(fp, "move $a0, $sp", "VAR local make a copy of stackpointer");
+    int offset = p->symbol->offset * WSIZE;
+    sprintf(s, "addi $a0, $a0, %d", offset);
+    emit_line(fp, s, "EMIT Var local variable");
+  }
+
+  if (is_array) {
+    emit_line(fp, "add $a0, $a0, $a1", "Compute address of array element");
   }
 
 }

@@ -2,12 +2,7 @@ int x[100];
 
 void main(void)
 begin
-  if true then
-  begin
-    5;
-    5;
-  end
 
-  endif
+  x[99];
 
 end

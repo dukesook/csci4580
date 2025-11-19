@@ -18,18 +18,12 @@ main:			# START of FUNCION
 	move $sp, $a0		# # adjust the stack pointer
 
 
-	li $a0, 1		# expression is a constant
-	beq $a0 $0 _L0		# #IF branch to else part
-
-			#  the positive portion of IF
-	li $a0, 5		# expression is a constant
-	li $a0, 5		# expression is a constant
-	j _L1		# #IF S1 end
-_L0:			# # ELSE target
-
-			#  the negative  portion of IF if there is an else
-			#  otherwise just these lines
-_L1:			# # End of IF 
+	li $a0, 99		# expression is a constant
+	move $a1, $a0		# VAR copy index array in a1
+	sll $a1 $a1 2		# muliply the index by wordszie via SLL
+	la $a0, x		# EMIT Var global variable
+	add $a0 $a0 $a1		# VAR array add internal offset
+	lw $a0, ($a0)		# Expression is a VAR
 	li $a0, 0		# RETURN has no specified value set to 0
 	lw $ra 4($sp)		# restore old environment RA
 	lw $sp ($sp)		# Return from function store SP
