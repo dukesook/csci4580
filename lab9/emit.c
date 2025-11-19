@@ -22,6 +22,7 @@ static void emit_traverse_ast(ASTnode*, FILE*, EmitFunction);
 static void emit_global_variable(ASTnode*, FILE*);
 static void emit_string(ASTnode*, FILE*);
 static void emit_function_declaration(ASTnode*, FILE*);
+static void emit_expression_statement(ASTnode*, FILE*);
 static void emit_expression(ASTnode*, FILE*);
 static void emit_assignment_statement(ASTnode*, FILE*);
 static void emit_read(ASTnode*, FILE*);
@@ -87,7 +88,6 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_COMPOUND:
     case A_STMT_LIST:
     case A_VOID_PARAM:
-    case A_EXPRESSION_STATEMENT:
     case A_SELECTION_BODY:
       emit_ast(p->s1, fp);
       emit_ast(p->s2, fp);
@@ -112,6 +112,9 @@ void emit_ast(ASTnode* p, FILE* fp) {
       break;
     case A_PARAM:
       emit_parameter(p, fp);
+      break;
+    case A_EXPRESSION_STATEMENT:
+      emit_expression_statement(p, fp);
       break;
     case A_EXPRESSION:
       emit_expression(p, fp);
@@ -297,6 +300,16 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
     // exit(1);
   }
 
+}
+
+// PRE:
+// POST:
+void emit_expression_statement(ASTnode* p, FILE* fp) {
+  assert_nodetype(p, A_EXPRESSION_STATEMENT);
+
+  // p->s1 is in the expression family
+
+  emit_ast(p->s1, fp);
 }
 
 // PRE: ASTnode pointer p, file pointer fp
