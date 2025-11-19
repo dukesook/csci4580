@@ -4,7 +4,6 @@
 
 .align 2 
 
-x: .space 400 # global variable
 
 .text  
 
