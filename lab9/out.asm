@@ -18,8 +18,6 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-	la $a0, y		# EMIT Var global variable
-	lw $a0, ($a0)		# # load variable value
 	li $a0, 99		# Expression is a constant
 	move $a1, $a0		# Copy index into $a1
 	sll $a1, $a1, 2		# Multiply index by 4 (word size)

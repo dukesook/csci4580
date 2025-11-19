@@ -676,7 +676,7 @@ Variable: T_ID 	{
 		$$->value = get_array_size($$->s1); // array size
 		/* $$->symbol->SubType = SYM_SCALAR; // while T_ID is an array, the result of indexing it is a scalar */
 		//$$->name = CreateTemp(); // temp variable to hold indexed value // USE ARRAY NAME, NOT TEMP!
-		$$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, 0); // insert temp variable into symbol table
+		/* $$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, 0); // insert temp variable into symbol table */
 		assert_datatype($3, A_INTTYPE); // Ensure index is of integer type
 	};
 
