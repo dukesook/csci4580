@@ -465,7 +465,7 @@ void emit_variable(ASTnode* p, FILE* fp) {
   char s[256];
   bool is_array = (p->s1) ? true : false; // array vs scalar
   bool is_global_variable = (p->symbol->level == 0) ? true : false;
-  bool is_parameter = true;
+  bool is_parameter = false;
 
   // Get Array Index
   if (is_array) {
@@ -478,6 +478,8 @@ void emit_variable(ASTnode* p, FILE* fp) {
 
   }
 
+
+  // Load Variable Address
   if (is_global_variable) {
     // Global variable
     // load address of global variable into $a0
