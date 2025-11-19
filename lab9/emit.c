@@ -33,7 +33,7 @@ static void emit_if(ASTnode*, FILE*);
 static void emit_while(ASTnode*, FILE*);
 static void emit_parameter(ASTnode*, FILE*);
 static void emit_constant(ASTnode*, FILE*);
-static void emit_expression_operand(ASTnode*, FILE*);
+static void emit_dereference_if_variable(ASTnode*, FILE*);
 
 // Prototypes - Helpers
 static char* create_label();
@@ -77,7 +77,7 @@ void emit_ast(ASTnode* p, FILE* fp) {
 
   char* type = ASTtype_to_string(p->nodetype);
 
-  if (p->nodetype == A_STMT_LIST) {
+  if (p->nodetype == A_SELECTION_BODY) {
     ;
   }
 
@@ -88,6 +88,7 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_STMT_LIST:
     case A_VOID_PARAM:
     case A_EXPRESSION_STATEMENT:
+    case A_SELECTION_BODY:
       emit_ast(p->s1, fp);
       emit_ast(p->s2, fp);
       break;
@@ -126,14 +127,13 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_ARG_LIST:
     case A_ARGUMENT:
     case A_ITERATION_STATEMENT:
-    case A_SELECTION_BODY:
     case A_FUNCTION_PROTOTYPE:
     case A_CONTINUE:
     case A_BREAK:
     case A_RETURN:
     default:
       printf("emit_ast(): ERROR! Unhandled node type %s\n", type);
-      // exit(1);
+      exit(1);
   } // end of switch(p->nodetype)
 
 
@@ -283,13 +283,15 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
   
   // Left Hand Side
-  emit_expression_operand(node->s1, fp);
+  emit_ast(node->s1, fp); // $a0 has the result of the left hand side expression
+  emit_dereference_if_variable(node->s1, fp);
   offset = node->symbol->offset * WSIZE;
   sprintf(line, "sw $a0, %d($sp)", offset);
   emit_line(fp, line, "expression store LHS temporarily");
 
   // Right Hand Side
-  emit_expression_operand(node->s2, fp);
+  emit_ast(node->s2, fp); // $a0 has the result of the left hand side expression
+  emit_dereference_if_variable(node->s2, fp);
   emit_line(fp, "move $a1, $a0", "Move RHS into $a1");
 
   offset = node->symbol->offset * WSIZE;
@@ -339,7 +341,8 @@ void emit_assignment_statement(ASTnode* p, FILE* fp) {
 
   // ---- Right Hand Side ----
   // emit_ast(p->s2, fp); // compute RHS → $a0
-  emit_expression_operand(p->s2, fp); // ensure $a0 has the value of the RHS
+  emit_ast(p->s2, fp); // compute RHS → $a0
+  emit_dereference_if_variable(p->s2, fp); // ensure $a0 has the value of the RHS
   sprintf(s, "sw $a0, %d($sp)", rhs_offset);
   emit_line(fp, s, "Assign store RHS temporarily");
   
@@ -470,24 +473,16 @@ void emit_constant(ASTnode* p, FILE* fp) {
 
 // PRE:
 // POST:
-void emit_expression_operand(ASTnode* node, FILE* fp) {
+void emit_dereference_if_variable(ASTnode* node, FILE* fp) {
   if (!node) {
-    printf("emit_expression_operand(): ERROR! NULL node\n");
-    exit(1);
-  } else if ( node->nodetype != A_VARIABLE &&
-              node->nodetype != A_NUMBER &&
-              node->nodetype != A_BOOLEAN &&
-              node->nodetype != A_EXPRESSION) {
-    fprintf(stderr, "ERROR! emit_expression_operand() expected a nodetype in the expression family\n");
-    fprintf(stderr, "Got nodetype: %s\n", ASTtype_to_string(node->nodetype));
-    exit(1);
+    return;
+  } else if ( node->nodetype != A_VARIABLE) {
+    return;
   }
+  // emit_ast(node, fp); // $a0 has the result
 
-  emit_ast(node, fp); // $a0 has the result
-  if (node->nodetype == A_VARIABLE) {
-    // Load variable value into $a0
-    emit_line(fp, "lw $a0, ($a0)", "# load variable value");
-  }
+  // Load variable value into $a0
+  emit_line(fp, "lw $a0, ($a0)", "# load variable value");
 
 }
 
@@ -495,28 +490,44 @@ void emit_expression_operand(ASTnode* node, FILE* fp) {
 // POST:
 void emit_if(ASTnode* p, FILE* fp) {
 
+  /*
+  A_SELECTION_STATEMENT:
+    s1 = EXPRESSION (condition)
+    s2 = A_SELECTION_BODY
+      s1 = THEN branch statement
+      s2 = ELSE branch statement (if any)
+  */
+
   assert_nodetype(p, A_SELECTION_STATEMENT);
 
-  // s1 = condition
-  // s2 = body of if statement
+  ASTnode* body_node = p->s2;
+  assert_nodetype(body_node, A_SELECTION_BODY);
+
   char s[256];
   char* else_label = create_label();
   char* if_label = create_label();
 
+  // Emit condition
   emit_ast(p->s1, fp); // $a0 has the condition result
+  emit_dereference_if_variable(p->s1, fp); // Emit the body of the if statement
   
+  // if false, jump to else label
   sprintf(s, "beq $a0, $0, %s", else_label);
   emit_line(fp, s, "# if expression is 0, jump to else");
 
-  // emit_ast(p->s2, fp); // Emit the body of the if statement
-  emit_line(fp, "li $a0, 88", "expression is a constant");
+  // if true
+  emit_ast(body_node->s1, fp); // Emit the body of the if statement
+  emit_dereference_if_variable(body_node->s1, fp); // Emit the body of the if statement
   sprintf(s, "j %s", if_label);
   emit_line(fp, s, "# Jump to end of if statement");
 
+  // else label
   sprintf(s, "%s:", else_label);
   emit_line(fp, s, "# ELSE label");
-  emit_line(fp, "li $a0, 100", "expression is a constant");
+  emit_ast(body_node->s2, fp); // Emit the body of the else statement (if any)
+  emit_dereference_if_variable(body_node->s2, fp); // Emit the body of the else statement (if any)
 
+  // end if label
   sprintf(s, "%s:", if_label);
   emit_line(fp, s, "# End of IF statement");
 

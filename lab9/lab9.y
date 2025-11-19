@@ -593,20 +593,24 @@ Expression_Stmt: Expression ';' { $$ = ASTCreateNode(A_EXPRESSION_STATEMENT); //
 
 /* Rule #15 */
 Selection_Stmt: T_IF Expression T_THEN Statement T_ENDIF 
-										{ $$ = ASTCreateNode(A_SELECTION_STATEMENT);
-											$$->s1 = $2; // Condition
-											$$->s2 = ASTCreateNode(A_SELECTION_BODY); // Then branch
-											$$->s2->s1 = $4; // Then branch statement
-										}
-              | T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF 
-										{ $$ = ASTCreateNode(A_SELECTION_STATEMENT);
-											$$->s1 = $2; // Condition
-											$$->s2 = ASTCreateNode(A_SELECTION_BODY); // Then branch
-											$$->s2->s1 = $4; // Then branch statement
-											$$->s2->s2 = ASTCreateNode(A_SELECTION_BODY); // Else branch
-											$$->s2->s2->s1 = $6; // Else branch statement
-										}
-							;
+			{ 
+				$$ = ASTCreateNode(A_SELECTION_STATEMENT);
+				$$->s1 = $2; // Condition
+				$$->s2 = ASTCreateNode(A_SELECTION_BODY); // Then branch
+				$$->s2->s1 = $4; // Then branch statement
+			}
+	| T_IF Expression T_THEN Statement T_ELSE Statement T_ENDIF 
+			{ 
+				ASTnode* p = ASTCreateNode(A_SELECTION_STATEMENT); // for debugging
+				ASTnode* body = ASTCreateNode(A_SELECTION_BODY); // Then branch
+				p->s1 = $2; // Condition
+				p->s2 = body;
+
+				body->s1 = $4; // Then branch statement
+				body->s2 = ASTCreateNode(A_SELECTION_BODY); // Else branch
+				body->s2->s1 = $6; // Else branch statement
+				$$ = p;
+			};
 
 /* Rule #16 */
 Iteration_Stmt: T_WHILE Expression T_DO Statement
