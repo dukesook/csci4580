@@ -31,11 +31,13 @@ then
   echo -e "Scooper's exit code: \e[31m$SCOOPER_EXIT_CODE\e[0m"
   echo -e "Exit codes do not match. Please check your implementation."
   exit 1
-elif [ LAB9_EXIT_CODE -eq 0 ] # if both succeeded
+elif [ $LAB9_EXIT_CODE -eq 0 ] # if both succeeded
 then
   echo "Lab9 created ${OUTPUT}"
   echo "Scooper created ${EXPECTED_ASM}"
 else # both failed
+  echo -e "Lab9 exit code: \e[31m$LAB9_EXIT_CODE\e[0m"
+  echo -e "Scooper's exit code: \e[31m$SCOOPER_EXIT_CODE\e[0m"
   echo -e "\e[31m${TEST_FILE} is bad!\e[0m"
   exit 1
 fi

@@ -2,8 +2,9 @@ void main(void)
 begin
 
   if 5 then
-    77;
-    88;
+    if 10 then
+    ;
+    endif
   endif
 
 end
