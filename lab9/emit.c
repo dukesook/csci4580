@@ -123,10 +123,12 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_SELECTION_STATEMENT:
       emit_if(p, fp);
       break;
+    case A_ITERATION_STATEMENT:
+      emit_while(p, fp);
+      break;
     case A_PROTOTYPE:
     case A_ARG_LIST:
     case A_ARGUMENT:
-    case A_ITERATION_STATEMENT:
     case A_FUNCTION_PROTOTYPE:
     case A_CONTINUE:
     case A_BREAK:
@@ -135,8 +137,6 @@ void emit_ast(ASTnode* p, FILE* fp) {
       printf("emit_ast(): ERROR! Unhandled node type %s\n", type);
       exit(1);
   } // end of switch(p->nodetype)
-
-
 
 } // end of emit_ast()
 
@@ -165,8 +165,36 @@ void emit_line(FILE* fp, char* line, char* comment) {
 }
 
 void emit_while(ASTnode* p, FILE* fp) {
-  // TODO - implement emit_while()
-  // Explained in 2nd half of lecture on November 13
+
+  assert_nodetype(p, A_ITERATION_STATEMENT);
+  
+  char* while_label = create_label();
+  char* end_label = create_label();
+  char s[256];
+
+  // Hard code for now:
+// _L0:			# # WHILE TOP target
+  fprintf(fp, "%s:  # While loop\n", while_label);
+
+  // Emit condition
+  emit_ast(p->s1, fp);
+  emit_dereference_if_variable(p->s1, fp);
+
+  // if false, jump to end label
+  sprintf(s, "beq $a0, $0, %s", end_label);
+  emit_line(fp, s, "# if expression is 0, jump to end of while");
+
+  // While loop Body
+  emit_ast(p->s2, fp); // Emit the body of the while statement
+  emit_dereference_if_variable(p->s2, fp);
+
+  // Jump to While Start
+  sprintf(s, "j %s", while_label);
+  emit_line(fp, s, "# Jump to while start");
+
+  // End Label
+  fprintf(fp, "%s:\n", end_label);
+
 } // end of emit_while()
 
 // PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
