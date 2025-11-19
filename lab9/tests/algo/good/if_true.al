@@ -1,8 +1,6 @@
 void main(void)
 begin
-  if 0 then
+  if true then
     write "true\n";
-  else
-    write "false\n";
   endif
 end

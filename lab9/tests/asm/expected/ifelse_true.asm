@@ -19,7 +19,7 @@ main:			# START of FUNCION
 	move $sp, $a0		# # adjust the stack pointer
 
 
-	li $a0, 0		# expression is a constant
+	li $a0, 1		# expression is a constant
 	beq $a0 $0 _L2		# #IF branch to else part
 
 			#  the positive portion of IF

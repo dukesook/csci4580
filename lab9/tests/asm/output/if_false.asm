@@ -2,7 +2,6 @@
 
 .data
 _L0:  .asciiz "true\n"
-_L1:  .asciiz "false\n"
 
 .align 2
 
@@ -19,22 +18,16 @@ main:			# Start of function
 
 
 	li $a0, 0		# Expression is a constant
-	beq $a0, $0, _L2		# # if expression is 0, jump to else
+	beq $a0, $0, _L1		# # if expression is 0, jump to else
 # WRITE statement
 	li $v0, 4		# # print a string
 	la $a0, _L0		# # print fetch string location
 	syscall		# Perform a write string
 
 
-	j _L3		# # Jump to end of if statement
-	_L2:		# # ELSE label
-# WRITE statement
-	li $v0, 4		# # print a string
-	la $a0, _L1		# # print fetch string location
-	syscall		# Perform a write string
-
-
-	_L3:		# # End of IF statement
+	j _L2		# # Jump to end of if statement
+	_L1:		# # ELSE label
+	_L2:		# # End of IF statement
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA

@@ -18,7 +18,7 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-	li $a0, 0		# Expression is a constant
+	li $a0, 1		# Expression is a constant
 	beq $a0, $0, _L2		# # if expression is 0, jump to else
 # WRITE statement
 	li $v0, 4		# # print a string
