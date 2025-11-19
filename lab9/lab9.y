@@ -651,15 +651,15 @@ Expression: Simple_Expression { $$ = $1; }; // Pass up the AST node
 
 /* Rule #22 */
 Variable: T_ID 	{ 
-		struct SymbTab* p = assert_exists($1, LEVEL); // Ensure variable exists
+		struct SymbTab* symbol = assert_exists($1, LEVEL); // Ensure variable exists
 		
 		// bugfix! value may also be array
 		//assert_subtype(p, SYM_SCALAR); // Ensure variable is of subtype SYM_SCALAR
 
 		$$ = ASTCreateNode(A_VARIABLE); // Create variable node
 		$$->name = $1; // Variable name
-		$$->symbol = p; // Link to symbol table entry
-		$$->datatype = p->Declared_Type; // Set datatype to the declared type of the variable
+		$$->symbol = symbol; // Link to symbol table entry
+		$$->datatype = symbol->Declared_Type; // Set datatype to the declared type of the variable
 		$$->value = 1; // scalar variable
 	}
 
