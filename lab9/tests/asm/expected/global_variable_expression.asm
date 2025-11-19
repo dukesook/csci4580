@@ -18,8 +18,6 @@ main:			# START of FUNCION
 	move $sp, $a0		# # adjust the stack pointer
 
 
-	la $a0, y		# EMIT Var global variable
-	lw $a0, ($a0)		# Expression is a VAR
 	li $a0, 0		# RETURN has no specified value set to 0
 	lw $ra 4($sp)		# restore old environment RA
 	lw $sp ($sp)		# Return from function store SP

@@ -40,6 +40,7 @@ static void emit_dereference_if_variable(ASTnode*, FILE*);
 static char* create_label();
 static char* create_temp_variable();
 static void assert_nodetype(ASTnode* node, enum ASTtype expected_type);
+static void assert_expression_family(ASTnode* node);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: All MIPS code directly and through helper functions
@@ -305,9 +306,9 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
 // PRE:
 // POST:
 void emit_expression_statement(ASTnode* p, FILE* fp) {
+  
   assert_nodetype(p, A_EXPRESSION_STATEMENT);
-
-  // p->s1 is in the expression family
+  assert_expression_family(p->s1);
 
   emit_ast(p->s1, fp);
 }
@@ -623,4 +624,25 @@ void assert_nodetype(ASTnode* node, enum ASTtype expected_type) {
             ASTtype_to_string(expected_type), ASTtype_to_string(node->nodetype));
     exit(1);
   }
+}
+
+void assert_expression_family(ASTnode* node) {
+  if (!node) {
+    fprintf(stderr, "Error: Expected an expression node but got NULL\n");
+    exit(1);
+  }
+
+  switch (node->nodetype) {
+    case A_EXPRESSION:
+    case A_VARIABLE:
+    case A_NUMBER:
+    case A_BOOLEAN:
+    case A_FUNCTION_CALL:
+      return; // Valid expression family node types
+    default:
+      fprintf(stderr, "Error: Expected an expression node but got %s\n",
+              ASTtype_to_string(node->nodetype));
+      exit(1);
+  }
+
 }
