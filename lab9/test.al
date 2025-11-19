@@ -1,11 +1,7 @@
-int x;
+int x[100];
 
-void main(int z)
+void main(void)
 begin
-  int y;
-  
   x;
-  y;
-  z;
 
 end
