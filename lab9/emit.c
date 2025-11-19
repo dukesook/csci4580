@@ -311,6 +311,7 @@ void emit_expression_statement(ASTnode* p, FILE* fp) {
   assert_expression_family(p->s1);
 
   emit_ast(p->s1, fp);
+  emit_dereference_if_variable(p->s1, fp);
 }
 
 // PRE: ASTnode pointer p, file pointer fp
