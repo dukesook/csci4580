@@ -465,18 +465,16 @@ void emit_variable(ASTnode* p, FILE* fp) {
   char s[256];
   bool is_array = (p->s1) ? true : false; // array vs scalar
   bool is_global_variable = (p->symbol->level == 0) ? true : false;
+  // bool is_parameter = 
 
+  // Get Array Index
   if (is_array) {
-    //   p->s1 is the index expression.
-    //   Example: x[p->s1]
 
     emit_ast(p->s1, fp); // $a0 has the result of the index expression
     emit_dereference_if_variable(p->s1, fp); // ensure $a0 has the value of the index expression
 
     emit_line(fp, "move $a1, $a0", "Copy index into $a1");
     emit_line(fp, "sll $a1, $a1, 2", "Multiply index by 4 (word size)");
-    
-    
 
   }
 
@@ -493,6 +491,7 @@ void emit_variable(ASTnode* p, FILE* fp) {
     emit_line(fp, s, "EMIT Var local variable");
   }
 
+  // Array Address + Offset
   if (is_array) {
     emit_line(fp, "add $a0, $a0, $a1", "Compute address of array element");
   }

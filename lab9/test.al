@@ -1,8 +1,7 @@
-int x[100];
 
-void main(void)
+void main(int x[])
 begin
 
-  x[99];
+  x[17];
 
 end

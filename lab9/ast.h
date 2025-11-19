@@ -83,7 +83,6 @@ typedef struct ASTnodetype {
   char *name;                   // Name (T_ID) of variable or function
   char *label;                  // used for labels in IF and WHILE statements
   int value;                    // used for number values. varaibles: 0 = single variable. # = array size. -1 = not used
-  int array_size;               // not in use (would be better, but too much work to implement)
   struct ASTnodetype *s1, *s2;  // used for holding IF and WHILE components -- not very descriptive
   struct SymbTab *symbol;       // Pointer to symbol table entry for this node
 } ASTnode;
