@@ -4,6 +4,7 @@
 
 .align 2 
 
+y: .space 4 # global variable
 x: .space 400 # global variable
 
 .text  
@@ -18,6 +19,8 @@ main:			# START of FUNCION
 	move $sp, $a0		# # adjust the stack pointer
 
 
+	la $a0, y		# EMIT Var global variable
+	lw $a0, ($a0)		# Expression is a VAR
 	li $a0, 99		# expression is a constant
 	move $a1, $a0		# VAR copy index array in a1
 	sll $a1 $a1 2		# muliply the index by wordszie via SLL
