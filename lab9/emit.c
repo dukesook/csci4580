@@ -373,7 +373,7 @@ void emit_call(ASTnode* p, FILE* fp) {
   emit_comment(fp, "Function Call");
 
   // Emit arguments
-  emit_ast(p->s1, fp); // Arguments (if any)
+  // emit_ast(p->s1, fp); // Arguments (if any)
 
   // Call function
   char s[256];
