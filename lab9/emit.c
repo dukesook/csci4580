@@ -85,6 +85,9 @@ void emit_ast(ASTnode* p, FILE* fp) {
 
   switch (p->nodetype) {
     case A_DEC_LIST:
+      emit_ast(p->s2, fp);
+      emit_ast(p->s1, fp);
+      break;
     case A_VARDEC:
     case A_COMPOUND:
     case A_STMT_LIST:
@@ -293,8 +296,6 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
     emit_comment(fp, "Exit from main function");
     emit_line(fp, "li $v0, 10", "Exit from Main we are done");
     emit_line(fp, "syscall", "EXIT everything");
-    // li $v0, 10		# Exit from Main we are done
-	  // syscall			# EXIT everything
   } else {
     emit_line(fp, "jr $ra", "Return from function");
   }
