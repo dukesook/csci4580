@@ -368,6 +368,18 @@ void emit_expression(ASTnode* node, FILE* fp) {
 // POST: $a0 will have the return value
 void emit_call(ASTnode* p, FILE* fp) {
 
+  assert_nodetype(p, A_FUNCTION_CALL);
+
+  emit_comment(fp, "Function Call");
+
+  // Emit arguments
+  emit_ast(p->s1, fp); // Arguments (if any)
+
+  // Call function
+  char s[256];
+  sprintf(s, "jal %s", p->name);
+  emit_line(fp, s, "Function call jump and link");
+
 } // end of emit_call()
 
 // PRE: ASTnode pointer p, file pointer fp
