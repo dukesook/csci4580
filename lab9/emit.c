@@ -296,9 +296,7 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
     // li $v0, 10		# Exit from Main we are done
 	  // syscall			# EXIT everything
   } else {
-    // TODO! normal function return;
-    printf("# TODO! normal function return;\n");
-    // exit(1);
+    emit_line(fp, "jr $ra", "Return from function");
   }
 
 }
