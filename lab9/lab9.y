@@ -777,13 +777,13 @@ Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
 /* Rule #28 */
 Call: T_ID '(' Args ')'	{	
 	int level = 0; // Functions are always at global level
-	struct SymbTab* p = assert_exists($1, level); // Ensure function exists
+	struct SymbTab* symbol = assert_exists($1, level); // Ensure function exists
 	// check to see if symbol is a function
-	if (p->SubType != SYM_FUNCTION &&
-			p->SubType != SYM_FUNCTION_PRE) {
-		printf("%s is not a function: it's a: %s\n", $1, subtype_to_string(p->SubType));
+	if (symbol->SubType != SYM_FUNCTION &&
+			symbol->SubType != SYM_FUNCTION_PRE) {
+		printf("%s is not a function: it's a: %s\n", $1, subtype_to_string(symbol->SubType));
 		yyerror("is not a function");
-	} else if (p->SubType == SYM_FUNCTION_PROTO) {
+	} else if (symbol->SubType == SYM_FUNCTION_PROTO) {
 		printf("Prototype function call: %s\n", $1);
 		yyerror("calling function prototype");
 	}
@@ -793,7 +793,7 @@ Call: T_ID '(' Args ')'	{
 	// $3->s1 = first A_ARGUMENT
 	ASTnode* arg_list = $3;
 	ASTnode* first_arg = arg_list->s1;
-	bool match = check_params(p->fparms, first_arg);
+	bool match = check_params(symbol->fparms, first_arg);
 	if (!match) {
 		printf("function parameters don't match for function: %s\n", $1);
 		yyerror($1);
@@ -802,8 +802,7 @@ Call: T_ID '(' Args ')'	{
 	$$ = ASTCreateNode(A_FUNCTION_CALL); // Create function call node
 	$$->name = $1; // Function name
 	$$->s1 = $3;  // Arguments
-	/* $$->symbol = p; // Link to symbol table entry */
-	$$->symbol = yy_insert(CreateTemp(), p->Declared_Type, SYM_SCALAR, LEVEL, SCALAR_SIZE); // temp variable to hold return value
+	$$->symbol = symbol; // Link to symbol table entry
 	$$->datatype = $$->symbol->Declared_Type; // Function return type
 };
 
