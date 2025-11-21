@@ -6,7 +6,8 @@ end
 int main(void)
 begin
 
-  foo(foo(77));
+  int x;
+  foo(x);
 
 end
 

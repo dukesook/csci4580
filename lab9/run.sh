@@ -29,7 +29,7 @@ if [ $LAB9_EXIT_CODE -ne $SCOOPER_EXIT_CODE ]
 then
   echo -e "Lab9 exit code: \e[31m$LAB9_EXIT_CODE\e[0m"
   echo -e "Scooper's exit code: \e[31m$SCOOPER_EXIT_CODE\e[0m"
-  echo -e "Exit codes do not match. Please check your implementation."
+  echo -e "Exit codes do not match. Check your lab9 code."
   exit 1
 elif [ $LAB9_EXIT_CODE -eq 0 ] # if both succeeded
 then

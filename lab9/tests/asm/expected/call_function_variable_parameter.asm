@@ -33,18 +33,9 @@ main:			# START of FUNCION
 
 			# Setting Up Function Call
 			# evaluate  Function Parameters
-			# Setting Up Function Call
-			# evaluate  Function Parameters
-	li $a0, 77		# expression is a constant
-	sw $a0, 8($sp)		# Store call Arg temporarily
-
-			# place   Parameters into T registers
-	lw $a0, 8($sp)		# pull out stored  Arg 
-	move $t0, $a0		# move arg in temp 
-
-	jal foo			# Call the function
-
-
+	move $a0 $sp		# VAR local make a copy of stackpointer
+	addi $a0 $a0 8		# VAR local stack pointer plus offset
+	lw $a0, ($a0)		# Expression is a VAR
 	sw $a0, 12($sp)		# Store call Arg temporarily
 
 			# place   Parameters into T registers
