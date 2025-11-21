@@ -32,12 +32,6 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-# Function Call
-	li $a0, 5		# Expression is a constant
-	sw $a0, 8($sp)		# Push argument onto stack
-	lw $a0, 8($sp)		# Load argument into $a register
-	move $t0, $a0		# Move argument into temp variable
-	jal foo		# Function call jump and link
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA

@@ -9,7 +9,6 @@ end
 int main(void)
 begin
 
-  
 
 end
 
