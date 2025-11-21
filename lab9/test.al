@@ -1,12 +1,12 @@
-int foo(int a, int b)
+int foo(int x, int y)
 begin
 
 end
 
 int main(void)
 begin
-  int x;
-  foo(5, 10);
+
+  foo(18, 77);
 
 end
 

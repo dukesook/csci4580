@@ -41,12 +41,12 @@ main:			# Start of function
 	sw $a0, 12($sp)		# Push argument onto stack
 	li $a0, 79		# Expression is a constant
 	sw $a0, 8($sp)		# Push argument onto stack
-	lw $a0, 8($sp)		# Load argument into $a register
-	move $t2, $a0		# Move argument into temp variable
-	lw $a0, 12($sp)		# Load argument into $a register
-	move $t1, $a0		# Move argument into temp variable
 	lw $a0, 16($sp)		# Load argument into $a register
 	move $t0, $a0		# Move argument into temp variable
+	lw $a0, 12($sp)		# Load argument into $a register
+	move $t1, $a0		# Move argument into temp variable
+	lw $a0, 8($sp)		# Load argument into $a register
+	move $t2, $a0		# Move argument into temp variable
 	jal foo		# Function call jump and link
 # Function Return
 	li $a0, 0		# restore RA
