@@ -43,6 +43,7 @@ static char* create_label();
 static char* create_temp_variable();
 static void assert_nodetype(ASTnode* node, enum ASTtype expected_type);
 static void assert_expression_family(ASTnode* node);
+static int count_arguments(ASTnode* argument);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: All MIPS code directly and through helper functions
@@ -625,7 +626,7 @@ void emit_arg_list(ASTnode* p, FILE* fp) {
     emit_argument(p->s1, fp); // First argument
   }
 
-  int arg_count = 3;
+  int arg_count = count_arguments(p->s1);
   int offset = 0;
   for (int i = 0; i < arg_count; i++) {
     char* temp_variable = create_temp_variable();
@@ -633,24 +634,9 @@ void emit_arg_list(ASTnode* p, FILE* fp) {
     char s[256];
     sprintf(s, "lw $a0, %d($sp)", offset);
     emit_line(fp, s, "Load argument into $a register");
-    sprintf(s, "move $%s, $a0", temp_variable);
+    sprintf(s, "move $t%d, $a0", i);
     emit_line(fp, s, "Move argument into temp variable");
   }
-
-  // TODO:
-  // arg 1:
-  // +lw $a0 16($sp)
-  // +move $t0 $a0
-
-  // arg 2:
-  // +lw $a0 12($sp)
-  // +move $t1 $a0
-
-  // arg 3:
-  // +lw $a0 8($sp)
-  // +move $t2 $a0
-
-
 
 } // end of emit_arg_list()
 
@@ -694,6 +680,23 @@ char* create_temp_variable() {
   sprintf(temp, "t%d", temp_count++);
   return strdup(temp);
 } // end of create_temp_variable()
+
+int count_arguments(ASTnode* argument) {
+
+  if (!argument) {
+    return 0;
+  }
+  
+  int count = 0;
+
+  if (argument->s2) {
+    count = 1 + count_arguments(argument->s2);  
+  } else {
+    return 1;
+  }
+
+  return count;
+} // end of count_arguments()
 
 void assert_nodetype(ASTnode* node, enum ASTtype expected_type) {
   if (!node) {
