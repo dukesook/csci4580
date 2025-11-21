@@ -1,11 +1,16 @@
+
 int main(int x)
 begin
 
+
+
 end
 
 
-int foo(void)
+int foo(int x)
 begin
 
+
 end
+
 

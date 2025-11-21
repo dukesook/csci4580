@@ -275,10 +275,10 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
 
   char s[256];
   int size = p->symbol->offset * WSIZE; // size in bytes
-  sprintf(s, "subu $a0, $sp, %d", size);
-
+  
   emit(fp, p->name, "", "Start of function");
   fprintf(fp, "\n");
+  sprintf(s, "subu $a0, $sp, %d", size);
   emit_line(fp, s, "adjust the stack for function setup");
   emit_line(fp, "sw $sp, ($a0)", "remember old SP");
   emit_line(fp, "sw $ra, 4($a0)", "remember current Return address");

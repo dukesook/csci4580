@@ -427,7 +427,6 @@ Func_Declaration:
 				Insert($2, $1, SYM_FUNCTION_PRE, LEVEL, 0, 0);
 				GOFFSET = OFFSET; // Save global offset
 				OFFSET = 2; // we need two memory locations for Stack Pointer and Return Address
-				/* maxoffset; */
 			} else {
 				// function/prototype found
 				switch (p->SubType) {
@@ -489,6 +488,7 @@ Func_Declaration:
 				yyerror("Function tail has unknown type");
 			}
 			yy_delete(LEVEL+1); // remove parameters from symbol table
+			maxoffset = 0; // reset maxoffset for next function
 		};
 
 /* NEW: Rule #6a */
