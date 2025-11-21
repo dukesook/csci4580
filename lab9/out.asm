@@ -10,12 +10,14 @@
 # Function Declaration
 foo:			# Start of function
 
-	subu $a0, $sp, 8		# adjust the stack for function setup
+	subu $a0, $sp, 16		# adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
 
 
+	sw $t0, 8($sp)		# Load formal parameter into temp variable
+	sw $t1, 12($sp)		# Load formal parameter into temp variable
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
@@ -25,13 +27,17 @@ foo:			# Start of function
 # Function Declaration
 main:			# Start of function
 
-	subu $a0, $sp, 8		# adjust the stack for function setup
+	subu $a0, $sp, 16		# adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
 
 
 # Function Call
+	li $a0, 18		# Expression is a constant
+	sw $a0, 12($sp)		# Push argument onto stack
+	li $a0, 55		# Expression is a constant
+	sw $a0, 8($sp)		# Push argument onto stack
 	jal foo		# Function call jump and link
 # Function Return
 	li $a0, 0		# restore RA

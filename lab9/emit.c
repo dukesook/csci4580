@@ -35,6 +35,7 @@ static void emit_while(ASTnode*, FILE*);
 static void emit_parameter(ASTnode*, FILE*);
 static void emit_constant(ASTnode*, FILE*);
 static void emit_dereference_if_variable(ASTnode*, FILE*);
+static void emit_argument(ASTnode*, FILE*);
 
 // Prototypes - Helpers
 static char* create_label();
@@ -93,8 +94,12 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_STMT_LIST:
     case A_VOID_PARAM:
     case A_SELECTION_BODY:
+    case A_ARG_LIST:
       emit_ast(p->s1, fp);
       emit_ast(p->s2, fp);
+      break;
+    case A_ARGUMENT:
+      emit_argument(p, fp);
       break;
     case A_FUNCTIONDEC:
       emit_function_declaration(p, fp);
@@ -134,8 +139,6 @@ void emit_ast(ASTnode* p, FILE* fp) {
       emit_while(p, fp);
       break;
     case A_PROTOTYPE:
-    case A_ARG_LIST:
-    case A_ARGUMENT:
     case A_FUNCTION_PROTOTYPE:
     case A_CONTINUE:
     case A_BREAK:
@@ -372,7 +375,8 @@ void emit_call(ASTnode* p, FILE* fp) {
   emit_comment(fp, "Function Call");
 
   // Emit arguments
-  // emit_ast(p->s1, fp); // Arguments (if any)
+  emit_ast(p->s1, fp); // Arguments (if any)
+
 
   // Call function
   char s[256];
@@ -610,6 +614,23 @@ void emit_if(ASTnode* p, FILE* fp) {
   emit_line(fp, s, "# End of IF statement");
 
 } // end of emit_if()
+
+void emit_argument(ASTnode* p, FILE* fp) {
+
+  assert_nodetype(p, A_ARGUMENT);
+
+  emit_ast(p->s1, fp); // Evaluate the argument expression
+  emit_dereference_if_variable(p->s1, fp); // Ensure $a0
+
+  char s[256];
+  sprintf(s, "sw $a0, %d($sp)", p->symbol->offset * WSIZE);
+  emit_line(fp, s, "Push argument onto stack");
+
+  if (p->s2) {
+    emit_argument(p->s2, fp); // Next argument (if any)
+  }
+
+} // end of emit_argument()
 
 // Prototypes - Helpers
 
