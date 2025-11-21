@@ -36,7 +36,7 @@ static void emit_parameter(ASTnode*, FILE*);
 static void emit_constant(ASTnode*, FILE*);
 static void emit_dereference_if_variable(ASTnode*, FILE*);
 static void emit_arg_list(ASTnode*, FILE*);
-static void emit_argument(ASTnode*, FILE*);
+static void emit_argument(ASTnode*, FILE*, int arg_index);
 
 // Prototypes - Helpers
 static char* create_label();
@@ -100,9 +100,6 @@ void emit_ast(ASTnode* p, FILE* fp) {
       emit_ast(p->s1, fp);
       emit_ast(p->s2, fp);
       break;
-    case A_ARGUMENT:
-      emit_argument(p, fp);
-      break;
     case A_FUNCTIONDEC:
       emit_function_declaration(p, fp);
       break;
@@ -140,6 +137,7 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_ITERATION_STATEMENT:
       emit_while(p, fp);
       break;
+    case A_ARGUMENT:
     case A_PROTOTYPE:
     case A_FUNCTION_PROTOTYPE:
     case A_CONTINUE:
@@ -623,19 +621,18 @@ void emit_arg_list(ASTnode* p, FILE* fp) {
   assert_nodetype(p, A_ARG_LIST);
 
   if (p->s1) {
-    emit_argument(p->s1, fp); // First argument
+    emit_argument(p->s1, fp, 0); // First argument
   }
 
   int arg_count = count_arguments(p->s1);
   int offset = 0;
   for (int i = 0; i < arg_count; i++) {
-    char* temp_variable = create_temp_variable();
     offset = (arg_count - i + 1) * WSIZE;
     char s[256];
-    sprintf(s, "lw $a0, %d($sp)", offset);
-    emit_line(fp, s, "Load argument into $a register");
-    sprintf(s, "move $t%d, $a0", i);
-    emit_line(fp, s, "Move argument into temp variable");
+    // sprintf(s, "lw $a0, %d($sp)", offset);
+    // emit_line(fp, s, "Load argument into $a register");
+    // sprintf(s, "move $t%d, $a0", i);
+    // emit_line(fp, s, "Move argument into temp variable");
   }
 
 } // end of emit_arg_list()
@@ -643,7 +640,7 @@ void emit_arg_list(ASTnode* p, FILE* fp) {
 
 // PRE:
 // POST:
-void emit_argument(ASTnode* p, FILE* fp) {
+void emit_argument(ASTnode* p, FILE* fp, int arg_index) {
 
   assert_nodetype(p, A_ARGUMENT);
 
@@ -655,8 +652,13 @@ void emit_argument(ASTnode* p, FILE* fp) {
   emit_line(fp, s, "Push argument onto stack");
 
   if (p->s2) {
-    emit_argument(p->s2, fp); // Next argument (if any)
+    emit_argument(p->s2, fp, arg_index + 1); // Next argument (if any)
   }
+
+  sprintf(s, "lw $a0, %d($sp)", p->symbol->offset * WSIZE);
+  emit_line(fp, s, "Load argument into $a register");
+  sprintf(s, "move $t%d, $a0", arg_index);
+  emit_line(fp, s, "Move argument into temp variable");
 
 } // end of emit_argument()
 
