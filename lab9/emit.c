@@ -35,6 +35,7 @@ static void emit_while(ASTnode*, FILE*);
 static void emit_parameter(ASTnode*, FILE*);
 static void emit_constant(ASTnode*, FILE*);
 static void emit_dereference_if_variable(ASTnode*, FILE*);
+static void emit_arg_list(ASTnode*, FILE*);
 static void emit_argument(ASTnode*, FILE*);
 
 // Prototypes - Helpers
@@ -375,8 +376,7 @@ void emit_call(ASTnode* p, FILE* fp) {
   emit_comment(fp, "Function Call");
 
   // Emit arguments
-  emit_ast(p->s1, fp); // Arguments (if any)
-
+  emit_arg_list(p->s1, fp); // Arguments (if any)
 
   // Call function
   char s[256];
@@ -615,6 +615,48 @@ void emit_if(ASTnode* p, FILE* fp) {
 
 } // end of emit_if()
 
+// PRE:
+// POST:
+void emit_arg_list(ASTnode* p, FILE* fp) {
+
+  assert_nodetype(p, A_ARG_LIST);
+
+  if (p->s1) {
+    emit_argument(p->s1, fp); // First argument
+  }
+
+  int arg_count = 3;
+  int offset = 0;
+  for (int i = 0; i < arg_count; i++) {
+    char* temp_variable = create_temp_variable();
+    offset = (arg_count - i + 1) * WSIZE;
+    char s[256];
+    sprintf(s, "lw $a0, %d($sp)", offset);
+    emit_line(fp, s, "Load argument into $a register");
+    sprintf(s, "move $%s, $a0", temp_variable);
+    emit_line(fp, s, "Move argument into temp variable");
+  }
+
+  // TODO:
+  // arg 1:
+  // +lw $a0 16($sp)
+  // +move $t0 $a0
+
+  // arg 2:
+  // +lw $a0 12($sp)
+  // +move $t1 $a0
+
+  // arg 3:
+  // +lw $a0 8($sp)
+  // +move $t2 $a0
+
+
+
+} // end of emit_arg_list()
+
+
+// PRE:
+// POST:
 void emit_argument(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_ARGUMENT);

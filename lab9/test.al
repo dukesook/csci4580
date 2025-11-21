@@ -1,4 +1,4 @@
-int foo(int x, int y)
+int foo(int x, int y, int z)
 begin
 
 end
@@ -6,7 +6,7 @@ end
 int main(void)
 begin
 
-  foo(18, 55);
+  foo(18, 55, 79);
 
 end
 
