@@ -34,7 +34,7 @@ foo:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-	sw $t1, 8($sp)		# Load formal parameter into temp variable
+	sw $t0, 8($sp)		# Load formal parameter into temp variable
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA

@@ -41,7 +41,6 @@ static void emit_argument_load(ASTnode*, FILE*, int arg_index);
 
 // Prototypes - Helpers
 static char* create_label();
-static char* create_temp_variable();
 static void assert_nodetype(ASTnode* node, enum ASTtype expected_type);
 static void assert_expression_family(ASTnode* node);
 static int count_arguments(ASTnode* argument);
@@ -527,9 +526,10 @@ void emit_parameter(ASTnode* p, FILE* fp) {
   }
 
   int offset = p->symbol->offset * WSIZE; // offset in bytes
+  int param_index = p->symbol->offset - 2; // 2 is the size of the function
   char s[256];
-  char* temp_name = create_temp_variable();
-  sprintf(s, "sw $%s, %d($sp)", temp_name, offset);
+
+  sprintf(s, "sw $t%d, %d($sp)", param_index, offset);
   emit_line(fp, s, "Load formal parameter into temp variable");
 
   emit_ast(p->s1, fp); // Next parameter (if any)
@@ -690,15 +690,6 @@ char* create_label() {
   sprintf(label, "_L%d", label_count++);
   return strdup(label);
 } // end of create_label()
-
-// PRE:
-// POST:
-char* create_temp_variable() {
-  static int temp_count = 0;
-  char temp[64];
-  sprintf(temp, "t%d", temp_count++);
-  return strdup(temp);
-} // end of create_temp_variable()
 
 int count_arguments(ASTnode* argument) {
 
