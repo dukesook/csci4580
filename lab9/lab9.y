@@ -272,7 +272,9 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 	}
 
 	// compare array vs scalar
-	if (params->symbol->SubType != args->symbol->SubType) {
+	bool params_is_array = (params->symbol->SubType == SYM_ARRAY);
+	bool args_is_array = (args->symbol->SubType == SYM_ARRAY);
+	if (params_is_array != params_is_array) {
 		return false; // one is array, the other is not
 	}
 
