@@ -39,6 +39,7 @@ static void emit_arg_list(ASTnode*, FILE*);
 static void emit_argument_expression(ASTnode*, FILE*);
 static void emit_argument_load(ASTnode*, FILE*, int arg_index);
 static void emit_return(ASTnode*, FILE*);
+static void emit_break(ASTnode*, FILE*);
 
 // Prototypes - Helpers
 static char* create_label();
@@ -138,12 +139,14 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_RETURN:
       emit_return(p, fp);
       break;
+    case A_BREAK:
+      emit_break(p, fp);
+      break;
     case A_PROTOTYPE:
-      // do nothing
+      // Do nothing! Don't even emit children!
       break;
     case A_ARGUMENT:
     case A_CONTINUE:
-    case A_BREAK:
     default:
       printf("emit_ast(): ERROR! Unhandled node type %s\n", type);
       exit(1);
@@ -679,7 +682,6 @@ void emit_arg_list(ASTnode* p, FILE* fp) {
 
 } // end of emit_arg_list()
 
-
 // PRE:
 // POST: Evaluate each argument expression and push it onto the stack
 void emit_argument_expression(ASTnode* p, FILE* fp) {
@@ -732,6 +734,17 @@ void emit_return(ASTnode* p, FILE* fp) {
   emit_line(fp, "syscall", "EXIT everything");
 
 }
+
+// PRE:
+// POST:
+void emit_break(ASTnode* p, FILE* fp) {
+
+  assert_nodetype(p, A_BREAK);
+
+  // Hard code for now:
+  // emit_line(fp, "j _L1", "BREAK Statement line jump inside of while");
+
+} // end of emit_break()
 
 // Prototypes - Helpers
 
