@@ -48,6 +48,7 @@ static void assert_nodetype(ASTnode* node, enum ASTtype expected_type);
 static void assert_expression_family(ASTnode* node);
 static int count_arguments(ASTnode* argument);
 static void set_while_labels(ASTnode*, char* start_label, char* end_label);
+static void link_return_to_function(ASTnode*, SymbTab* );
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: All MIPS code directly and through helper functions
@@ -279,6 +280,10 @@ void emit_string(ASTnode* node, FILE* fp) {
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits MIPS code for function declarations
 void emit_function_declaration(ASTnode* p, FILE* fp) {
+
+  assert_nodetype(p, A_FUNCTIONDEC);
+
+  link_return_to_function(p, p->symbol);
 
   emit_comment(fp, "Function Declaration");
 
@@ -731,13 +736,31 @@ void emit_return(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_RETURN);
 
-  // Hardcode for now:
-  emit_ast(p->s1, fp); // Evaluate return expression
-  emit_dereference_if_variable(p->s1, fp); // Ensure $a0 has the return value
+  if (p->s1) {
+    // Return expression
+    emit_ast(p->s1, fp); // Evaluate return expression
+    emit_dereference_if_variable(p->s1, fp); // Ensure $a0 has the return value
+  } else {
+    // Void return
+    emit_line(fp, "li $a0, 0", "Void return value 0");
+  }
+
   emit_line(fp, "lw $ra, 4($sp)", "restore old environment RA");
   emit_line(fp, "lw $sp, ($sp)", "Return from function store SP");
-  emit_line(fp, "li $v0, 10", "Exit we are done");
-  emit_line(fp, "syscall", "EXIT everything");
+
+  char* function_name = p->symbol->name;
+  if (strcmp(function_name, "main") == 0) {
+    // Main function return
+
+    emit_line(fp, "li $v0, 10", "Exit we are done");
+    emit_line(fp, "syscall", "EXIT everything");
+  } else {
+    emit_line(fp, "jr $ra", "Return from function");
+  }
+
+  // Hardcode for now:
+
+
 
 }
 
@@ -841,4 +864,20 @@ void set_while_labels(ASTnode* p, char* start_label, char* end_label) {
 
   set_while_labels(p->s1, start_label, end_label);
   set_while_labels(p->s2, start_label, end_label);
+}
+
+// PRE:
+// POST: Links each A_RETURN node to its function declaration symbol table entry
+void link_return_to_function(ASTnode* node, SymbTab* function_delcaration) {
+  if (!node) {
+    return;
+  }
+
+  if (node->nodetype == A_RETURN) {
+    node->symbol = function_delcaration;
+  }
+
+  link_return_to_function(node->s1, function_delcaration);
+  link_return_to_function(node->s2, function_delcaration);
+
 }

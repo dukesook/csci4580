@@ -17,10 +17,10 @@ foo:			# Start of function
 
 
 	sw $t0, 8($sp)		# Load formal parameter into temp variable
+	li $a0, 0		# Void return value 0
 	lw $ra, 4($sp)		# restore old environment RA
 	lw $sp, ($sp)		# Return from function store SP
-	li $v0, 10		# Exit we are done
-	syscall		# EXIT everything
+	jr $ra		# Return from function
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
