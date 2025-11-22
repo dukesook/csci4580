@@ -61,7 +61,7 @@ _L0:  # While loop
 
 
 
-	j _L0		# CONTINUE Statement line jump inside of while
+	j _L1		# BREAK Statement line jump inside of while
 	j _L0		# # Jump to while start
 _L1:
 # Function Return

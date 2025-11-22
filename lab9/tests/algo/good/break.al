@@ -8,7 +8,7 @@ begin
   begin
     x = x + 1;
     write x;
-    continue;
+    break;
   end
 
 end

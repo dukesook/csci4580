@@ -40,12 +40,14 @@ static void emit_argument_expression(ASTnode*, FILE*);
 static void emit_argument_load(ASTnode*, FILE*, int arg_index);
 static void emit_return(ASTnode*, FILE*);
 static void emit_break(ASTnode*, FILE*);
+static void emit_continue(ASTnode*, FILE*);
 
 // Prototypes - Helpers
 static char* create_label();
 static void assert_nodetype(ASTnode* node, enum ASTtype expected_type);
 static void assert_expression_family(ASTnode* node);
 static int count_arguments(ASTnode* argument);
+static void set_while_labels(ASTnode*, char* start_label, char* end_label);
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: All MIPS code directly and through helper functions
@@ -142,11 +144,13 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_BREAK:
       emit_break(p, fp);
       break;
+    case A_CONTINUE:
+      emit_continue(p, fp);
+      break;
     case A_PROTOTYPE:
       // Do nothing! Don't even emit children!
       break;
     case A_ARGUMENT:
-    case A_CONTINUE:
     default:
       printf("emit_ast(): ERROR! Unhandled node type %s\n", type);
       exit(1);
@@ -185,6 +189,8 @@ void emit_while(ASTnode* p, FILE* fp) {
   char* while_label = create_label();
   char* end_label = create_label();
   char s[256];
+
+  set_while_labels(p, while_label, end_label);
 
   // Hard code for now:
 // _L0:			# # WHILE TOP target
@@ -741,10 +747,21 @@ void emit_break(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_BREAK);
 
-  // Hard code for now:
-  // emit_line(fp, "j _L1", "BREAK Statement line jump inside of while");
+  char s[256];
+  sprintf(s, "j %s", p->label);
+  emit_line(fp, s, "BREAK Statement line jump inside of while");
 
 } // end of emit_break()
+
+void emit_continue(ASTnode* p, FILE* fp) {
+
+  assert_nodetype(p, A_CONTINUE);
+
+  char s[256];
+  sprintf(s, "j %s", p->label);
+  emit_line(fp, s, "CONTINUE Statement line jump inside of while");
+
+} // end of emit_continue()
 
 // Prototypes - Helpers
 
@@ -806,4 +823,22 @@ void assert_expression_family(ASTnode* node) {
       exit(1);
   }
 
+}
+
+// PRE: 
+// POST: Each A_BREAK & A_CONTINUE labels are set appropriately
+void set_while_labels(ASTnode* p, char* start_label, char* end_label) {
+  
+  if (!p) {
+    return;
+  }
+
+  if (p->nodetype == A_BREAK) {
+    p->label = end_label;
+  } else if (p->nodetype == A_CONTINUE) {
+    p->label = start_label;
+  }
+
+  set_while_labels(p->s1, start_label, end_label);
+  set_while_labels(p->s2, start_label, end_label);
 }

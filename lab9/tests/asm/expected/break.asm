@@ -53,8 +53,8 @@ _L0:			# # WHILE TOP target
 	syscall		# # system call for print number
 
 
-	j _L0
-		# CONTINUE Statement jump inside of while
+	j _L1
+		# BREAK Statement line ump inside of while
 	j _L0		# #WHILE Jump back
 _L1:			# # End of WHILE 
 	li $a0, 0		# RETURN has no specified value set to 0
