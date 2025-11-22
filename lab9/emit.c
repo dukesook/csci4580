@@ -137,8 +137,10 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_ITERATION_STATEMENT:
       emit_while(p, fp);
       break;
-    case A_ARGUMENT:
     case A_PROTOTYPE:
+      // do nothing
+      break;
+    case A_ARGUMENT:
     case A_CONTINUE:
     case A_BREAK:
     case A_RETURN:
