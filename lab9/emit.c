@@ -139,7 +139,6 @@ void emit_ast(ASTnode* p, FILE* fp) {
       break;
     case A_ARGUMENT:
     case A_PROTOTYPE:
-    case A_FUNCTION_PROTOTYPE:
     case A_CONTINUE:
     case A_BREAK:
     case A_RETURN:

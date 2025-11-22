@@ -43,7 +43,6 @@ enum ASTtype {
   A_ITERATION_STATEMENT,  // Example: while x < 10 do being .. end
   A_SELECTION_STATEMENT,  // Example: if x < 10 then ... else ... endif
   A_SELECTION_BODY,       // The body of an if statement
-  A_FUNCTION_PROTOTYPE,   // Function Prototype
   A_CONTINUE,             // Continue Statement
   A_BREAK,                // Break Statement
   A_RETURN,               // Return Statement

@@ -834,13 +834,6 @@ Arg_List: Expression	{
 															$$->symbol = yy_insert(CreateTemp(), $1->datatype, $1->symbol->SubType, LEVEL, SCALAR_SIZE);
 														};
 
-/* Graduate Student Required Rule */
-/* Func_Prototype: Type_Specifier T_ID '(' Params ')' ';' 	
-	{ $$ = ASTCreateNode(A_FUNCTION_PROTOTYPE);
-		$$->datatype = $1; // Return Type
-		$$->name = $2;		 // Function Name
-		$$->s1 = $4; 		   // Parameters
-	}; */
 
 /* Graduate Student Required Rule */
 Continue_Stmt: T_CONTINUE ';' { $$ = ASTCreateNode(A_CONTINUE); } ;

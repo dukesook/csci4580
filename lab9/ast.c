@@ -275,12 +275,6 @@ void ASTprint(int level, ASTnode *p) {
     ASTprint(level + 1, p->s1); // Expression
     break;
 
-  case A_FUNCTION_PROTOTYPE:
-    PT(level);
-    printf("Function PROTOTYPE %s  %s", type, p->name);
-    ASTprint(level + 1, p->s1); // parameters
-    break;
-
   case A_CONTINUE:
     PT(level);
     printf("CONTINUE\n"); // required for graduate students
@@ -390,14 +384,14 @@ char *ASTtype_to_string(enum ASTtype type) {
     return "A_SELECTION_STATEMENT";
   case A_SELECTION_BODY:
     return "A_SELECTION_BODY";
-  case A_FUNCTION_PROTOTYPE:
-    return "A_FUNCTION_PROTOTYPE";
   case A_CONTINUE:
     return "A_CONTINUE";
   case A_BREAK:
     return "A_BREAK";
   case A_RETURN:
     return "A_RETURN";
+  case A_PROTOTYPE:
+    return "A_PROTOTYPE";
   default:
     return "UNKNOWN_ASTTYPE";
   } // end of switch
