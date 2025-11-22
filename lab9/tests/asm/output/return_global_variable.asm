@@ -3,25 +3,11 @@
 .data
 
 .align 2
+x: .space 200  # global variable
 
 .text
 
 .globl main
-# Function Declaration
-foo:			# Start of function
-
-	subu $a0, $sp, 8		# adjust the stack for function setup
-	sw $sp, ($a0)		# remember old SP
-	sw $ra, 4($a0)		# remember current Return address
-	move $sp, $a0		# adjust the stack pointer
-
-
-# Function Return
-	li $a0, 0		# restore RA
-	lw $ra, 4($sp)		# restore old environment RA
-	lw $sp, ($sp)		# Return from function store SP
-
-	jr $ra		# Return from function
 # Function Declaration
 main:			# Start of function
 
@@ -31,8 +17,12 @@ main:			# Start of function
 	move $sp, $a0		# adjust the stack pointer
 
 
-# Function Call
-	jal foo		# Function call jump and link
+	li $a0, 20		# Expression is a constant
+	move $a1, $a0		# Copy index into $a1
+	sll $a1, $a1, 2		# Multiply index by 4 (word size)
+	la $a0, x		# EMIT Var global variable
+	add $a0, $a0, $a1		# Compute address of array element
+	lw $a0, ($a0)		# # load variable value
 	lw $ra, 4($sp)		# restore old environment RA
 	lw $sp, ($sp)		# Return from function store SP
 	li $v0, 10		# Exit we are done

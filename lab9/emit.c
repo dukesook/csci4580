@@ -38,6 +38,7 @@ static void emit_dereference_if_variable(ASTnode*, FILE*);
 static void emit_arg_list(ASTnode*, FILE*);
 static void emit_argument_expression(ASTnode*, FILE*);
 static void emit_argument_load(ASTnode*, FILE*, int arg_index);
+static void emit_return(ASTnode*, FILE*);
 
 // Prototypes - Helpers
 static char* create_label();
@@ -137,13 +138,15 @@ void emit_ast(ASTnode* p, FILE* fp) {
     case A_ITERATION_STATEMENT:
       emit_while(p, fp);
       break;
+    case A_RETURN:
+      emit_return(p, fp);
+      break;
     case A_PROTOTYPE:
       // do nothing
       break;
     case A_ARGUMENT:
     case A_CONTINUE:
     case A_BREAK:
-    case A_RETURN:
     default:
       printf("emit_ast(): ERROR! Unhandled node type %s\n", type);
       exit(1);
@@ -679,6 +682,22 @@ void emit_argument_load(ASTnode* p, FILE* fp, int arg_index) {
   }
 
 } // end of emit_argument_load()
+
+// PRE:
+// POST:
+void emit_return(ASTnode* p, FILE* fp) {
+
+  assert_nodetype(p, A_RETURN);
+
+  // Hardcode for now:
+  emit_ast(p->s1, fp); // Evaluate return expression
+  emit_dereference_if_variable(p->s1, fp); // Ensure $a0 has the return value
+  emit_line(fp, "lw $ra, 4($sp)", "restore old environment RA");
+  emit_line(fp, "lw $sp, ($sp)", "Return from function store SP");
+  emit_line(fp, "li $v0, 10", "Exit we are done");
+  emit_line(fp, "syscall", "EXIT everything");
+
+}
 
 // Prototypes - Helpers
 
