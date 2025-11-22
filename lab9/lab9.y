@@ -657,6 +657,10 @@ Assignment_Stmt: Variable '=' Simple_Expression ';' {
 	$$ = ASTCreateNode(A_ASSIGNMENT_STATEMENT);
 	ASTnode* lhs = $1; // for debugging
 	ASTnode* rhs = $3; // for debugging
+	if (rhs->symbol->SubType == SYM_ARRAY) {
+		// The RHS should never be an array
+		yyerror("Cannot assign array to variable");
+	}
 	assert_same_datatype($1, $3); // Ensure variable and expression have the same datatype
 	assert_scalar_array_match($1, $3); // Ensure both are scalar or both are array
 	$$->s1 = $1; // Variable

@@ -1,7 +1,7 @@
 void main(void)
 begin
 
-  int x;
+  int x[50];
   int y[50];
 
   x = y;
