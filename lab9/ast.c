@@ -31,10 +31,12 @@ ASTnode *ASTCreateNode(enum ASTtype mytype) {
   p->operator = A_OPERATOR_UNKNOWN;       // Indicates which operator (if any) will be applied to the child nodes
   p->datatype = A_DATATYPE_UNKNOWN;       // Indicates datatype of variable or function
   p->name = NULL;                         // Name (T_ID) of variable or function
+  p->label = NULL;                        // used for labels in IF and WHILE statements
   p->s1 = NULL;                           // Child node #1
   p->s2 = NULL;                           // Child node #2
   p->value = -1;                          // used for number values and also for array size
   p->symbol = NULL;                       // Pointer to symbol table entry for this node
+  p->is_array = false;                    // true if this variable node represents an array element (e.g., x[5]
   return (p);
 } // end of ASTCreateNode()
 

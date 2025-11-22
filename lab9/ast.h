@@ -84,6 +84,7 @@ typedef struct ASTnodetype {
   int value;                    // used for number values. varaibles: 0 = single variable. # = array size. -1 = not used
   struct ASTnodetype *s1, *s2;  // used for holding IF and WHILE components -- not very descriptive
   struct SymbTab *symbol;       // Pointer to symbol table entry for this node
+  bool is_array;              // true if this variable node represents an array element (e.g., x[5]
 } ASTnode;
 
 /* uses malloc to create an ASTnode and passes back the heap address of the newley created node */

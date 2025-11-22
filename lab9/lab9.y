@@ -60,9 +60,7 @@ static void assert_scalar_array_match(ASTnode* p1, ASTnode* p2) {
 
 	// A scalar may
 
-	bool p1_is_array = (p1->symbol->SubType == SYM_ARRAY);
-	bool p2_is_array = (p2->symbol->SubType == SYM_ARRAY);
-	if (p1_is_array != p2_is_array) {
+	if (p1->is_array != p2->is_array) {
 		yyerror(p1->name);
 		yyerror(p2->name);
 		printf("mismatched scalar/array types\n");
@@ -408,6 +406,7 @@ Var_List: T_ID
 				yyerror("Array size must be greater than 0");
 			}
 			$$->value = $3; // array size
+			$$->is_array = true; // mark as array
 			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3); // insert into symbol table
 		}
 	| T_ID ',' Var_List	
@@ -424,6 +423,7 @@ Var_List: T_ID
 			$$->name = $1; // variable name
 			$$->value = $3; // array size
 			$$->s1 = $6; // next variable in list
+			$$->is_array = true; // mark as array
 			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3); // insert into symbol table
 		};
 
@@ -552,6 +552,7 @@ Param: Type_Specifier T_ID
 			$$->name = $2; // Parameter name
 			$$->value = 1; // indicates array parameter
 			int size = 1; // arrays are passed as pointers, so size is 1
+			$$->is_array = true; // mark as array
 			$$->symbol = yy_insert($2, $1, SYM_ARRAY, LEVEL+1, size);
 		};
 
@@ -657,7 +658,7 @@ Assignment_Stmt: Variable '=' Simple_Expression ';' {
 	$$ = ASTCreateNode(A_ASSIGNMENT_STATEMENT);
 	ASTnode* lhs = $1; // for debugging
 	ASTnode* rhs = $3; // for debugging
-	if (rhs->symbol->SubType == SYM_ARRAY) {
+	if (rhs->is_array) {
 		// The RHS should never be an array
 		yyerror("Cannot assign array to variable");
 	}
@@ -695,6 +696,7 @@ Variable: T_ID 	{
 		$$->name = $1; // Variable name
 		$$->s1 = $3; // Index expression
 		$$->symbol = symbol; // Link to symbol table entry
+		$$->is_array = false; // indexed variable is scalar!!!
 		$$->datatype = symbol->Declared_Type; // Set datatype to the declared type of the array
 		$$->value = get_array_size($$->s1); // array size
 		/* $$->symbol->SubType = SYM_SCALAR; // while T_ID is an array, the result of indexing it is a scalar */
