@@ -36,8 +36,8 @@ Enhancements:
 
 enum  SYMBOL_SUBTYPE
 {
-   SYM_SCALAR, // not array
-   SYM_FUNCTION,
+   SYM_SCALAR,   // scalar
+   SYM_FUNCTION, // scalar
    SYM_FUNCTION_PROTO, // example: int f(void);
    SYM_FUNCTION_PRE, // example: int f, parameters & body is unknown
    SYM_ARRAY

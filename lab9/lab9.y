@@ -52,6 +52,24 @@ static void assert_not_null(void *p) {
 	}
 }
 
+// PRE: two AST nodes to compare
+// POST: exits program if one is scalar and the other is array
+static void assert_scalar_array_match(ASTnode* p1, ASTnode* p2) {
+	assert_not_null(p1);
+	assert_not_null(p2);
+
+	// A scalar may
+
+	bool p1_is_array = (p1->symbol->SubType == SYM_ARRAY);
+	bool p2_is_array = (p2->symbol->SubType == SYM_ARRAY);
+	if (p1_is_array != p2_is_array) {
+		yyerror(p1->name);
+		yyerror(p2->name);
+		printf("mismatched scalar/array types\n");
+		exit(1);
+	}
+}
+
 // PRE: name to search, level to search at, recur for recursive search
 // POST: exits program if symbol is found
 static void assert_doesnt_exist(char name[], int level, bool recur) {
@@ -272,11 +290,7 @@ static bool check_params(ASTnode *params, ASTnode *args) {
 	}
 
 	// compare array vs scalar
-	bool params_is_array = (params->symbol->SubType == SYM_ARRAY);
-	bool args_is_array = (args->symbol->SubType == SYM_ARRAY);
-	if (params_is_array != params_is_array) {
-		return false; // one is array, the other is not
-	}
+	assert_scalar_array_match(params, args);
 
 	// check children
 	bool children_match = check_params(params->s1, args->s2);
@@ -641,7 +655,10 @@ Write_Stmt: T_WRITE Expression ';' { $$ = ASTCreateNode(A_WRITE); // Write expre
 /* Rule #20 */
 Assignment_Stmt: Variable '=' Simple_Expression ';' { 
 	$$ = ASTCreateNode(A_ASSIGNMENT_STATEMENT);
+	ASTnode* lhs = $1; // for debugging
+	ASTnode* rhs = $3; // for debugging
 	assert_same_datatype($1, $3); // Ensure variable and expression have the same datatype
+	assert_scalar_array_match($1, $3); // Ensure both are scalar or both are array
 	$$->s1 = $1; // Variable
 	$$->s2 = $3; // Expression
 	$$->name = CreateTemp(); // temp variable to hold assigned value
