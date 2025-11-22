@@ -1,10 +1,7 @@
-int foo(void) begin
-
-end
-
-int main(void)
+void main(void)
 begin
 
-  return foo();
+  1 < 2;
+
 
 end

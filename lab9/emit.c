@@ -364,7 +364,7 @@ void emit_expression(ASTnode* node, FILE* fp) {
       emit_line(fp, "mflo $a0", "EXPR DIV");
       break;
     default:
-      printf("emit_expression(): unhandled operator\n");
+      printf("emit_expression(): unhandled operator: %s\n", operator);
       exit(1);
   }
 

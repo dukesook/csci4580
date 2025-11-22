@@ -692,7 +692,7 @@ Simple_Expression: Additive_Expression { $$ = $1;}
 		$$->operator = $2; // Relational operator
 		$$->datatype = A_BOOLEANTYPE; // Result of relational operation is boolean
 		$$->name = CreateTemp(); // temp 1/3
-		yy_insert($$->name, A_BOOLEANTYPE, SYM_SCALAR, LEVEL, SCALAR_SIZE);
+		$$->symbol = yy_insert($$->name, A_BOOLEANTYPE, SYM_SCALAR, LEVEL, SCALAR_SIZE);
 	};
 
 /* Rule #22 */
