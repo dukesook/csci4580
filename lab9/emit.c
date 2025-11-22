@@ -83,9 +83,6 @@ void emit_ast(ASTnode* p, FILE* fp) {
 
   char* type = ASTtype_to_string(p->nodetype);
 
-  if (p->nodetype == A_STMT_LIST) {
-    printf("\n");
-  }
 
   switch (p->nodetype) {
     case A_DEC_LIST:
@@ -326,6 +323,12 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
   assert_nodetype(node, A_EXPRESSION);
 
+  if (node->operator == A_NOT) {
+    emit_ast(node->s1, fp); // $a0 has the result of the left hand side expression
+    emit_dereference_if_variable(node->s1, fp);
+    return;
+  }
+
   char* type = ASTtype_to_string(node->nodetype);
   char line[256];
   int offset = 0;
@@ -363,6 +366,37 @@ void emit_expression(ASTnode* node, FILE* fp) {
       emit_line(fp, "div $a0, $a1", "Expression DIVIDE");
       emit_line(fp, "mflo $a0", "EXPR DIV");
       break;
+    case A_LT:
+      emit_line(fp, "slt $a0, $a0, $a1", "Expression LT");
+      break;
+    case A_GT:
+      emit_line(fp, "slt $a0, $a1, $a0", "Expression GT");
+      break;
+    case A_LE:
+      emit_line(fp, "add $a1, $a1, 1", "Expression LE adjust");
+      emit_line(fp, "slt $a0, $a0, $a1", "Expression LE");
+      break;
+    case A_GE:
+      emit_line(fp, "add $a0, $a0, 1", "Expression GE adjust");
+      emit_line(fp, "slt $a0, $a1, $a0", "Expression GE");
+      break;
+    case A_EQ:
+      emit_line(fp, "slt $t2, $a0, $a1", "Expression EQ part 1");
+      emit_line(fp, "slt $t3, $a1, $a0", "Expression EQ part 2");
+      emit_line(fp, "nor $a0, $t2, $t3", "Expression EQ final");
+      emit_line(fp, "andi $a0, 1", "Expression EQ result");
+      break;
+    case A_NE:
+      emit_line(fp, "slt $t2, $a0, $a1", "Expression NE part 1");
+      emit_line(fp, "slt $t3, $a1, $a0", "Expression NE part 2");
+      emit_line(fp, "or $a0, $t2, $t3", "Expression NE final");
+      break;
+      case A_AND:
+      case A_OR:
+      // emit nothing?
+      break;
+    case A_NOT:
+        // handled above
     default:
       printf("emit_expression(): unhandled operator: %s\n", operator);
       exit(1);

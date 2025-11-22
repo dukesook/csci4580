@@ -774,6 +774,7 @@ Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
 										$$->operator = A_NOT; // NOT operator
 										$$->s1 = $2; // Operand
 										$$->datatype = A_BOOLEANTYPE; // Result is boolean
+										$$->symbol = yy_insert(CreateTemp(), A_BOOLEANTYPE, SYM_SCALAR, LEVEL, 0);
 									};
 
 /* Rule #28 */
