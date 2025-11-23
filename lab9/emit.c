@@ -572,9 +572,9 @@ void emit_variable(ASTnode* p, FILE* fp) {
 // PRE:
 // POST:
 void emit_parameter(ASTnode* p, FILE* fp) {
-  if (!p) {
-    return;
-  }
+  
+  assert_nodetype(p, A_PARAM);
+
 
   int offset = p->symbol->offset * WSIZE; // offset in bytes
   int param_index = p->symbol->offset - 2; // 2 is the size of the function
