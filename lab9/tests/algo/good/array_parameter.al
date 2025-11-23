@@ -1,7 +1,19 @@
+int foo(int b)
+begin
+
+end
+
+int bar(int c[])
+begin
+
+end
+
 void main(int x[])
 begin
-  
-  x[2];
+
+  main(x);
+  bar(x);
+
 
 
 end

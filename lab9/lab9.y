@@ -61,9 +61,9 @@ static void assert_scalar_array_match(ASTnode* p1, ASTnode* p2) {
 	// A scalar may
 
 	if (p1->is_array != p2->is_array) {
+		printf("mismatched scalar/array types\n");
 		yyerror(p1->name);
 		yyerror(p2->name);
-		printf("mismatched scalar/array types\n");
 		exit(1);
 	}
 }
@@ -677,14 +677,13 @@ Expression: Simple_Expression { $$ = $1; }; // Pass up the AST node
 Variable: T_ID 	{ 
 		struct SymbTab* symbol = assert_exists($1, LEVEL); // Ensure variable exists
 		
-		// bugfix! value may also be array
-		//assert_subtype(p, SYM_SCALAR); // Ensure variable is of subtype SYM_SCALAR
-
-		$$ = ASTCreateNode(A_VARIABLE); // Create variable node
-		$$->name = $1; // Variable name
-		$$->symbol = symbol; // Link to symbol table entry
-		$$->datatype = symbol->Declared_Type; // Set datatype to the declared type of the variable
-		$$->value = 1; // scalar variable
+		ASTnode* node = ASTCreateNode(A_VARIABLE); // for debugging
+		node->name = $1; // Variable name
+		node->symbol = symbol; // Link to symbol table entry
+		node->datatype = symbol->Declared_Type; // Set datatype to the declared type of the variable
+		node->value = 1; // scalar variable
+		node->is_array = (symbol->SubType == SYM_ARRAY || symbol->SubType == SYM_ARRAY_PARAMETER) ? true : false;
+		$$ = node;
 	}
 
 	| T_ID '[' Expression ']'	{ 
@@ -698,7 +697,7 @@ Variable: T_ID 	{
 		$$->symbol = symbol; // Link to symbol table entry
 		$$->is_array = false; // indexed variable is scalar!!!
 		$$->datatype = symbol->Declared_Type; // Set datatype to the declared type of the array
-		$$->value = get_array_size($$->s1); // array size
+		$$->value = get_array_size($$->s1); // array index
 		/* $$->symbol->SubType = SYM_SCALAR; // while T_ID is an array, the result of indexing it is a scalar */
 		//$$->name = CreateTemp(); // temp variable to hold indexed value // USE ARRAY NAME, NOT TEMP!
 		/* $$->symbol = yy_insert($$->name, $$->datatype, SYM_SCALAR, LEVEL, 0); // insert temp variable into symbol table */
@@ -830,6 +829,9 @@ Call: T_ID '(' Args ')'	{
 	$$->s1 = $3;  // Arguments
 	$$->symbol = symbol; // Link to symbol table entry
 	$$->datatype = $$->symbol->Declared_Type; // Function return type
+
+	
+
 };
 
 /* Rule #29 */
@@ -841,21 +843,24 @@ Args: Arg_List { 	$$ = ASTCreateNode(A_ARG_LIST); // Create argument list node
 /* Rule #30 */
 Arg_List: Expression	{ 	
 												ASTnode* p = ASTCreateNode(A_ARGUMENT); // for debugging
-												$$ = p; // Create argument node
-												$$->s1 = $1; // Argument Expression
-												$$->s2 = NULL; // No remaining arguments
-												$$->datatype = $1->datatype;
-												$$->value = get_array_size($1);
-												$$->symbol = yy_insert(CreateTemp(), $1->datatype, $1->symbol->SubType, LEVEL, SCALAR_SIZE);
+												p = p; // Create argument node
+												p->s1 = $1; // Argument Expression
+												p->s2 = NULL; // No remaining arguments
+												p->datatype = $1->datatype;
+												p->value = get_array_size($1);
+												p->symbol = yy_insert(CreateTemp(), $1->datatype, $1->symbol->SubType, LEVEL, SCALAR_SIZE);
+												p->is_array = p->s1->is_array;
+												$$ = p;
 											}
 	| Expression ',' Arg_List { 
 															ASTnode* p = ASTCreateNode(A_ARGUMENT); // Create argument node
+															p->s1 = $1; // Argument Expression
+															p->s2 = $3; // Remaining arguments
+															p->datatype = $1->datatype;
+															p->value = get_array_size($1);
+															p->symbol = yy_insert(CreateTemp(), $1->datatype, $1->symbol->SubType, LEVEL, SCALAR_SIZE);
+															p->is_array = p->s1->is_array;
 															$$ = p;
-															$$->s1 = $1; // Argument Expression
-															$$->s2 = $3; // Remaining arguments
-															$$->datatype = $1->datatype;
-															$$->value = get_array_size($1);
-															$$->symbol = yy_insert(CreateTemp(), $1->datatype, $1->symbol->SubType, LEVEL, SCALAR_SIZE);
 														};
 
 

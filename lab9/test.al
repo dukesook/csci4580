@@ -1,19 +1,19 @@
-int y[100];
-
-int foo (int x[])
+int foo(int b)
 begin
-  int y;
 
-  y = x[5];
-  x[10] = y + 4 + x[2];
+end
+
+int bar(int c[])
+begin
 
 end
 
 void main(int x[])
 begin
-  int z;
-  x[2];
-  y[10] = y[1] + x[y[2/2]] * z;
-  x[2] = y[x[y[x[y[x[37*92*x[2]]]]]]];
+
+  main(x);
+  bar(x);
+
+
 
 end
