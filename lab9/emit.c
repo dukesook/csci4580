@@ -526,11 +526,11 @@ void emit_variable(ASTnode* p, FILE* fp) {
   assert_nodetype(p, A_VARIABLE);
 
   char s[256];
-  bool is_array = (p->s1) ? true : false; // array vs scalar
+  bool is_indexed_array = (p->s1) ? true : false; // an indexed array is actually a scalar.
   bool is_global_variable = (p->symbol->level == 0) ? true : false;
 
   // Get Array Index
-  if (is_array) {
+  if (is_indexed_array) {
 
     emit_ast(p->s1, fp); // $a0 has the result of the index expression
     emit_dereference_if_variable(p->s1, fp); // ensure $a0 has the value of the index expression
@@ -556,7 +556,7 @@ void emit_variable(ASTnode* p, FILE* fp) {
   }
 
   // Array Address + Offset
-  if (is_array) {
+  if (is_indexed_array) {
     if (p->symbol->SubType == SYM_ARRAY_PARAMETER) {
       emit_line(fp, "lw, $a0, ($a0)", "Load address of array parameter");
     }
@@ -606,6 +606,9 @@ void emit_dereference_if_variable(ASTnode* node, FILE* fp) {
   if (!node) {
     return;
   } else if ( node->nodetype != A_VARIABLE) {
+    return;
+  } else if (node->symbol->level == 0 && node->is_array) {
+    // Global array variable - do not dereference
     return;
   }
   // emit_ast(node, fp); // $a0 has the result
