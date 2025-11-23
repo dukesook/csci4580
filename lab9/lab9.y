@@ -553,7 +553,7 @@ Param: Type_Specifier T_ID
 			$$->value = 1; // indicates array parameter
 			int size = 1; // arrays are passed as pointers, so size is 1
 			$$->is_array = true; // mark as array
-			$$->symbol = yy_insert($2, $1, SYM_ARRAY, LEVEL+1, size);
+			$$->symbol = yy_insert($2, $1, SYM_ARRAY_PARAMETER, LEVEL+1, size);
 		};
 
 /* Rule #10 */
@@ -689,7 +689,7 @@ Variable: T_ID 	{
 
 	| T_ID '[' Expression ']'	{ 
 		struct SymbTab* symbol = assert_exists($1, LEVEL); // Ensure variable exists
-		assert_subtype(symbol, SYM_ARRAY); // Ensure variable is of subtype SYM_ARRAY
+		/* assert_subtype(symbol, SYM_ARRAY); // Ensure variable is of subtype SYM_ARRAY */
 		
 		ASTnode* p = ASTCreateNode(A_VARIABLE); // for debugging
 		$$ = p; // Create array variable node

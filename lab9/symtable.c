@@ -211,6 +211,8 @@ const char* subtype_to_string(enum SYMBOL_SUBTYPE subtype)
          return "FUNCTION_PRE";
       case SYM_ARRAY:
          return "ARRAY";
+      case SYM_ARRAY_PARAMETER:
+         return "ARRAY_PARAMETER";
       default:
          return "UNKNOWN_SUBTYPE";
    }

@@ -562,7 +562,7 @@ void emit_variable(ASTnode* p, FILE* fp) {
 
   // Array Address + Offset
   if (is_array) {
-    if (is_parameter) {
+    if (p->symbol->SubType == SYM_ARRAY_PARAMETER) {
       emit_line(fp, "lw, $a0, ($a0)", "Load address of array parameter");
     }
     emit_line(fp, "add $a0, $a0, $a1", "Compute address of array element");

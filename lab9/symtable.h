@@ -40,7 +40,8 @@ enum  SYMBOL_SUBTYPE
    SYM_FUNCTION, // scalar
    SYM_FUNCTION_PROTO, // example: int f(void);
    SYM_FUNCTION_PRE, // example: int f, parameters & body is unknown
-   SYM_ARRAY
+   SYM_ARRAY,
+   SYM_ARRAY_PARAMETER,
    // missing for array as parameter
 };
 

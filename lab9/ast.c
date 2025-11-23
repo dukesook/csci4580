@@ -37,6 +37,7 @@ ASTnode *ASTCreateNode(enum ASTtype mytype) {
   p->value = -1;                          // used for number values and also for array size
   p->symbol = NULL;                       // Pointer to symbol table entry for this node
   p->is_array = false;                    // true if this variable node represents an array element (e.g., x[5]
+  p->is_parameter = false;
   return (p);
 } // end of ASTCreateNode()
 
