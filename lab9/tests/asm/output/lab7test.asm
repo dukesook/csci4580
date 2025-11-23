@@ -3,8 +3,8 @@
 .data
 
 .align 2
-Z: .space 400  # global variable
 y: .space 4  # global variable
+Z: .space 400  # global variable
 z: .space 4  # global variable
 
 .text

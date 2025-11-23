@@ -19,7 +19,7 @@ static void emit_ast(ASTnode*, FILE*);
 static void emit(FILE*, char* label, char* command, char* comment);
 static void emit_line(FILE*, char* line, char* comment);
 static void emit_traverse_ast(ASTnode*, FILE*, EmitFunction);
-static void emit_global_variable(ASTnode*, FILE*);
+static void emit_global_variables(ASTnode*, FILE*);
 static void emit_string(ASTnode*, FILE*);
 static void emit_function_declaration(ASTnode*, FILE*);
 static void emit_expression_statement(ASTnode*, FILE*);
@@ -64,7 +64,7 @@ void EMIT(ASTnode* root, FILE* fp) {
   
   // Globals
   fprintf(fp, "\n.align 2\n");
-  emit_traverse_ast(root, fp, emit_global_variable);
+  emit_global_variables(root, fp);
 
   // Text
   fprintf(fp, "\n.text\n");
@@ -236,26 +236,28 @@ void emit_traverse_ast(ASTnode* node, FILE* fp, EmitFunction function) {
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits global variable declarations in MIPS code
-void emit_global_variable(ASTnode* node, FILE* fp) {
+void emit_global_variables(ASTnode* node, FILE* fp) {
   if (!node) {
     return;
   }
 
   if (!node->symbol) {
-    return;// No symbol table entry
+    // return;// No symbol table entry
   } else if (node->symbol->level != 0) {
-    return;// Not a global variable
-  }
-
-  if (node->nodetype == A_VARDEC) {
+    // return;// Not a global variable
+  } else if (node->nodetype == A_VARDEC) {
     char* type = ASTtype_to_string(node->nodetype);
     int size = node->value * WSIZE; // size in bytes
     fprintf(fp, "%s: .space %d  # global variable\n", node->name, size);
   }
 
+  emit_global_variables(node->s2, fp);
+  emit_global_variables(node->s1, fp);
+
+
   return;
 
-} // end of emit_global_variable()
+} // end of emit_global_variables()
 
 // PRE: ASTnode pointer p, file pointer fp
 // POST: Emits string literals in MIPS code
