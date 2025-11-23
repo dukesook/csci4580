@@ -1,18 +1,9 @@
-int foo(int b)
-begin
-
-end
-
-int bar(int c[])
-begin
-
-end
+int g[100];
 
 void main(int x[])
 begin
 
-  main(x);
-  bar(x);
+  main(g);
 
 
 

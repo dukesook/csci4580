@@ -501,12 +501,8 @@ void emit_write(ASTnode* p, FILE* fp) {
   } else {
     // Expression
     emit_ast(p->s1, fp);
-    if (p->s1->nodetype == A_VARIABLE) {
-      // Load variable value into $a0
-      emit_line(fp, "lw $a0, ($a0)", "# load variable value");
-    } else {
-      // $a0 already has the expression result
-    }
+    emit_dereference_if_variable(p->s1, fp);
+
     emit_line(fp, "li $v0, 1", "# print the number");
     emit_line(fp, "syscall", "#system call for print number");
     fprintf(fp, "\n\n");
@@ -682,10 +678,6 @@ void emit_arg_list(ASTnode* p, FILE* fp) {
   for (int i = 0; i < arg_count; i++) {
     offset = (arg_count - i + 1) * WSIZE;
     char s[256];
-    // sprintf(s, "lw $a0, %d($sp)", offset);
-    // emit_line(fp, s, "Load argument into $a register");
-    // sprintf(s, "move $t%d, $a0", i);
-    // emit_line(fp, s, "Move argument into temp variable");
 
   }
 
