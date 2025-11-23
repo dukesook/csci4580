@@ -391,31 +391,30 @@ Var_Declaration: Type_Specifier Var_List ';'
 /* Rule 4a */
 Var_List: T_ID 
 		{ 
-			$$ = ASTCreateNode(A_VARDEC);
-			$$->name = $1;
-			$$->value = 1; // single variable (not array)
-			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert into symbol table
+			ASTnode* p = ASTCreateNode(A_VARDEC);
+			p->name = $1;
+			p->value = 1; // single variable (not array)
+			p->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert into symbol table
+			$$ = p;
 		}
 
 	| T_ID '[' T_NUM ']'
 		{ 
 			ASTnode *p = ASTCreateNode(A_VARDEC); // for debugging
+			p->name = $1; // variable name
+			p->value = $3; // array size
+			p->is_array = true; // mark as array
+			p->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3); // insert into symbol table
 			$$ = p;
-			$$->name = $1; // variable name
-			if ($3 <= 0) {
-				yyerror("Array size must be greater than 0");
-			}
-			$$->value = $3; // array size
-			$$->is_array = true; // mark as array
-			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_ARRAY, LEVEL, $3); // insert into symbol table
 		}
 	| T_ID ',' Var_List	
 		{ 
-			$$ = ASTCreateNode(A_VARDEC);
-			$$->name = $1;  // variable name
-			$$->value = 1; // single variable (not array)
-			$$->s1 = $3; // next variable in list
-			$$->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert into symbol table
+			ASTnode* p = ASTCreateNode(A_VARDEC);
+			p->name = $1;  // variable name
+			p->value = 1; // single variable (not array)
+			p->s1 = $3; // next variable in list
+			p->symbol = yy_insert($1, A_DATATYPE_UNKNOWN, SYM_SCALAR, LEVEL, SCALAR_SIZE); // insert into symbol table
+			$$ = p;
 		}
 	| T_ID '[' T_NUM ']' ',' Var_List
 		{ 

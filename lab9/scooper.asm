@@ -26,7 +26,7 @@ main:			# START of FUNCION
 	lw $a0, ($a0)		# Expression is a VAR
 	move $a1, $a0		# #right hand side needs to be a1
 	lw $a0, 16($sp)		# expression restore LHS from memory
-	slt $a0, $a0, $a1		# #EXPR Lessthan
+	add $a0, $a0, $a1		# #EXPR ADD
 	li $a0, 0		# RETURN has no specified value set to 0
 	lw $ra 4($sp)		# restore old environment RA
 	lw $sp ($sp)		# Return from function store SP
