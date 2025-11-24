@@ -3,7 +3,7 @@
 .data
 
 .align 2
-my_array: .space 4096  # global variable
+g: .space 20  # global variable
 
 .text
 

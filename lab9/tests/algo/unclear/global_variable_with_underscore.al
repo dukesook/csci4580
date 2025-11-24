@@ -1,4 +1,4 @@
-int g[5];
+int my_array[5];
 
 
 int main(void)
