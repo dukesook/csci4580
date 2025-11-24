@@ -3,6 +3,7 @@
 .data
 
 .align 2
+my_array: .space 4096  # global variable
 
 .text
 
@@ -10,22 +11,12 @@
 # Function Declaration
 main:			# Start of function
 
-	subu $a0, $sp, 20		# adjust the stack for function setup
+	subu $a0, $sp, 8		# adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# adjust the stack pointer
 
 
-	move $a0, $sp		# VAR local make a copy of stackpointer
-	addi $a0, $a0, 8		# EMIT Var local variable
-	lw $a0, ($a0)		# # load variable value
-	sw $a0, 16($sp)		# expression store LHS temporarily
-	move $a0, $sp		# VAR local make a copy of stackpointer
-	addi $a0, $a0, 12		# EMIT Var local variable
-	lw $a0, ($a0)		# # load variable value
-	move $a1, $a0		# Move RHS into $a1
-	lw $a0, 16($sp)		# expression restore LHS from memory
-	add $a0, $a0, $a1		# Expression PLUS
 # Function Return
 	li $a0, 0		# restore RA
 	lw $ra, 4($sp)		# restore old environment RA
