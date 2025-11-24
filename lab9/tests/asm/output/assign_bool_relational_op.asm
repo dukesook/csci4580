@@ -19,11 +19,11 @@ main:			# Start of function
 
 # Assignment Statement
 	move $a0, $sp		# VAR local make a copy of stackpointer
-	addi $a0, $a0, 12		# EMIT Var local variable
+	addi $a0, $a0, 8		# EMIT Var local variable
 	lw $a0, ($a0)		# # load variable value
 	sw $a0, 20($sp)		# expression store LHS temporarily
 	move $a0, $sp		# VAR local make a copy of stackpointer
-	addi $a0, $a0, 8		# EMIT Var local variable
+	addi $a0, $a0, 12		# EMIT Var local variable
 	lw $a0, ($a0)		# # load variable value
 	move $a1, $a0		# Move RHS into $a1
 	lw $a0, 20($sp)		# expression restore LHS from memory

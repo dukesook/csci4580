@@ -386,6 +386,18 @@ Var_Declaration: Type_Specifier Var_List ';'
 			p->symbol->Declared_Type = $1;
 			p = p->s1; // Move to the next variable in the list
 		}
+
+		// Quick Hack!!!
+		// Reverse the offsets of the varlist (to match scooper/lab9)
+		int offsets[1024];
+		int count = 0;
+		for (p = $2; p != NULL; count++, p = p->s1) {
+			offsets[count] = p->symbol->offset;			
+		}
+		for (p = $2; p != NULL; p = p->s1, count--) {
+			p->symbol->offset = offsets[count-1];
+		}
+	
 	};
 
 /* Rule 4a */
