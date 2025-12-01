@@ -816,13 +816,15 @@ Call: T_ID '(' Args ')'	{
 	struct SymbTab* symbol = assert_exists($1, level); // Ensure function exists
 	// check to see if symbol is a function
 	if (symbol->SubType != SYM_FUNCTION &&
-			symbol->SubType != SYM_FUNCTION_PRE) {
+			symbol->SubType != SYM_FUNCTION_PRE &&
+			symbol->SubType != SYM_FUNCTION_PROTO) {
 		printf("%s is not a function: it's a: %s\n", $1, subtype_to_string(symbol->SubType));
 		yyerror("is not a function");
-	} else if (symbol->SubType == SYM_FUNCTION_PROTO) {
+	}
+	/* else if (symbol->SubType == SYM_FUNCTION_PROTO) {
 		printf("Prototype function call: %s\n", $1);
 		yyerror("calling function prototype");
-	}
+	} */
 
 	// check to see if formals and actuals match in length and type
 	// $3 = A_ARG_LIST
