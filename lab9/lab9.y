@@ -903,7 +903,7 @@ int main(int argc, char* argv[]) {
 				exit(1);
 			}  // end if
 			strcpy(s, argv[i+1]);
-			/* strcat(s, ".asm"); */
+			strcat(s, ".asm");
 
 			if (mydebug) {
 				printf("opening file: %s\n", s);

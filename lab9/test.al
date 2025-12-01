@@ -1,8 +1,8 @@
-int g[5];
 
 
 int main(void)
 begin
+  int myarray;
 
 
 end

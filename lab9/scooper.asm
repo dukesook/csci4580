@@ -4,7 +4,6 @@
 
 .align 2 
 
-g: .space 20 # global variable
 
 .text  
 
@@ -12,7 +11,7 @@ g: .space 20 # global variable
 
 main:			# START of FUNCION
 
-	subu $a0, $sp, 8		# # adjust the stack for function setup
+	subu $a0, $sp, 12		# # adjust the stack for function setup
 	sw $sp, ($a0)		# remember old SP
 	sw $ra, 4($a0)		# remember current Return address
 	move $sp, $a0		# # adjust the stack pointer

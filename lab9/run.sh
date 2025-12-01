@@ -9,7 +9,7 @@ LAB9_EXIT_CODE=0
 SCOOPER_EXIT_CODE=0
 
 # Compile test.al to out.asm
-make && ./lab9 -o out.asm < "$TEST_FILE"
+make && ./lab9 -o out < "$TEST_FILE"
 LAB9_EXIT_CODE=$?
 if [ $LAB9_EXIT_CODE -eq 0 ] # if success
 then

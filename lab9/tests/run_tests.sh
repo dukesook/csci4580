@@ -24,7 +24,7 @@ do
   EXPECTED="asm/expected/$(basename "${f%.al}".asm)"
 
   # Run Lab 9
-  ../lab9 -o "$OUTPUT" < "$f" > /dev/null
+  ../lab9 -o "${OUTPUT%.asm}" < "$f" > /dev/null
   if [ $? -ne 0 ]
   then
     echo -e "Test $f: \e[31mCompilation Failed!\e[0m"
