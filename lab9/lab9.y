@@ -393,11 +393,23 @@ Var_Declaration: Type_Specifier Var_List ';'
 		int offsets[1024];
 		int count = 0;
 		for (p = $2; p != NULL; count++, p = p->s1) {
-			offsets[count] = p->symbol->offset;			
+			offsets[count] = p->symbol->offset;
 		}
-		for (p = $2; p != NULL; p = p->s1, count--) {
+		int first_offset = offsets[count-1];
+		int current_offset = first_offset;
+		p = $2;
+		p->symbol->offset = first_offset;
+		while (p != NULL) {
+			p->symbol->offset = current_offset;
+			current_offset += p->symbol->mysize;
+			p = p->s1;
+		}
+
+		// This doesn't account for arrays properly
+		/* for (p = $2; p != NULL; count--) {
 			p->symbol->offset = offsets[count-1];
-		}
+			p = p->s1;
+		} */
 	
 	};
 
