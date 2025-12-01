@@ -609,7 +609,10 @@ void emit_dereference_if_variable(ASTnode* node, FILE* fp) {
     return;
   } else if ( node->nodetype != A_VARIABLE) {
     return;
-  } else if (node->symbol->level == 0 && node->is_array) {
+  } else if (node->symbol->SubType == SYM_ARRAY_PARAMETER) {
+    // Dereference Array parameter
+    // pass through
+  } else if (node->is_array) {
     // Global array variable - do not dereference
     return;
   }
