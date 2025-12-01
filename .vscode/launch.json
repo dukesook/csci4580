@@ -35,7 +35,7 @@
       "program": "${workspaceFolder}/lab9/lab9",
       // prettier-ignore
       "args": [
-        "-o", "${workspaceFolder}/lab9/out.asm",
+        "-o", "${workspaceFolder}/lab9/out",
         "<", "${workspaceFolder}/lab9/test.al"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",

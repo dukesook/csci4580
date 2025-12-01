@@ -204,6 +204,7 @@ static int get_array_size(ASTnode* p) {
 		case A_NUMBER:
 		case A_EXPRESSION:
 		case A_FUNCTION_CALL: // ASTnode->value is not used for functions
+		case A_BOOLEAN:
 			return 0; // Scalar
 		case A_VARIABLE:
 		  if (p->value == -1) { // value is uninitialized
@@ -795,11 +796,13 @@ Factor: '(' Expression ')' { $$ = $2; } // Pass up the Expression node
 										$$ = ASTCreateNode(A_BOOLEAN); 
 										$$->value = 1; // true is represented as 1
 										$$->datatype = A_BOOLEANTYPE; // Set datatype
+										$$->symbol = yy_insert(CreateTemp(), A_BOOLEANTYPE, SYM_SCALAR, LEVEL, 0);
 									} 
 	| T_FALSE  			{
 										$$ = ASTCreateNode(A_BOOLEAN);
 										$$->value = 0; // false is represented as 0
 										$$->datatype = A_BOOLEANTYPE; // Set datatype
+										$$->symbol = yy_insert(CreateTemp(), A_BOOLEANTYPE, SYM_SCALAR, LEVEL, 0);
 									}
 	| T_NOT Factor	{ 
 										assert_datatype($2, A_BOOLEANTYPE); // Ensure the factor is boolean
@@ -861,6 +864,10 @@ Arg_List: Expression	{
 												p->s2 = NULL; // No remaining arguments
 												p->datatype = $1->datatype;
 												p->value = get_array_size($1);
+												if ($1->symbol == NULL) {
+													printf("ERROR: Argument expression has no symbol\n");
+													exit(1);
+												}
 												p->symbol = yy_insert(CreateTemp(), $1->datatype, $1->symbol->SubType, LEVEL, SCALAR_SIZE);
 												p->is_array = p->s1->is_array;
 												$$ = p;
