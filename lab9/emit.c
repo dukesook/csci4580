@@ -183,6 +183,8 @@ void emit_line(FILE* fp, char* line, char* comment) {
   emit(fp, "", line, comment);
 }
 
+// PRE: ASTnode pointer p, file pointer fp
+// POST: Emits MIPS code for while statements
 void emit_while(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_ITERATION_STATEMENT);
@@ -322,8 +324,8 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
 
 }
 
-// PRE:
-// POST:
+// PRE: Expects a ASTnode pointer p to an A_EXPRESSION_STATEMENT
+// POST: Emits MIPS code for expression statements
 void emit_expression_statement(ASTnode* p, FILE* fp) {
   
   assert_nodetype(p, A_EXPRESSION_STATEMENT);
@@ -420,7 +422,7 @@ void emit_expression(ASTnode* node, FILE* fp) {
 
 }
 
-// PRE: 
+// PRE: Expects an ASTnode* p to be of type: A_FUNCTION_CALL
 // POST: $a0 will have the return value
 void emit_call(ASTnode* p, FILE* fp) {
 
@@ -567,8 +569,8 @@ void emit_variable(ASTnode* p, FILE* fp) {
 
 }
 
-// PRE:
-// POST:
+// PRE: Expects ASTnode* p to be of type A_PARAM
+// POST: Emits MIPS code for function parameters
 void emit_parameter(ASTnode* p, FILE* fp) {
   
   assert_nodetype(p, A_PARAM);
@@ -590,8 +592,8 @@ void emit_comment(FILE* fp, char* comment) {
   fprintf(fp, "# %s\n", comment);
 }
 
-// PRE:
-// POST:
+// PRE: Expects ASTnode* p to be of type A_NUMBER or A_BOOLEAN
+// POST: Emits the p->value into $a0
 void emit_constant(ASTnode* p, FILE* fp) {
   if (!p) {
     return;
@@ -602,8 +604,8 @@ void emit_constant(ASTnode* p, FILE* fp) {
   emit_line(fp, s, "Expression is a constant");
 }
 
-// PRE:
-// POST:
+// PRE: Expects ASTnode* node to be of type A_VARIABLE
+// POST: If node is a variable, dereference it to get its value into $a0
 void emit_dereference_if_variable(ASTnode* node, FILE* fp) {
   if (!node) {
     return;
@@ -623,8 +625,8 @@ void emit_dereference_if_variable(ASTnode* node, FILE* fp) {
 
 }
 
-// PRE:
-// POST:
+// PRE: Expects an ASTnode* p to be of type A_SELECTION_STATEMENT
+// POST: Emits MIPS code for if statements
 void emit_if(ASTnode* p, FILE* fp) {
 
   /*
@@ -670,8 +672,8 @@ void emit_if(ASTnode* p, FILE* fp) {
 
 } // end of emit_if()
 
-// PRE:
-// POST:
+// PRE: Expects ASTnode* p to be of type A_ARG_LIST
+// POST: Emits MIPS code for function arguments
 void emit_arg_list(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_ARG_LIST);
@@ -691,7 +693,7 @@ void emit_arg_list(ASTnode* p, FILE* fp) {
 
 } // end of emit_arg_list()
 
-// PRE:
+// PRE: Expects an ASTnode* p to be of type A_ARGUMENT
 // POST: Evaluate each argument expression and push it onto the stack
 void emit_argument_expression(ASTnode* p, FILE* fp) {
 
@@ -710,8 +712,8 @@ void emit_argument_expression(ASTnode* p, FILE* fp) {
 
 } // end of emit_argument_expression()
 
-// PRE:
-// POST:
+// PRE: Expects an ASTnode* p to be of type A_ARGUMENT
+// POST: Loads arguments into $t# registers
 void emit_argument_load(ASTnode* p, FILE* fp, int arg_index) {
 
   assert_nodetype(p, A_ARGUMENT);
@@ -728,8 +730,8 @@ void emit_argument_load(ASTnode* p, FILE* fp, int arg_index) {
 
 } // end of emit_argument_load()
 
-// PRE:
-// POST:
+// PRE: Expects ASTnode* p to be of type A_RETURN
+// POST: Emits MIPS code for return statements
 void emit_return(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_RETURN);
@@ -756,14 +758,10 @@ void emit_return(ASTnode* p, FILE* fp) {
     emit_line(fp, "jr $ra", "Return from function");
   }
 
-  // Hardcode for now:
-
-
-
 }
 
-// PRE:
-// POST:
+// PRE: Expects ASTnode* p to be of type A_BREAK
+// POST: Emits MIPS code for break statements
 void emit_break(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_BREAK);
@@ -774,6 +772,9 @@ void emit_break(ASTnode* p, FILE* fp) {
 
 } // end of emit_break()
 
+
+// PRE: Expects ASTnode* p to be of type A_CONTINUE
+// POST: Emits MIPS code for continue statements
 void emit_continue(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_CONTINUE);
@@ -784,10 +785,11 @@ void emit_continue(ASTnode* p, FILE* fp) {
 
 } // end of emit_continue()
 
+
 // Prototypes - Helpers
 
 
-// PRE: None
+// PRE: No preconditions for this function
 // POST: Creates and returns a unique label string
 char* create_label() {
   static int label_count = 0;
@@ -796,6 +798,8 @@ char* create_label() {
   return strdup(label);
 } // end of create_label()
 
+// PRE: Expects an ASTnode* p to be of type A_ARGUMENT
+// POST: Counts the number of arguments in the argument list
 int count_arguments(ASTnode* argument) {
 
   if (!argument) {
@@ -813,6 +817,8 @@ int count_arguments(ASTnode* argument) {
   return count;
 } // end of count_arguments()
 
+// PRE: Expects an ASTnode* node and an expected ASTtype
+// POST: Asserts that the node is of the expected type, otherwise exits with an error
 void assert_nodetype(ASTnode* node, enum ASTtype expected_type) {
   if (!node) {
     fprintf(stderr, "Error: Expected node type %s but got NULL\n",
@@ -825,6 +831,8 @@ void assert_nodetype(ASTnode* node, enum ASTtype expected_type) {
   }
 }
 
+// PRE: Expects an ASTnode* node to be of an expression family type
+// POST: Asserts that the node is of an expression family type, otherwise exits with an error
 void assert_expression_family(ASTnode* node) {
   if (!node) {
     fprintf(stderr, "Error: Expected an expression node but got NULL\n");
@@ -846,7 +854,7 @@ void assert_expression_family(ASTnode* node) {
 
 }
 
-// PRE: 
+// PRE: ASTnode pointer p, start and end labels
 // POST: Each A_BREAK & A_CONTINUE labels are set appropriately
 void set_while_labels(ASTnode* p, char* start_label, char* end_label) {
   
@@ -864,7 +872,7 @@ void set_while_labels(ASTnode* p, char* start_label, char* end_label) {
   set_while_labels(p->s2, start_label, end_label);
 }
 
-// PRE:
+// PRE: ASTnode pointer node, SymbTab* function_declaration
 // POST: Links each A_RETURN node to its function declaration symbol table entry
 void link_return_to_function(ASTnode* node, SymbTab* function_delcaration) {
   if (!node) {
