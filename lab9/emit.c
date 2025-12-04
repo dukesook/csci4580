@@ -335,8 +335,8 @@ void emit_expression_statement(ASTnode* p, FILE* fp) {
   emit_dereference_if_variable(p->s1, fp);
 }
 
-// PRE: ASTnode pointer p, file pointer fp
-// POST: MIPS Code so that $a0 has the return value
+// PRE: ASTnode pointer p, to an A_EXPRESSION file pointer fp
+// POST: $a0 has the return value of the expression
 void emit_expression(ASTnode* node, FILE* fp) {
 
   assert_nodetype(node, A_EXPRESSION);
@@ -441,8 +441,8 @@ void emit_call(ASTnode* p, FILE* fp) {
 
 } // end of emit_call()
 
-// PRE: ASTnode pointer p, file pointer fp
-// POST: Emits MIPS code for assignment statements
+// PRE: ASTnode pointer p to A_ASSIGNMENT_STATEMENT, file pointer fp
+// POST: Sets the left hand size memory to the right hand sides value.
 void emit_assignment_statement(ASTnode* p, FILE* fp) {
 
   assert_nodetype(p, A_ASSIGNMENT_STATEMENT);
