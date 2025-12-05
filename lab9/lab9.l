@@ -1,14 +1,12 @@
   /*
-Devon Sookhoo
-October 31st, 2025
-Lab 7 Add Symbol Table and Type Checking
-Enhancements:
-  - Removed comments from previous labs
-  - #include "ast.h"  
-  - All Tokens start with T_
-  - No other changes made in this lab
-  */
 
+Devon Sookhoo
+December 5th, 2025
+Lab 9 ALGOL Create MIPS code from you AST
+Enhancements:
+  - No other changes made to this file for this lab
+
+*/
 
 %{
 

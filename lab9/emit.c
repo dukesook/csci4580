@@ -7,9 +7,14 @@ emit.c is the emitter file for compilers with MIPS.
 Set of functions to create proper MIPS code and place it in the appropriate opened file.
 
 Enhancements:
-  - Created emit.h and emit.c files to handle MIPS code generation
+  - Created emit.c from scratch to handle MIPS code generation
   - #include <string.h> for strcmp()
-
+  - Using assert_nodetype() to ensure correct AST node types are being passed to functions
+  - Ensured each function has a PRE and POST condition comment block
+  - EMIT() is the main driver function to start the MIPS code generation process
+  - Listed other functions as static to ensure they are only visible within this file
+  - Added detailed comments to each function for clarity
+  - Implemented graduate student specific requirements including break, continue, and prototypes.
 */
 
 #include "emit.h"
@@ -18,7 +23,6 @@ Enhancements:
 static void emit_ast(ASTnode*, FILE*);
 static void emit(FILE*, char* label, char* command, char* comment);
 static void emit_line(FILE*, char* line, char* comment);
-static void emit_traverse_ast(ASTnode*, FILE*, EmitFunction);
 static void emit_global_variables(ASTnode*, FILE*);
 static void emit_string(ASTnode*, FILE*);
 static void emit_function_declaration(ASTnode*, FILE*);
@@ -50,7 +54,7 @@ static int count_arguments(ASTnode* argument);
 static void set_while_labels(ASTnode*, char* start_label, char* end_label);
 static void link_return_to_function(ASTnode*, SymbTab* );
 
-// PRE: ASTnode pointer p, file pointer fp
+// PRE: ASTnode pointer root which points to the root of the AST (not null), file pointer fp
 // POST: All MIPS code directly and through helper functions
 //       prints in the file via the file pointer.
 void EMIT(ASTnode* root, FILE* fp) {
@@ -59,7 +63,6 @@ void EMIT(ASTnode* root, FILE* fp) {
   
   // Data
   fprintf(fp, "\n.data\n");
-  // emit_traverse_ast(root, fp, emit_string);
   emit_string(root, fp);
   
   // Globals
@@ -76,18 +79,18 @@ void EMIT(ASTnode* root, FILE* fp) {
 
 } // end of EMIT()
 
-// PRE: Pointer to astnode
+// PRE: Pointer to astnode. May be NULL. FILE* fp is open for writing
 // POST: Main driver for walking out AST Tree to produce
 //     MIPS code by calling appropriate helper functions
 void emit_ast(ASTnode* p, FILE* fp) {
 
-  if (!p) {
+  if (!p) { // if null, just return
     return;
   }
 
-  char* type = ASTtype_to_string(p->nodetype);
+  char* type = ASTtype_to_string(p->nodetype); // for debugging
 
-
+  // Main switch on node type
   switch (p->nodetype) {
     case A_DEC_LIST:
       emit_ast(p->s2, fp);
@@ -183,7 +186,7 @@ void emit_line(FILE* fp, char* line, char* comment) {
   emit(fp, "", line, comment);
 }
 
-// PRE: ASTnode pointer p, file pointer fp
+// PRE: ASTnode pointer p is of type A_ITERATION_STATEMENT (not null), file pointer fp
 // POST: Emits MIPS code for while statements
 void emit_while(ASTnode* p, FILE* fp) {
 
@@ -220,23 +223,7 @@ void emit_while(ASTnode* p, FILE* fp) {
 
 } // end of emit_while()
 
-// PRE: ASTnode pointer p, file pointer fp, function pointer for traversal
-// POST: Traverses the AST and applies the given function to each node
-void emit_traverse_ast(ASTnode* node, FILE* fp, EmitFunction function) {
-  if (!node) {
-    return;
-  }
-  
-  // Traverse children
-  emit_traverse_ast(node->s2, fp, function);
-  emit_traverse_ast(node->s1, fp, function);
-
-  // Process current node
-  function(node, fp);
-
-} // end of emit_traverse_ast()
-
-// PRE: ASTnode pointer p, file pointer fp
+// PRE: ASTnode pointer p may NULL or point to a A_VARDEC, file pointer fp
 // POST: Emits global variable declarations in MIPS code
 void emit_global_variables(ASTnode* node, FILE* fp) {
   if (!node) {
@@ -256,12 +243,11 @@ void emit_global_variables(ASTnode* node, FILE* fp) {
   emit_global_variables(node->s2, fp);
   emit_global_variables(node->s1, fp);
 
-
   return;
 
 } // end of emit_global_variables()
 
-// PRE: ASTnode pointer p, file pointer fp
+// PRE: ASTnode pointer p may be null or point to an A_WRITE, file pointer fp
 // POST: Emits string literals in MIPS code
 void emit_string(ASTnode* node, FILE* fp) {
   
@@ -281,7 +267,7 @@ void emit_string(ASTnode* node, FILE* fp) {
 
 } // end of emit_string()
 
-// PRE: ASTnode pointer p, file pointer fp
+// PRE: ASTnode pointer p must be of type A_FUNCTIONDEC (not NULL!), file pointer fp
 // POST: Emits MIPS code for function declarations
 void emit_function_declaration(ASTnode* p, FILE* fp) {
 
@@ -324,10 +310,9 @@ void emit_function_declaration(ASTnode* p, FILE* fp) {
 
 }
 
-// PRE: Expects a ASTnode pointer p to an A_EXPRESSION_STATEMENT
-// POST: Emits MIPS code for expression statements
+// PRE: Expects a ASTnode pointer p to an A_EXPRESSION_STATEMENT and p->s1 is in the expression family.
+// POST: The resut of the expression is shall be in $a0. Emits MIPS code for expression statements
 void emit_expression_statement(ASTnode* p, FILE* fp) {
-  
   assert_nodetype(p, A_EXPRESSION_STATEMENT);
   assert_expression_family(p->s1);
 
@@ -335,7 +320,7 @@ void emit_expression_statement(ASTnode* p, FILE* fp) {
   emit_dereference_if_variable(p->s1, fp);
 }
 
-// PRE: ASTnode pointer p, to an A_EXPRESSION file pointer fp
+// PRE: ASTnode pointer p to an A_EXPRESSION, file pointer fp
 // POST: $a0 has the return value of the expression
 void emit_expression(ASTnode* node, FILE* fp) {
 
@@ -350,7 +335,6 @@ void emit_expression(ASTnode* node, FILE* fp) {
   char* type = ASTtype_to_string(node->nodetype);
   char line[256];
   int offset = 0;
-
   
   // Left Hand Side
   emit_ast(node->s1, fp); // $a0 has the result of the left hand side expression
@@ -411,13 +395,13 @@ void emit_expression(ASTnode* node, FILE* fp) {
       break;
       case A_AND:
       case A_OR:
-      // emit nothing?
+      // emit nothing
       break;
     case A_NOT:
         // handled above
     default:
       printf("emit_expression(): unhandled operator: %s\n", operator);
-      exit(1);
+      // exit(1);
   }
 
 }
@@ -474,9 +458,11 @@ void emit_assignment_statement(ASTnode* p, FILE* fp) {
 
 }
 
-// PRE: ASTnode pointer p, file pointer fp
+// PRE: ASTnode pointer p must be of type A_READ (not null!), file pointer fp
 // POST: Emits MIPS code for read statements
 void emit_read(ASTnode* p, FILE* fp) {
+  assert_nodetype(p, A_READ);
+
   emit_comment(fp, "READ statement");
   emit_variable(p->s1, fp); // $a0 is the location
   emit_line(fp, "li $v0, 5", "5 in $v0 means: Read an integer from the user");
@@ -486,9 +472,12 @@ void emit_read(ASTnode* p, FILE* fp) {
   return;
 }
 
-// PRE: ASTnode pointer p, file pointer fp
+// PRE: ASTnode pointer p must be of type A_WRITE, file pointer fp
 // POST: Emits MIPS code for write statements
 void emit_write(ASTnode* p, FILE* fp) {
+
+  assert_nodetype(p, A_WRITE);
+
   // There are type types of write:
   //    1. String
   //    2. Expression
@@ -535,15 +524,12 @@ void emit_variable(ASTnode* p, FILE* fp) {
 
   // Get Array Index
   if (is_indexed_array) {
-
     emit_ast(p->s1, fp); // $a0 has the result of the index expression
     emit_dereference_if_variable(p->s1, fp); // ensure $a0 has the value of the index expression
 
     emit_line(fp, "move $a1, $a0", "Copy index into $a1");
     emit_line(fp, "sll $a1, $a1, 2", "Multiply index by 4 (word size)");
-
   }
-
 
   // Load Variable Address
   if (is_global_variable) {

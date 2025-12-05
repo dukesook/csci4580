@@ -1,7 +1,7 @@
 # Devon Sookhoo
-# October 31st, 2025
-# Lab 7 Add Symbol Table and Type Checking
-# Added symtable.c and symtable.h for symbol table management
+# December 5th, 2025
+# Lab 9 ALGOL Create MIPS code from you AST
+# Added emit.c and emit.h to handle MIPS code generation
 
 
 # Compiler Flags

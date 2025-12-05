@@ -7,6 +7,8 @@ Enhancements:
 		- #include "string.h" for strcmp
 		- #include "emit.h" for EMIT() function
 		- Added int main(int argc, char* argv[]) to read in arguments
+		- Added debug flag -d to enable debug output
+		- Assigned a symbol to every AST node
 */
 
 %{
