@@ -1,12 +1,11 @@
   /*
-
 Devon Sookhoo
 December 5th, 2025
 Lab 9 ALGOL Create MIPS code from you AST
 Enhancements:
   - No other changes made to this file for this lab
+  */
 
-*/
 
 %{
 
