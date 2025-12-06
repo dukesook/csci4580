@@ -3,7 +3,7 @@ int x;
 
 int main(int x)
 begin
-  write "hello world";
+  write "hello world\n";
   write 42;
   write "\n";
 end

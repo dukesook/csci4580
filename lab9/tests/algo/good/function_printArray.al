@@ -11,7 +11,6 @@ begin
     write "\n";
     i = i + 1;
   end
-  
 
 end
 

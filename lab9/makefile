@@ -18,4 +18,4 @@ lab9: lab9.y lab9.l ast.c ast.h symtable.c symtable.h emit.h emit.c
 	gcc $(CFLAGS) -o lab9 lex.yy.c y.tab.c ast.c symtable.c emit.c
 
 clean:
-	rm -f lab9 y.tab.c y.tab.h y.output lex.yy.c
+	rm -f lab9 y.tab.c y.tab.h y.output lex.yy.c scooper.asm out.asm
