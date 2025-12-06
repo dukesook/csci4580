@@ -1,7 +1,7 @@
 # MIPS code generated from AST
 
 .data
-_L0:  .asciiz "hello world"
+_L0:  .asciiz "hello world\n"
 _L1:  .asciiz "\n"
 
 .align 2
